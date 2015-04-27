@@ -13,7 +13,7 @@ app.use(app.router);
     app.set("view engine", "jade");
 
 });
-routes = require('./routes/api')(app);
+routes = require('./routes/messages')(app);
 
 app.get('/', function(req, res){
     res.render("index");
@@ -22,7 +22,7 @@ app.get('/', function(req, res){
 
 //routes = require('./routes/users')(app);
 
-mongoose.connect('mongodb://localhost/usuarios', function(err, res){
+mongoose.connect('mongodb://localhost/messages', function(err, res){
 	if(err){
 		console.log('ERROR: connecting to database.' + err);
 	}

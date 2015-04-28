@@ -14,6 +14,9 @@ app.get('/', function(req, res) {
     res.send("Hello world!");
 });
 
+routes = require('./routes/race')(app);
+routes2 = require('./routes/userRace')(app);
+
 mongoose.connect('mongodb://localhost/race', function(err, res) {
     if(err) {
         console.log('ERROR: connecting to Database. ' + err);

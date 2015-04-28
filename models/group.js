@@ -8,24 +8,24 @@ var groupSchema = new Schema({
     Level: {
         type: String, enum: ['Beginner', 'Initiated', 'Professional']
     },
-    LocationIni: {
+    Location: {
         Lng: {type: Number},
         Ltd: {type: Number}
     },
     Admin_Group: {type: String},
-    Users: {
+    Users: [{
         Username: {type: String}
-    },
-    RacesDone: {
+    }],
+    RacesDone:[ {
         Race: {type: String}
-    },
+    }],
     RacesPending: {
         Race: {type: String}
     },
-    Messages: {
+    Messages: [{
         Username: {type: String},
         Message: {type: String}
-    }
+    }]
 
 });
 

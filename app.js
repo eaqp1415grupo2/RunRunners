@@ -1,7 +1,7 @@
 var express = require("express"),
     app     = express(),
     http    = require("http"),
-    server  = http.createServer(app);
+    server  = http.createServer(app),
     mongoose = require('mongoose');
 
 app.configure(function () {

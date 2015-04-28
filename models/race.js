@@ -18,7 +18,7 @@ var raceSchema = new Schema({
         Stag: {type: String}
     }],
     Users:[{
-        ID_User: {type: String}
+        Username: {type: String}
     }],
     Messages:[{
         ID_Message: {type: String}

@@ -2,6 +2,7 @@ var express = require("express"),
     app     = express(),
     http    = require("http"),
     server  = http.createServer(app);
+    mongoose = require('mongoose');
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -11,6 +12,14 @@ app.configure(function () {
 
 app.get('/', function(req, res) {
     res.send("Hello world!");
+});
+
+mongoose.connect('mongodb://localhost/race', function(err, res) {
+    if(err) {
+        console.log('ERROR: connecting to Database. ' + err);
+    } else {
+        console.log('Connected to Database');
+    }
 });
 
 server.listen(3000, function() {

@@ -3,9 +3,10 @@
  */
 module.exports = function(app) {
     var Message = require('../models/message.js');
+   // var Answer = require('../models/message.js')
     //GET - Devuelve un mensaje en concreto
     findMessageById = function(req, res) {
-        Message.findById(req.params.id, function(err, messages) {
+        Message.findById(req.params.ID_Message, function(err, messages) {
             if(!err) {
                 console.log('GET /message/' + req.params.id);
                 res.send(messages);
@@ -33,7 +34,7 @@ module.exports = function(app) {
         console.log(req.body);
         console.log(req.body);
 
-//recogemos los valores de la petición
+//recogemos los valores de la peticiï¿½n
         var message = new Message({
             sender:  req.body.sender,
             reciver:  req.body.reciver,
@@ -54,10 +55,13 @@ module.exports = function(app) {
 
 //PUT- Permite actualizar un mensaje
     updateMessage = function(req, res) {
-        Message.findById(req.params.id, function(err, message) {
-            sender:  req.body.sender;
-                reciver:  req.body.reciver;
-                text:  req.body.text;
+        Message.findById(req.params.ID_Message, function(err, message) {
+
+
+              answer = req.body.answer;
+                //{
+
+                  //  text:  req.body.text}
 
 //guardamos en la base de datos
             message.save(function(err) {
@@ -73,7 +77,7 @@ module.exports = function(app) {
 
     //DELETE - Permite Borrar un mensaje
     deleteMessage = function(req, res) {
-        Message.findById(req.params.id, function(err, message) {
+        Message.findById(req.params.ID_Message, function(err, message) {
             //borramos en la base de datos
             message.remove(function(err) {
                 if(!err) {
@@ -86,11 +90,39 @@ module.exports = function(app) {
         });
     }
 
-//Rutas
 
-    app.get('/message/:id', findMessageById );
+
+
+//POST - Permite Crear una respuesta
+    addAnswer = function(req, res) {
+        Message.findById(req.params.ID_Message, function(err, message) {
+        console.log('POST');
+        console.log(req.body);
+        console.log(req.body);
+
+//recogemos los valores de la peticiï¿½n
+        var message = new Message({
+            answer: req.body.answer
+        });
+        console.log(message);
+//lo guardamos en la base de datos
+        message.save(function(err) {
+            if(!err) {
+                console.log('Created');
+            } else {
+                console.log('ERROR: ' + err);
+            }
+        });
+
+        res.send(message);});
+    };
+//Rutas
+    app.delete('/message/:ID_Message', deleteMessage);
+
+    app.get('/message/:ID_Message', findMessageById );
     app.get('/messages', findAllMessages);
     app.post('/message', addMessage);
-    app.put('/message/:id', updateMessage);
-    app.delete('/message/:id', deleteMessage);
+    app.post('/message/:ID_Message/answer', addAnswer);
+    app.put('/message/:ID_Message/answer', updateMessage);
+
 }

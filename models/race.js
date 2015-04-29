@@ -1,32 +1,39 @@
 var mongoose = require('mongoose'),
     Schema   = mongoose.Schema;
 
+var Tour = new Schema({
+    lng:   { type: Number },
+    ltd:   { type: Number }
+});
+
+var Tags = new Schema({
+    tag: {type: String}
+});
+
+var Users = new Schema({
+    username: {type: String}
+});
+
+var Messages = new Schema({
+    id_Message: {type: String}
+});
+
 var raceSchema = new Schema({
-    ID_Race:    { type: String },
-    Name:     { type: String },
-    Level:    { type: String, enum:
+    name:     { type: String },
+    level:    { type: String, enum:
         ['Beginner', 'Initiated', 'Professional']
     },
-    Date:   { type: Date },
-    LocationIni:  {
+    date:   { type: Date , format : "YYYY-MM-DD HH:mm:ss"},
+    locationIni: {
         Lng:   { type: Number },
         Ltd:   { type: Number }
     },
-    Distance:  { type: Number },
-    Type: {type: String},
-    Tags:[{
-        Stag: {type: String}
-    }],
-    Users:[{
-        Username: {type: String}
-    }],
-    Messages:[{
-        ID_Message: {type: String}
-    }],
-    Tour:[{
-        Lng:   { type: Number },
-        Ltd:   { type: Number }
-    }]
+    distance:  { type: Number },
+    type: {type: String},
+    tags:[Tags],
+    users:[Users],
+    messages:[Messages],
+    tour:[Tour]
 });
 
 module.exports = mongoose.model('Race', raceSchema);

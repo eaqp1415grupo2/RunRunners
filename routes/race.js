@@ -1,4 +1,5 @@
-module.exports = function(app) {
+module.exports = function (app) {
+
     var Race = require('../models/race.js');
 
     //GET - Return all races in the DB
@@ -14,7 +15,8 @@ module.exports = function(app) {
 
     //GET - Return all races in the DB by ID_Race
     findRaceByID = function(req, res) {
-        Race.findById({"ID_Race":req.param.ID_Race}, function(err, race) {
+        console.log(req.params.id);
+        Race.findById(req.params.id, function(err, race) {
             if(!err) {
                 res.send(race);
             } else {
@@ -23,24 +25,19 @@ module.exports = function(app) {
         });
     };
 
-    //POST - Insert a new TVShow in the DB
-    addRace = function(req, res) {
-        console.log('POST');
-        console.log(req.body);
-
+    //POST - Insert a new Race in the DB
+    createRace = function(req, res) {
         var race = new Race({
-            ID_Race:    req.body.ID_Race,
-            Name: 	  req.body.Name,
-            Level:  req.body.Level,
-            Location:   req.body.Location,
-            Distance:  req.body.Distance,
-            Type:    req.body.Type,
-            Tags: req.body.Tags,
-            Users: req.body.Users,
-            Messages: req.body.Messages,
-            Tour:  req.body.Tour
+            name: 	  req.body.name,
+            level:  req.body.level,
+            locationIni:   req.body.locationIni,
+            distance:  req.body.distance,
+            type:    req.body.type,
+            tags: req.body.tags,
+            users: req.body.users,
+            messages: req.body.messages,
+            tour:  req.body.tour
         });
-
         race.save(function(err) {
             if(!err) {
                 console.log('Created');
@@ -54,7 +51,7 @@ module.exports = function(app) {
 
     //PUT - Update a register already exists
     updateRace = function(req, res) {
-        Race.findById({"ID_Race":req.param.ID_Race}, function(err, race) {
+        Race.findById({"ID_Race":req.params.ID_Race}, function(err, race) {
             race.ID_Race = req.body.ID_Race;
             race.Name = req.body.Name;
             race.Level = req.body.Level;
@@ -75,11 +72,11 @@ module.exports = function(app) {
                 res.send(race);
             });
         });
-    }
+    };
 
     //DELETE - Delete a TVShow with specified ID
     deleteRace = function(req, res) {
-        Race.findById({"ID_Race":req.param.ID_Race}, function(err, race) {
+        Race.findById({"ID_Race":req.params.ID_Race}, function(err, race) {
             race.remove(function(err) {
                 if(!err) {
                     console.log('Removed');
@@ -88,10 +85,10 @@ module.exports = function(app) {
                 }
             })
         });
-    }
+    };
 
     addUser = function (req, res) {
-        Race.findById({"ID_Race":req.param.ID_Race}, function(err, user) {
+        Race.findById({"ID_Race":req.params.ID_Race}, function(err, user) {
             if (Race.findOne({"Users.Username": req.body.Username}) == null) {
                 if (req.body.Username != null) user.Users.push(req.body);
                 else console.log("Something wrong with: " + req.body);
@@ -107,8 +104,8 @@ module.exports = function(app) {
     };
 
     addMessages = function (req, res) {
-        Race.findById({"ID_Race":req.param.ID_Race}, function(err, message) {
-            if (message.body.Username != null && message.body.Text != null)  message.Messages.push(req.body);
+        Race.findById({"ID_Race":req.params.ID_Race}, function(err, message) {
+            if (message.body.Username != null)  message.Messages.push(req.body);
             else console.log("Something wrong with: " + req.body);
             message.save(function (err) {
                 if (err) console.log("Error: " + err);
@@ -122,11 +119,11 @@ module.exports = function(app) {
 
     //Link routes and functions
     app.get('/race', findAllRaces);
-    app.get('/race/:id_race', findRaceByID);
-    app.post('/race', addRace);
+    app.get('/race/:id', findRaceByID);
+    app.post('/race', createRace);
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);
     app.put('/race/:id', addUser);
     app.put('/race/:id', addMessages);
 
-}
+};

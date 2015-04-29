@@ -1,7 +1,7 @@
 var express = require("express"),
     app     = express(),
     http    = require("http"),
-    server  = http.createServer(app),
+    server  = http.createServer(app);
     mongoose = require('mongoose');
 
 app.configure(function () {
@@ -16,6 +16,7 @@ app.get('/', function(req, res) {
 
 routes = require('./routes/race')(app);
 routes2 = require('./routes/userRace')(app);
+routes3 = require('./routes/group')(app);
 
 mongoose.connect('mongodb://localhost/race', function(err, res) {
     if(err) {

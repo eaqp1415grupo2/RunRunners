@@ -2,15 +2,15 @@ module.exports = function(app) {
 
 
     var User  = require('../models/user.js');
-    var Races = require('../models/group.js');
-    var Group = require('../models/race.js');
+    var Groups = require('../models/group.js');
+    var Races = require('../models/race.js');
 
     findAllUsers = function(req, res) {
         console.log("GET - /users");
 
         return User.find(function(err, users) {
             Races.populate(users, { path : 'RacesPending'}, function(err, users){
-                Group.populate(users, { path : 'Group'}, function(err, users){
+                Groups.populate(users, { path : 'Group'}, function(err, users){
 
                     res.send(users);
                     console.log(users);

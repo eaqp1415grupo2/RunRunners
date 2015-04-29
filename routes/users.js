@@ -2,6 +2,8 @@ module.exports = function(app) {
 
 
     var User  = require('../models/user.js');
+    var Races = require('../models/group.js');
+    var Group = require('../models/race.js');
 
     findAllUsers = function(req, res) {
         console.log("GET - /users");

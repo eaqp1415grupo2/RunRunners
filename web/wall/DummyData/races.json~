@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1, 
+        "name": "C/ Valeencia", 
+        "level" : "facil",
+        "date" : "03/06/2015",
+        "lat" : 41.396506,
+        "long" : 2.168235,
+        "distance": 4,
+        "type": "urbana",
+        "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
+
+    }
+]

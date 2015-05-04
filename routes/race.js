@@ -1,7 +1,7 @@
 module.exports = function (app) {
 
     var Race = require('../models/race.js');
-
+    var User = require('../models/user.js');
     //GET - Return all races in the DB
     findAllRaces = function(req, res) {
         Race.find(function(err, races) {
@@ -11,6 +11,41 @@ module.exports = function (app) {
                 console.log('ERROR: ' + err);
             }
         });
+    };
+
+    findRaceByVicinity = function(req, res) {
+        var userreq,
+            lngMin,
+            lngMax,
+            ltdMin,
+            ltdMax;
+        User.findById(req.params.id, function(err, user){
+            if(!user) {
+                res.statusCode = 404;
+                return res.send({ error: 'No se encuentra este nombre de usuario, revise la petición' });
+            }
+            if(!err) {
+                lngMin = user.locationIni.Lng - 0.0015083; // - 10 km
+                lngMax = user.locationIni.Lng + 0.0015083; // + 10 km
+                ltdMin = user.locationIni.Ltd - 0.0015083; // - 10 km
+                ltdMax = user.locationIni.Ltd + 0.0015083; // + 10 km
+                userreq = user;
+            } else {
+                res.statusCode = 500;
+                console.log('Internal error(%d): %s',res.statusCode,err.message);
+                return res.send({ error: 'Server error' });
+            }
+        });
+        var query = Race.find()
+            .where({'userreq.locationIni.Lng': {'gte': lngMin, 'lte':lngMax},'userreq.locationIni.Ltd': {'gte': ltdMin, 'lte':ltdMax}})
+            .limit(50)
+            .exec(function(err, races) {
+                if(!err) {
+                    res.send(races);
+                } else {
+                    console.log('ERROR: ' + err);
+                }
+            });
     };
 
     //GET - Return all races in the DB by ID_Race
@@ -112,8 +147,8 @@ module.exports = function (app) {
     };
 
     addMessages = function (req, res) {
-        Race.findById({"ID_Race":req.params.ID_Race}, function(err, message) {
-            if (message.body.Username != null)  message.Messages.push(req.body);
+        Race.findById(req.params.id, function(err, message) {
+            if (req.body.username != null && req.body.text != null)  message.messages.push(req.body);
             else console.log("Something wrong with: " + req.body);
             message.save(function (err) {
                 if (err) console.log("Error: " + err);
@@ -127,6 +162,7 @@ module.exports = function (app) {
 
     //Link routes and functions
     app.get('/race', findAllRaces);
+    app.get('/user/:id/race', findRaceByVicinity);
     app.get('/race/:id', findRaceByID);
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);

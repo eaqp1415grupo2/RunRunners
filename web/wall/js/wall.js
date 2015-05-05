@@ -19,7 +19,7 @@ angular.module('wallApp', [])
 
 	 var config={
 	 method:"GET",
-	 url:"http://localhost/wall/DummyData/races.json"	 
+	 url:"wall/DummyData/races.json"	 
 	 }
 	 var response=$http(config);
 	 response.success(function (data, status, headers, config) {

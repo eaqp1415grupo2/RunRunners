@@ -10,9 +10,11 @@ app.configure(function () {
     app.use(app.router);
 });
 
+//de momento redirige a wall, a la espera de login
 app.get('/', function(req, res) {
   res.sendfile('./web/wall/wall.html');
 });
+//habilita los archivos secundarios de resources y js necesarios de /web
 app.use(express.static('web'));
 
 routes = require('./routes/race')(app);

@@ -13,7 +13,6 @@ app.configure(function () {
 app.get('/', function(req, res) {
   res.sendfile('./web/wall/wall.html');
 });
-app.use(express.static('web'));
 
 routes = require('./routes/race')(app);
 routes2 = require('./routes/userRace')(app);

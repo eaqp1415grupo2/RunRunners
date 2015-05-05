@@ -10,12 +10,21 @@ app.configure(function () {
     app.use(app.router);
 });
 
-//de momento redirige a wall, a la espera de login
-app.get('/', function(req, res) {
-  res.sendfile('./web/wall/wall.html');
-});
+
 //habilita los archivos secundarios de resources y js necesarios de /web
 app.use(express.static('web'));
+//de momento redirige a wall, a la espera de login
+
+app.get('/wall', function(req, res) {
+  res.sendfile('./web/wall/wall.html');});
+
+app.get('/profile', function(req, res) {
+  res.sendfile('./web/profile/profile.html');});
+
+app.get('/login', function(req, res) {
+  res.sendfile('./web/login/login.html');}); 
+  
+
 
 routes = require('./routes/race')(app);
 routes2 = require('./routes/userRace')(app);

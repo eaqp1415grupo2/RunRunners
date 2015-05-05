@@ -1,5 +1,5 @@
 //Angular App Module and Controller
-angular.module('mapsApp', [])
+angular.module('wallApp', [])
 
 .controller('MapCtrl', function ($scope,$http,$log) {
 	 var races={};
@@ -19,7 +19,7 @@ angular.module('mapsApp', [])
 
 	 var config={
 	 method:"GET",
-	 url:"http://localhost/wall/DummyData/races.json"	 
+	 url:"wall/DummyData/races.json"	 
 	 }
 	 var response=$http(config);
 	 response.success(function (data, status, headers, config) {

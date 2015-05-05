@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<html lang="es" ng-app="loginRunRunners">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <title>Login-RunRunners</title>
 
-</body>
+        <link rel="stylesheet" href="../wall/bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../ngDialog/css/ngDialog.css">
+        <link rel="stylesheet" href="../ngDialog/css/ngDialog-theme-default.css">
+        <link rel="stylesheet" href="css/login.css">
+
+        <script type="text/javascript" src="../wall/bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="../wall/bower_components/angular-resource/angular-resource.js"></script>
+        <script type="text/javascript" src="../ngDialog/js/ngDialog.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
+    </head>
+    <body>
+        <nav id="navbarid" class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+            <div class= "container clearfix">
+                <div class="navbar-header">
+                    <a id="home" class="navbar-brand">RunRunners</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="headerController">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" ng-click="clickToOpen()" class="btn btn-primary">Sign Up</a>
+                        </li>
+                        <li>
+                            <a id="signUp" type="button" class="btn btn-primary">Sign Up</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+        <div id="homepg" class="container">
+        <div class="row well">
+            <div class="page-header">
+                <div class="col-sm-2"></div>
+                <h1>Users List</h1>
+            </div>
+
+            <div class="row" ng-controller="userController as userCtrl">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-6">
+                    <section class="tab" ng-controller="TabController as tab">
+
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
 </html>

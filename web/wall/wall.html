@@ -8,53 +8,56 @@
 </head>
 
 <body>
-
 <nav class="navbar navbar-inverse navbar-run">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <a class="navbar-brand" href="#" style="color:#36FF03"><h1>RunRunners</h1></a>
+    </div>
+    <div>
+      <ul class="navbar-btn-run nav navbar-nav pull-right " >
+        <li><a style="color:#36FF03" href="/profile">Perfil</a></li>
+        <li><a style="color:#36FF03" href="/login">LogOut</a></li>
+      </ul>
     </div>
 </nav>
 
 
-<div  ng-controller="MapCtrl">
-    <div id="map"></div>
+<div>
+  <div id="map"></div>
     
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-4">
-
-	<div id="calendar"></div>
-
-
-    </div>
-    
+  <div class="container-fluid">
+     <div class="row">
         <div class="col-md-4">
-
-
-
-    </div>
+             <p class="title-block center">Grupos</p>
+             <div id="class" ng-repeat="group in groups | orderBy : 'name'">
+                <h3>{{groupList.name}}</h3>
+             </div>
+        </div>  
+        
+        <div class="col-md-4">
+             <p class="title-block center">Mensajes</p>
+        </div>
     
-    <div class="col-md-4">
-    <p class="title-block">Carreras en la Ciudad</p>
-      <!--Body content-->   
-    <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
-         <a href="#" ng-click="openInfoWindow($event, marker)"><h3>{{marker.title}}</h3></a>
-         <p><h5>{{marker.dist}}</h5></p>
-    </div>
+        <div class="col-md-4" ng-controller="mapController">
+             <p class="title-block center">Carreras en la Ciudad <input  type="text" ng-model="racefilter"></p>        
+             <div id="class" ng-repeat="race in races | orderBy : 'title'| filter:racefilter">
+                 <a href="#" ng-click="openInfoWindow($event, race)"><h3>{{race.name}}</h3></a>
+             <p><h5>{{race.distance+ ' km'}}</h5></p>
+             </div>
+        </div>
+ 
 
-
-    </div>
-  </div>
-</div>    
+      </div> 
+   </div>    
 </div>
+
   <script src="../resources/jquery/dist/jquery.js"></script>
   <script src="../resources/angular/angular.js"></script>
   <script src="../resources/angular-route/angular-route.js"></script>
   <script src="../resources/angular-resource/angular-resource.js"></script>
   <script src="wall/js/wall.js"></script>
+  <script src="wall/js/wallcontrollers.js"></script>
   <script src="wall/js/calendar.js"></script>
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false">
-  </script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  
 </body>
 </html>

@@ -1,7 +1,7 @@
 [
     {
         "id": 1, 
-        "name": "C/ Valeencia", 
+        "name": "C/ Valencia", 
         "level" : "facil",
         "date" : "03/06/2015",
         "lat" : 41.396506,
@@ -9,18 +9,27 @@
         "distance": 4,
         "type": "urbana",
         "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
-
     },
         {
-        "id": 1, 
-        "name": "C/ Valeencia", 
+        "id": 2, 
+        "name": "Rambla", 
         "level" : "facil",
         "date" : "03/06/2015",
-        "lat" : 41.396506,
-        "long" : 2.168235,
-        "distance": 4,
+        "lat" : 41.380126,
+        "long" : 2.168205,
+        "distance": 5,
         "type": "urbana",
         "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
-
+    },
+            {
+        "id": 3, 
+        "name": "Rambla dummy", 
+        "level" : "facil",
+        "date" : "03/06/2015",
+        "lat" : 41.391446,
+        "long" : 2.168265,
+        "distance": 7,
+        "type": "urbana",
+        "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
     }
 ]

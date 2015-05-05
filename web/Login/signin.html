@@ -1,0 +1,19 @@
+
+<div id="ngdialogSignup" class="ngdialog ngdialog-theme-default ngdialog-theme-custom ng-scope" ng-controller="headerController">
+    <div class="ngdialog-overlay"></div>
+    <div class="ngdialog-content">
+        <form name="userForm">
+            <h4>Sign Up</h4>
+            <fieldset class="form-group">
+                <input ng-minlength=4 class="form-control" placeholder="Username"
+                       title="Username"/>
+                <input ng-minlength=4 class="form-control" placeholder="Password"
+                       title="Password"/>
+            </fieldset>
+        </form>
+        <div class="ngdialog-buttons mt">
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
+        </div>
+        <div class="ngdialog-close"></div>
+    </div>
+</div>

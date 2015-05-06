@@ -54,7 +54,7 @@ module.exports = function (app) {
 
     //GET - Return all races in the DB by ID_Race
     findRaceByID = function (req, res) {
-        Race.findById(req.params.id, function (err, race) {
+        Race.findOne({_id: req.params.id}, function (err, race) {
             if (!err) {
                 res.send(race);
             } else {
@@ -68,6 +68,7 @@ module.exports = function (app) {
         var race = new Race({
             name: req.body.name,
             level: req.body.level,
+            date: req.body.date,
             locationIni: req.body.locationIni,
             distance: req.body.distance,
             type: req.body.type,
@@ -75,6 +76,7 @@ module.exports = function (app) {
             users: req.body.users,
             messages: req.body.messages,
             tour: req.body.tour
+
         });
         race.save(function (err) {
             if (!err) {

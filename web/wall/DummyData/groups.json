@@ -1,21 +1,21 @@
 [
 {
-	"id":1,
-	"name": "Grup de Raval",
-	"info": "none",
-	"level": "medio",
-	"location": "??",
-	"admin": "juan"
+	id:1,
+	name: 'Grup de Raval',
+	info: 'none',
+	level: 'medio',
+	location: '??',
+	admin: 'juan',
 	
 },
 
 {
-	"id":2,
-	"name": "Grup de Moncada",
-	"info": "none",
-	"level": "medio",
-	"location": "??",
-	"admin": "pepe"
+	id:2,
+	name: 'Grup de Moncada',
+	info: 'none',
+	level: 'medio',
+	location: '??',
+	admin: 'pepe',
 	
 }
 ]

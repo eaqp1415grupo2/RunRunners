@@ -41,16 +41,7 @@
         #panelmap {
             width: 532px;
             height: 300px;
-            <!--right: -500px;-->
-        }
-        #global{
-            left : -150px;
-            top: 50px;
-        }
-
-        #evolution
-        {
-            top: 55px;
+        <!--right: -500px;-->
         }
     </style>
 </head>
@@ -115,16 +106,17 @@
         </h1>
     </div><!--/span-->
 
-    <div class="col-md-4"  align="center" >
-        <h3>My statistics  </h3>
+    <div class="col-md-4" align="center">
+        <h3>Race statistics</h3>
         <ul id="Race">
         </ul>
+        </ul>
 
-        <div><b > Carrera:</b><a> Cursa Bombers</a></div>
-            <div><b > Distancia:</b><a> 10Km</a></div>
-                <div><b > Tipo:</b><a> Urbana</a></div>
-                    <div><b > Fecha:</b><a> 5/05/2015</a></div>
-                        <div> <b > Nivel:</b><a> Medio</a></div>
+        <div><b > Carrera:</b><a> El corte Inglés</a></div>
+        <div><b > Distancia:</b><a> 20Km</a></div>
+        <div><b > Tipo:</b><a> Mountain / Urbano</a></div>
+        <div><b > Fecha:</b><a> 01/06/2015</a></div>
+        <div> <b > Nivel:</b><a> Medio</a></div>
 
     </div>
     <div class="col-md-8" id="panelmap">
@@ -137,123 +129,36 @@
         </div>
     </div>
 
-
-    <
 </div><!--/span-->
-<div class="col-md-8" align="center" id="evolution">
-    <h3>My Evolution</h3>
-    <canvas id="buyers" width="400" height="200"></canvas>
-
-</div>
 
 
 </div>
-
-<div class="col-md-4" align="center" id="global">
-    <h3>Global statistics</h3>
-
-
-    <div><b > Distance:</b><a> 40Km</a></div>
-    <div><b > Time:</b><a> 04:25</a></div>
-    <div><b> Level:</b><a> Initiated</a></div>
-        <div><b> Type :</b><a> Urban</a></div>
-
-
 </div><!--/span-->
 
-<script>
 
-    // line chart data
-    var buyerData = {
-        labels : ["1-05-2015","2-05-2015","3-05-2015","4-05-2015","5-05-2015","6-05-2015"],
-        datasets : [
-            {
-                fillColor : "rgba(255, 168, 63, 1.0)",
-                strokeColor : "#ff8c00",
-                pointColor : "#fff",
-                pointStrokeColor : "#ffa83f",
-                data : [10,0,5,15,10,0]
-            }
-        ]
-    }
-    // get line chart canvas
-    var buyers = document.getElementById('buyers').getContext('2d');
-    // draw line chart
-    new Chart(buyers).Line(buyerData);
-
-</script>
 <script type="text/javascript">
 
-//var map;
-//$(document).ready(function() {
-   var map = new GMaps({
+
+    var map = new GMaps({
         el: '#map',
-        lat: 41.3931136,
-        lng: 2.1442971
+        lat: 41.387015,
+        lng: 2.170047
     });
     map.addMarker({
-        lat: 41.3927395,
-        lng: 2.1435036,
-        title: 'Running Diagonal',
+        lat: 41.387015,
+        lng: 2.170047,
+        title: 'Cursa El Corte Ingles',
         infoWindow: {
-            content: '<p>Running Diagonal: 5km por la diagonal</p>'
+            content: '<p>Cursa El Corte Ingles: distancia:20km</p>'
         }
     });
-map.addMarker({
-    lat: 41.3741459,
-    lng: 2.150023,
-    title: 'Cursa Bombers',
-    infoWindow: {
-        content: '<p>Cursa bombers: distancia:10km</p>'
-    }
-});
-map.addMarker({
-    lat: 41.4066626,
-    lng: 2.1090847,
-    title: 'Carretera Aigues',
-    infoWindow: {
-        content: '<p>Carretera Aigues :15km</p>'
-    }
-});
-map.drawRoute({
-    origin: [41.3741459, 2.150023],
-    destination: [41.410505, 2.216299],
-    travelMode: 'walking',
-    strokeColor: '#131540',
-    strokeOpacity: 0.6,
-    strokeWeight: 6
-});
-map.drawRoute({
-    origin: [41.3927395, 2.1435036],
-    destination: [41.3846735, 2.106584],
-    travelMode: 'walking',
-    strokeColor: '#131540',
-    strokeOpacity: 0.6,
-    strokeWeight: 6
-});
-//});
-
-</script>
-
-<script type="text/javascript">
-
-
-
-    var map;
-    $(document).ready(function() {
-        map = new GMaps({
-            el: '#map',
-            lat: 41.3931136,
-            lng: 2.1442971
-        });
-        map.addMarker({
-            lat: 41.3927395,
-            lng: 2.1435036,
-            title: 'Running Diagonal',
-            infoWindow: {
-                content: '<p>5km por la diagonal</p>'
-            }
-        });
+    map.drawRoute({
+        origin: [41.387015, 2.170047],
+        destination: [41.2778881, 1.97154],
+        travelMode: 'walking',
+        strokeColor: '#131540',
+        strokeOpacity: 0.6,
+        strokeWeight: 6
     });
 
 </script>

@@ -54,7 +54,7 @@ module.exports = function (app) {
 
     //GET - Return all races in the DB by ID_Race
     findRaceByID = function (req, res) {
-        Race.findById(req.params.id, function (err, race) {
+        Race.findOne({_id: req.params.id}, function (err, race) {
             if (!err) {
                 res.send(race);
             } else {

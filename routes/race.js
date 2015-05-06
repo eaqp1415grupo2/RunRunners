@@ -66,15 +66,13 @@ module.exports = function (app) {
     //POST - Insert a new Race in the DB
     createRace = function (req, res) {
         var race = new Race({
-            name: req.body.name,
-            level: req.body.level,
-            locationIni: req.body.locationIni,
-            distance: req.body.distance,
-            type: req.body.type,
-            tags: req.body.tags,
-            users: req.body.users,
-            messages: req.body.messages,
-            tour: req.body.tour
+            Name: req.body.Name,
+            Level: req.body.Level,
+            LocationIni: req.body.LocationIni,
+            Distance: req.body.Distance,
+            Type: req.body.Type,
+            Tags: req.body.Tags,
+            Tour: req.body.Tour
         });
         race.save(function (err) {
             if (!err) {
@@ -90,15 +88,15 @@ module.exports = function (app) {
     //PUT - Update a register already exists
     updateRace = function (req, res) {
         Race.findById(req.params.id, function (err, race) {
-            race.name = req.body.name;
-            race.level = req.body.level;
-            race.locationIni = req.body.locationIni;
-            race.distance = req.body.distance;
-            race.type = req.body.type;
-            race.tags = req.body.tags;
-            race.users = req.body.users;
-            race.messages = req.body.messages;
-            race.tour = req.body.tour;
+            race.Name = req.body.Name;
+            race.Level = req.body.Level;
+            race.LocationIni = req.body.LocationIni;
+            race.Distance = req.body.Distance;
+            race.Type = req.body.Type;
+            race.Tags = req.body.Tags;
+            race.Users = req.body.Users;
+            race.Messages = req.body.Messages;
+            race.Tour = req.body.Tour;
 
             race.save(function (err) {
                 if (!err) {

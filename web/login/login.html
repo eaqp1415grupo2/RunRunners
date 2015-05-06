@@ -5,15 +5,14 @@
         <title>Login-RunRunners</title>
 
         <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog.css">
-        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-theme-default.css">
-        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-theme-plain.css">
-        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-custom-width.css">
+        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog.css">
+        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog-theme-default.css">
+        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog-theme-plain.css">
         <link rel="stylesheet" href="css/login.css">
 
         <script type="text/javascript" src="../resources/angular/angular.min.js"></script>
         <script type="text/javascript" src="../resources/angular-resource/angular-resource.js"></script>
-        <script type="text/javascript" src="../resources/ngDialog/js/ngDialog.js"></script>
+        <script type="text/javascript" src="../../node_modules/ng-dialog/js/ngDialog.js"></script>
         <script type="text/javascript" src="js/login.js"></script>
     </head>
     <body>
@@ -43,65 +42,62 @@
         </div>
 
         <script type="text/ng-template" id="signIn">
-            <div id="ngdialogSignIn" class="ngdialog ngdialog-theme-default ng-scope" ng-controller="headerController">
-                <div class="ngdialog-overlay"></div>
-                <div class="ngdialog-content">
-                    <form name="userForm">
-                        <h4>Sign In</h4>
-                        <fieldset class="form-group">
-                            <input ng-minlength=4 class="form-control" placeholder="Username"
-                                   title="Username"/>
-                            <input ng-minlength=4 class="form-control" placeholder="Password"
-                                   title="Password"/>
-                        </fieldset>
-                    </form>
-                    <div class="ngdialog-buttons mt">
-                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Sign In</button>
-                    </div>
-                    <div class="ngdialog-close"></div>
+            <div class="ngdialog-content">
+                <form name="userForm">
+                    <h4>Sign In</h4>
+                    <fieldset class="form-group">
+                        <input ng-minlength=4 class="form-control" placeholder="Username"
+                               title="Username"/>
+                        <input ng-minlength=8 class="form-control" placeholder="Password"
+                               title="Password"/>
+                    </fieldset>
+                </form>
+                <div class="ngdialog-buttons mt">
+                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Sign In</button>
                 </div>
             </div>
         </script>
 
         <script type="text/ng-template" id="signUp">
-            <div id="ngdialogSignUp" class="ngdialog ngdialog-theme-default ng-scope" ng-controller="headerController">
-                <div class="ngdialog-overlay"></div>
-                <div class="ngdialog-content">
-                    <form name="userForm">
-                        <h4>Sign In</h4>
-                        <fieldset class="form-group">
-                            <input ng-minlength=4 class="form-control" placeholder="Name"
-                                   title="Name"/>
-                            <input ng-minlength=4 class="form-control" placeholder="Surname"
-                                   title="Surname"/>
-                            <input ng-minlength=4 class="form-control" placeholder="Username"
-                                   title="Username"/>
-                            <input ng-minlength=8 class="form-control" placeholder="Password"
-                                   title="Password (Min. 8 characters)"/>
-                            <input ng-minlength=4 class="form-control" placeholder="Repeat Password"
-                                   title="Repeat Password"/>
-                            <input ng-minlength=4 class="form-control" placeholder="Email"
-                                   title="Email"/>
-                            <div class="input-group-btn search-panel">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                        data-toggle="dropdown">
-                                    <span >Level</span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Beginner</a></li>
-                                    <li><a href="#">Initiated</a></li>
-                                    <li><a href="#">Professional</a></li>
-                                </ul>
-                            </div>
-                        </fieldset>
-                    </form>
-                    <div class="ngdialog-buttons mt">
-                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
-                    </div>
-                    <div class="ngdialog-close"></div>
+            <div class="ngdialog-content">
+                <form name="userForm">
+                    <h4>Sign In</h4>
+                    <fieldset class="form-group">
+                        <input ng-minlength=4 class="form-control" placeholder="Name"
+                               title="Name"/>
+                        <input ng-minlength=4 class="form-control" placeholder="Surname"
+                               title="Surname"/>
+                        <input ng-minlength=4 class="form-control" placeholder="Username"
+                               title="Username"/>
+                        <input ng-minlength=8 class="form-control" placeholder="Password"
+                               title="Password (Min. 8 characters)"/>
+                        <input ng-minlength=4 class="form-control" placeholder="Repeat Password"
+                               title="Repeat Password"/>
+                        <input ng-minlength=4 class="form-control" placeholder="Email"
+                               title="Email"/>
+                        <div class="input-group-btn search-panel">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown">
+                                <span >Level</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Beginner</a></li>
+                                <li><a href="#">Initiated</a></li>
+                                <li><a href="#">Professional</a></li>
+                            </ul>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="ngdialog-buttons mt">
+                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
                 </div>
             </div>
         </script>
+        <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation" ng-controller="footerController">
 
+            <div class="navbar-header">
+
+            </div>
+        </nav>
     </body>
 </html>

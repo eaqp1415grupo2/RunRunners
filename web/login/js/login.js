@@ -27,6 +27,8 @@ app.controller('headerController', function($scope, ngDialog){
     };
 });
 
+app.controller('footerController', function($scope){});
+
 app.config(['ngDialogProvider', function (ngDialogProvider) {
     ngDialogProvider.setDefaults({
         className: 'ngdialog-theme-default',

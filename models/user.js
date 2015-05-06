@@ -22,7 +22,7 @@ var userSchema = new Schema({
         Lng: {type: Number},
         Ltd: {type: Number}
     },
-    Level : {type : String, enum: ['Beginner', 'Medium', 'High']},
+    Level : {type : String, enum: ['Beginner', 'Initiated', 'Professional']},
     Group : [{type : Schema.ObjectId , ref : 'Group'}],
     Races :[RaceSchema]
 

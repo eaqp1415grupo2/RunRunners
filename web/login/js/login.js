@@ -4,17 +4,13 @@ var app = angular.module('loginRunRunners',['ngDialog']);
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {
         ngDialog.open({
-            template: 'signUp',
-            controller: 'InsideCtrl',
-            className: 'ngdialog-theme-default'
+            template: 'signUp'
         });
     };
 
     $scope.clickToOpenSignIn = function () {
         ngDialog.open({
-            template: 'signIn',
-            controller: 'InsideCtrl',
-            className: 'ngdialog-theme-default'
+            template: 'signIn'
         });
     };
 
@@ -26,6 +22,35 @@ app.controller('headerController', function($scope, ngDialog){
 
     };
 });
+
+app.controller('userController', ['$http', function ($http){
+    var loginRunRunners = this;
+    var user = {};
+    loginRunRunners.users = [];
+
+    $http.get('http://localhost:3000/user').success(function (data) {
+        loginRunRunners.users = data;
+    }).
+        error(function(data) {
+            window.alert("ERROR - Fallo al realizar el GET");
+        });
+
+    this.addUser = function(){
+        console.log(user);
+        loginRunRunners.users.push(this.user);
+        $http({
+            method: 'POST',
+            url: "http://localhost:3000/user",
+            data: this.user,
+            headers: {'Content-Type': 'application/json'}
+        }).success(function(data) {
+        }).error(function(data) {
+            window.alert("ERROR - Fallo al realizar el POST");
+        });
+        this.user = {};
+    };
+
+}]);
 
 app.controller('footerController', function($scope){});
 
@@ -43,18 +68,6 @@ app.config(['ngDialogProvider', function (ngDialogProvider) {
     });
 }]);
 
-app.controller('InsideCtrl', function ($scope, ngDialog) {
-    $scope.dialogModel = {
-        message : 'message from passed scope'
-    };
-    $scope.openSecond = function () {
-        ngDialog.open({
-            template: '<h3><a href="" ng-click="closeSecond()">Close all by click here!</a></h3>',
-            plain: true,
-            closeByEscape: false,
-            controller: 'SecondModalCtrl'
-        });
-    };
-});
+
 
 

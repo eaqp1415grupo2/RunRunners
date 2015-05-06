@@ -4,16 +4,13 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <title>Login-RunRunners</title>
 
-        <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog.css">
-        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog-theme-default.css">
-        <link rel="stylesheet" href="../../node_modules/ng-dialog/css/ngDialog-theme-plain.css">
-        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="resources/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog.css">
+        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog-theme-default.css">
+        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog-theme-plain.css">
+        <link rel="stylesheet" href="login/css/login.css">
 
-        <script type="text/javascript" src="../resources/angular/angular.min.js"></script>
-        <script type="text/javascript" src="../resources/angular-resource/angular-resource.js"></script>
-        <script type="text/javascript" src="../../node_modules/ng-dialog/js/ngDialog.js"></script>
-        <script type="text/javascript" src="js/login.js"></script>
+
     </head>
     <body>
         <nav id="navbarid" class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
@@ -24,10 +21,10 @@
                 <div class="collapse navbar-collapse" id="navbar-buttons" ng-controller="headerController">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="" class="btn btn-primary" ng-click="clickToOpenSignIn()" >Sign In</a>
+                            <a href="" class="btn signin-btn" ng-click="clickToOpenSignIn()" >Sign In</a>
                         </li>
                         <li>
-                            <a href="" class="btn btn-primary" ng-click="clickToOpenSignUp()" >Sign Up</a>
+                            <a href="" class="btn signup-btn" ng-click="clickToOpenSignUp()" >Sign Up</a>
                         </li>
                     </ul>
 
@@ -59,22 +56,25 @@
         </script>
 
         <script type="text/ng-template" id="signUp">
-            <div class="ngdialog-content">
+            <div class="ngdialog-content" ng-controller="userController as userCtrl">
                 <form name="userForm">
                     <h4>Sign In</h4>
                     <fieldset class="form-group">
                         <input ng-minlength=4 class="form-control" placeholder="Name"
-                               title="Name"/>
+                               title="Name" ng-model="userCtrl.user.Name" required/>
                         <input ng-minlength=4 class="form-control" placeholder="Surname"
-                               title="Surname"/>
+                               title="Surname" ng-model="userCtrl.user.Surname" required/>
                         <input ng-minlength=4 class="form-control" placeholder="Username"
-                               title="Username"/>
+                               title="Username" ng-model="userCtrl.user.Username" required/>
                         <input ng-minlength=8 class="form-control" placeholder="Password"
-                               title="Password (Min. 8 characters)"/>
+                               title="Password (Min. 8 characters)" ng-model="userCtrl.user.Password" required/>
+                        <!--
                         <input ng-minlength=4 class="form-control" placeholder="Repeat Password"
-                               title="Repeat Password"/>
+                               title="Repeat Password" ng-model="userCtrl.user.Username" required/>
+                        -->
                         <input ng-minlength=4 class="form-control" placeholder="Email"
-                               title="Email"/>
+                               title="Email" ng-model="userCtrl.user.Email" required/>
+                        <!--
                         <div class="input-group-btn search-panel">
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown">
@@ -86,10 +86,11 @@
                                 <li><a href="#">Professional</a></li>
                             </ul>
                         </div>
+                        -->
                     </fieldset>
                 </form>
                 <div class="ngdialog-buttons mt">
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
+                    <button type="submit" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
                 </div>
             </div>
         </script>
@@ -99,5 +100,9 @@
 
             </div>
         </nav>
+        <script type="text/javascript" src="resources/angular/angular.min.js"></script>
+        <script type="text/javascript" src="resources/angular-resource/angular-resource.js"></script>
+        <script type="text/javascript" src="../node_modules/ng-dialog/js/ngDialog.js"></script>
+        <script type="text/javascript" src="login/js/login.js"></script>
     </body>
 </html>

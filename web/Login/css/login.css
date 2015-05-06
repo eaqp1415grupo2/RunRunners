@@ -14,5 +14,63 @@ body{
     background-size: cover;
 }
 
+.signin-btn {
+    background: #0DE0FC;
+    background-image: -webkit-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -moz-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -ms-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -o-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: linear-gradient(to bottom, #0DE0FC, #1F8DFF);
+    -webkit-border-radius: 1%;
+    -moz-border-radius: 1%;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 7px 15px 7px 15px;
+    border: none #0DE0FC  1px;
+    text-decoration: none;
+}
+
+.signin-btn:hover {
+    background: #0DE0FC;
+    background-image: -webkit-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -moz-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -ms-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: -o-linear-gradient(top, #0DE0FC, #1F8DFF);
+    background-image: linear-gradient(to bottom, #0DE0FC, #1F8DFF);
+    text-decoration: none;
+}
+
+.signup-btn {
+    background: #38FC48;
+    background-image: -webkit-linear-gradient(top, #38FC48, #15FF39);
+    background-image: -moz-linear-gradient(top,#38FC48, #15FF39);
+    background-image: -ms-linear-gradient(top, #38FC48, #15FF39);
+    background-image: -o-linear-gradient(top, #38FC48, #15FF39);
+    background-image: linear-gradient(to bottom, #38FC48, #15FF39);
+    -webkit-border-radius: 1%;
+    -moz-border-radius: 1%;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 7px 15px 7px 15px;
+    border: none #0DE0FC  1px;
+    text-decoration: none;
+}
+
+.signup-btn:hover {
+    background: #38FC48;
+    background-image: -webkit-linear-gradient(top, #38FC48, #15FF39);
+    background-image: -moz-linear-gradient(top,#38FC48, #15FF39);
+    background-image: -ms-linear-gradient(top, #38FC48, #15FF39);
+    background-image: -o-linear-gradient(top, #38FC48, #15FF39);
+    background-image: linear-gradient(to bottom, #38FC48, #15FF39);
+    text-decoration: none;
+}
+
+.navbar-default .navbar-brand{
+    color:#ffffff;
+    font-size:20px;
+}
 
 

@@ -5,3 +5,14 @@
 .ng-valid.ng-dirty {
     border-color: green;
 }
+
+body{
+    background: url(../image/imagenmenuprincipal.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+

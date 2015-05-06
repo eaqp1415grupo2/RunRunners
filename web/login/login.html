@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog.css">
         <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-theme-default.css">
+        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-theme-plain.css">
+        <link rel="stylesheet" href="../resources/ngDialog/css/ngDialog-custom-width.css">
         <link rel="stylesheet" href="css/login.css">
 
         <script type="text/javascript" src="../resources/angular/angular.min.js"></script>
@@ -20,13 +22,13 @@
                 <div class="navbar-header">
                     <a id="home" class="navbar-brand">RunRunners</a>
                 </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" ng-controller="headerController">
+                <div class="collapse navbar-collapse" id="navbar-buttons" ng-controller="headerController">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="#" ng-click="clickToOpenSignIn()" class="btn btn-primary">Sign In</a>
+                            <a href="" class="btn btn-primary" ng-click="clickToOpenSignIn()" >Sign In</a>
                         </li>
                         <li>
-                            <a href="#" ng-click="clickToOpenSignUp()" class="btn btn-primary">Sign Up</a>
+                            <a href="" class="btn btn-primary" ng-click="clickToOpenSignUp()" >Sign Up</a>
                         </li>
                     </ul>
 
@@ -35,21 +37,71 @@
         </nav>
 
         <div id="homepg" class="container">
-        <div class="row well">
-            <div class="page-header">
-                <div class="col-sm-2"></div>
-                <h1>Users List</h1>
-            </div>
+            <div class="row well">
 
-            <div class="row" ng-controller="userController as userCtrl">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-6">
-                    <section class="tab" ng-controller="TabController as tab">
-
-                    </section>
-                </div>
             </div>
         </div>
-    </div>
+
+        <script type="text/ng-template" id="signIn">
+            <div id="ngdialogSignIn" class="ngdialog ngdialog-theme-default ng-scope" ng-controller="headerController">
+                <div class="ngdialog-overlay"></div>
+                <div class="ngdialog-content">
+                    <form name="userForm">
+                        <h4>Sign In</h4>
+                        <fieldset class="form-group">
+                            <input ng-minlength=4 class="form-control" placeholder="Username"
+                                   title="Username"/>
+                            <input ng-minlength=4 class="form-control" placeholder="Password"
+                                   title="Password"/>
+                        </fieldset>
+                    </form>
+                    <div class="ngdialog-buttons mt">
+                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Sign In</button>
+                    </div>
+                    <div class="ngdialog-close"></div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="signUp">
+            <div id="ngdialogSignUp" class="ngdialog ngdialog-theme-default ng-scope" ng-controller="headerController">
+                <div class="ngdialog-overlay"></div>
+                <div class="ngdialog-content">
+                    <form name="userForm">
+                        <h4>Sign In</h4>
+                        <fieldset class="form-group">
+                            <input ng-minlength=4 class="form-control" placeholder="Name"
+                                   title="Name"/>
+                            <input ng-minlength=4 class="form-control" placeholder="Surname"
+                                   title="Surname"/>
+                            <input ng-minlength=4 class="form-control" placeholder="Username"
+                                   title="Username"/>
+                            <input ng-minlength=8 class="form-control" placeholder="Password"
+                                   title="Password (Min. 8 characters)"/>
+                            <input ng-minlength=4 class="form-control" placeholder="Repeat Password"
+                                   title="Repeat Password"/>
+                            <input ng-minlength=4 class="form-control" placeholder="Email"
+                                   title="Email"/>
+                            <div class="input-group-btn search-panel">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span >Level</span> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Beginner</a></li>
+                                    <li><a href="#">Initiated</a></li>
+                                    <li><a href="#">Professional</a></li>
+                                </ul>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <div class="ngdialog-buttons mt">
+                        <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
+                    </div>
+                    <div class="ngdialog-close"></div>
+                </div>
+            </div>
+        </script>
+
     </body>
 </html>

@@ -28,15 +28,7 @@ app.controller('userController', ['$http', function ($http){
     var user = {};
     loginRunRunners.users = [];
 
-    $http.get('http://localhost:3000/user').success(function (data) {
-        loginRunRunners.users = data;
-    }).
-        error(function(data) {
-            window.alert("ERROR - Fallo al realizar el GET");
-        });
-
     this.addUser = function(){
-        console.log(user);
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',

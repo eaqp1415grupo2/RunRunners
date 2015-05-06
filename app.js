@@ -21,7 +21,7 @@ app.get('/wall', function(req, res) {
 app.get('/profile', function(req, res) {
   res.sendfile('./web/profile/profile.html');});
 
-app.get('/login', function(req, res) {
+app.get('/', function(req, res) {
   res.sendfile('./web/login/login.html');});
 app.get('/RacesDone', function(req, res) {
     res.sendfile('./web/profile/RacesDone.html');});

@@ -4,10 +4,10 @@
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <title>Login-RunRunners</title>
 
-        <link rel="stylesheet" href="resources/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog.css">
-        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog-theme-default.css">
-        <link rel="stylesheet" href="../node_modules/ng-dialog/css/ngDialog-theme-plain.css">
+        <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="login/css/ngDialog.min.css">
+        <link rel="stylesheet" href="login/css/ngDialog-theme-default.min.css">
+        <link rel="stylesheet" href="login/css/ngDialog-theme-plain.min.css">
         <link rel="stylesheet" href="login/css/login.css">
 
 
@@ -33,9 +33,7 @@
         </nav>
 
         <div id="homepg" class="container">
-            <div class="row well">
 
-            </div>
         </div>
 
         <script type="text/ng-template" id="signIn">
@@ -57,8 +55,8 @@
 
         <script type="text/ng-template" id="signUp">
             <div class="ngdialog-content" ng-controller="userController as userCtrl">
-                <form name="userForm">
-                    <h4>Sign In</h4>
+                <form name="userForm" ng-submit="userForm.$valid && userCtrl.addUser()" novalidate>
+                    <h4>Create user</h4>
                     <fieldset class="form-group">
                         <input ng-minlength=4 class="form-control" placeholder="Name"
                                title="Name" ng-model="userCtrl.user.Name" required/>
@@ -66,14 +64,14 @@
                                title="Surname" ng-model="userCtrl.user.Surname" required/>
                         <input ng-minlength=4 class="form-control" placeholder="Username"
                                title="Username" ng-model="userCtrl.user.Username" required/>
-                        <input ng-minlength=8 class="form-control" placeholder="Password"
-                               title="Password (Min. 8 characters)" ng-model="userCtrl.user.Password" required/>
+                        <input ng-minlength=8 class="form-control" placeholder="Password  (Min. 8 characters)"
+                               title="Password" ng-model="userCtrl.user.Password" type="password" required/>
                         <!--
                         <input ng-minlength=4 class="form-control" placeholder="Repeat Password"
                                title="Repeat Password" ng-model="userCtrl.user.Username" required/>
                         -->
                         <input ng-minlength=4 class="form-control" placeholder="Email"
-                               title="Email" ng-model="userCtrl.user.Email" required/>
+                               title="Email" type="email" ng-model="userCtrl.user.Email" required/>
                         <!--
                         <div class="input-group-btn search-panel">
                             <button type="button" class="btn btn-default dropdown-toggle"
@@ -88,10 +86,11 @@
                         </div>
                         -->
                     </fieldset>
+                    <fieldset class="form-group">
+                        <input type="submit" class="btn btn-primary pull-right"  value="Create user"/>
+                    </fieldset>
                 </form>
-                <div class="ngdialog-buttons mt">
-                    <button type="submit" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Create</button>
-                </div>
+
             </div>
         </script>
         <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation" ng-controller="footerController">
@@ -100,9 +99,9 @@
 
             </div>
         </nav>
-        <script type="text/javascript" src="resources/angular/angular.min.js"></script>
-        <script type="text/javascript" src="resources/angular-resource/angular-resource.js"></script>
-        <script type="text/javascript" src="../node_modules/ng-dialog/js/ngDialog.js"></script>
+        <script type="text/javascript" src="../resources/angular/angular.min.js"></script>
+        <script type="text/javascript" src="../resources/angular-resource/angular-resource.js"></script>
+        <script type="text/javascript" src="login/js/ngDialog.js"></script>
         <script type="text/javascript" src="login/js/login.js"></script>
     </body>
 </html>

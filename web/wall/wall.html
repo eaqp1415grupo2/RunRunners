@@ -26,24 +26,21 @@
     
   <div class="container-fluid">
      <div class="row">
-        <div class="col-md-3" ng-controller="groupController">
+        <div class="col-md-4">
              <p class="title-block center">Grupos</p>
-             <div id="class" ng-repeat="group in groups ">
-                <a href="" ng-click="getGroupMessages($event,group.id)"><h3>{{group.name+' id:'+group.id}}</h3></a>
+             <div id="class" ng-repeat="group in groups | orderBy : 'name'">
+                <h3>{{groupList.name}}</h3>
              </div>
         </div>  
         
-        <div class="col-md-5" ng-controller="messageController">
+        <div class="col-md-4">
              <p class="title-block center">Mensajes</p>
-             <div id="messages_block" ng-repeat="message in messages ">
-                <p><h4>{{message.username+' dice:'}}</h4><h3>{{message.text}}</h3> </p>
-             </div>
         </div>
     
         <div class="col-md-4" ng-controller="mapController">
              <p class="title-block center">Carreras en la Ciudad <input  type="text" ng-model="racefilter"></p>        
              <div id="class" ng-repeat="race in races | orderBy : 'title'| filter:racefilter">
-                 <a href="" ng-click="openInfoWindow($event, race)"><h3>{{race.name}}</h3></a>
+                 <a href="#" ng-click="openInfoWindow($event, race)"><h3>{{race.name}}</h3></a>
              <p><h5>{{race.distance+ ' km'}}</h5></p>
              </div>
         </div>

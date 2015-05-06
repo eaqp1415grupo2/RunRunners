@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var RaceSchema = new Schema({
-    RaceID: {type: Schema.ObjectId, ref: 'Races'},
+    _id: {type: Schema.ObjectId, ref: 'Races'},
     State: {type: String, enum: ['Done','Pending']},
     Data: {
         Time: {type: Number},

@@ -2,7 +2,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 var User = new Schema({UserID: {type: Schema.ObjectId, ref: 'User'}});
 
-var Race = new Schema({Race: {type: String}});
+var Race = new Schema({
+    _id: {type: Schema.ObjectId, ref: 'Races'},
+    State: {type: String, enum: ['Done','Pending']}
+});
 
 var Message = new Schema({
     UserID: {type: Schema.ObjectId, ref: 'User'},
@@ -22,8 +25,7 @@ var groupSchema = new Schema({
     },
     Admin_Group: {type: String},
     Users: [User],
-    RacesDone: [Race],
-    RacesPending: [Race],
+    Races: [Race],
     Messages: [Message]
 }, {versionKey: false});
 

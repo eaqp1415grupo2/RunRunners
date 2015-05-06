@@ -6,10 +6,15 @@ module.exports = function (app) {
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
         Race.find(function (err, races) {
-            if (!err) {
-                res.send(races);
+            if (!races) {
+                res.send(404, "There are no races")
             } else {
-                console.log('ERROR: ' + err);
+                if (!err) {
+                    res.send(200, races);
+                } else {
+                    res.send(500, "Mongo Error");
+                    console.log('ERROR: ' + err);
+                }
             }
         });
     };
@@ -22,8 +27,8 @@ module.exports = function (app) {
             ltdMax;
         User.findById(req.params.id, function (err, user) {
             if (!user) {
-                res.statusCode = 404;
-                res.send({error: 'No se encuentra este nombre de usuario, revise la petici�n'});
+
+                res.send(404, 'No se encuentra este nombre de usuario, revise la petici�n');
             }
             if (!err) {
                 lngMin = user.locationIni.Lng - 0.0015083; // - 10 km
@@ -55,15 +60,21 @@ module.exports = function (app) {
     //GET - Return all races in the DB by ID_Race
     findRaceByID = function (req, res) {
         Race.findOne({_id: req.params.id}, function (err, race) {
-            if (!err) {
-                res.send(race);
+            if (!race) {
+                res.send(404, "Race not found");
             } else {
-                console.log('ERROR: ' + err);
+                if (!err) {
+                    res.send(200, race);
+                } else {
+                    res.send(500, "Mongo Error");
+                    console.log('ERROR: ' + err);
+                }
             }
         });
     };
 
-    //POST - Insert a new Race in the DB
+
+//POST - Insert a new Race in the DB
     createRace = function (req, res) {
         var race = new Race({
             Name: req.body.Name,
@@ -78,47 +89,53 @@ module.exports = function (app) {
             if (!err) {
                 console.log('Created');
             } else {
+                res.send(500, "Mongo Error");
                 console.log('ERROR: ' + err);
             }
         });
 
-        res.send(race);
+        res.send(200, race);
     };
 
-    //PUT - Update a register already exists
+//PUT - Update a register already exists
     updateRace = function (req, res) {
         Race.findById(req.params.id, function (err, race) {
-            race.Name = req.body.Name;
-            race.Level = req.body.Level;
-            race.LocationIni = req.body.LocationIni;
-            race.Distance = req.body.Distance;
-            race.Type = req.body.Type;
-            race.Tags = req.body.Tags;
-            race.Users = req.body.Users;
-            race.Messages = req.body.Messages;
-            race.Tour = req.body.Tour;
+            if (!race) {
+                res.send(404, "Race not found");
+            } else {
+                race.Name = req.body.Name;
+                race.Level = req.body.Level;
+                race.LocationIni = req.body.LocationIni;
+                race.Distance = req.body.Distance;
+                race.Type = req.body.Type;
+                race.Tags = req.body.Tags;
+                race.Users = req.body.Users;
+                race.Messages = req.body.Messages;
+                race.Tour = req.body.Tour;
 
-            race.save(function (err) {
-                if (!err) {
-                    console.log('Updated');
-                } else {
-                    console.log('ERROR: ' + err);
-                }
-                res.send(race);
-            });
+                race.save(function (err) {
+                    if (!err) {
+                        console.log('Updated');
+                    } else {
+                        res.send(500, "Mongo Error");
+                        console.log('ERROR: ' + err);
+                    }
+                    res.send(200, race);
+                });
+            }
         });
     };
 
-    //DELETE - Delete a TVShow with specified ID
+//DELETE - Delete a TVShow with specified ID
     deleteRace = function (req, res) {
         Race.findById(req.params.id, function (err, race) {
             race.remove(function (err) {
                 if (!err) {
                     console.log('Removed');
-                    return res.send({status: 'OK'});
+                    res.send(200, 'Race Removed');
                 } else {
                     console.log('ERROR: ' + err);
-                    return res.send({error: 'Server error'});
+                    res.send(500, "Mongo Error");
                 }
             })
         });
@@ -126,14 +143,14 @@ module.exports = function (app) {
 
     addUser = function (req, res) {
         var id = req.body._id;
-        Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
-            console.log(id);
-            console.log(users);
-            if (!err && users == null) {
-                Race.findOne({_id: req.params.id}, function (error, race) {
-                    if (!race) {
-                        res.send(404, 'Race not found');
-                    } else {
+        Race.findOne({_id: req.params.id}, function (error, race) {
+            if (!race) {
+                res.send(404, 'Race not found');
+            } else {
+                Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
+                    console.log(id);
+                    console.log(users);
+                    if (!err && users == null) {
                         race.Users.push(id);
                         race.save(function (err) {
                             if (!err) {
@@ -144,11 +161,11 @@ module.exports = function (app) {
                             res.send(200, race);
 
                         });
+                    } else {
+                        res.send(400, 'This user is in the race already');
                     }
 
                 });
-            } else {
-                res.send(400, 'This user is in the race already');
             }
         });
 
@@ -162,13 +179,13 @@ module.exports = function (app) {
                 if (err) console.log("Error: " + err);
                 else console.log("User Inserted in Group");
             });
-            res.send(message);
+            res.send(200, message);
         });
 
     };
 
 
-    //Link routes and functions
+//Link routes and functions
     app.get('/race', findAllRaces);
     app.get('/user/:id/race', findRaceByVicinity);
     app.get('/race/:id', findRaceByID);

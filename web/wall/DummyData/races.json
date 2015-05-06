@@ -19,7 +19,7 @@
         "long" : 2.168205,
         "distance": 5,
         "type": "urbana",
-        "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
+        "desc" : "Carrera dede C/ - Girona fins Pl. "
     },
             {
         "id": 3, 
@@ -30,6 +30,6 @@
         "long" : 2.168265,
         "distance": 7,
         "type": "urbana",
-        "desc" : "Carrera dede C/ Valencia - Girona fins Pl. Glories"
+        "desc" : "Carrera dede C - Girona fins Pl."
     }
 ]

@@ -14,7 +14,7 @@ module.exports = function (app) {
     };
 
     findRaceByVicinity = function(req, res) {
-        var userreq,
+        var userrequest,
             lngMin,
             lngMax,
             ltdMin,
@@ -29,7 +29,7 @@ module.exports = function (app) {
                 lngMax = user.locationIni.Lng + 0.0015083; // + 10 km
                 ltdMin = user.locationIni.Ltd - 0.0015083; // - 10 km
                 ltdMax = user.locationIni.Ltd + 0.0015083; // + 10 km
-                userreq = user;
+                userrequest = user;
             } else {
                 res.statusCode = 500;
                 console.log('Internal error(%d): %s',res.statusCode,err.message);
@@ -37,7 +37,7 @@ module.exports = function (app) {
             }
         });
         var query = Race.find()
-            .where({'userreq.locationIni.Lng': {'gte': lngMin, 'lte':lngMax},'userreq.locationIni.Ltd': {'gte': ltdMin, 'lte':ltdMax}})
+            .where({'userrequest.locationIni.Lng': {'gte': lngMin, 'lte':lngMax},'userrequest.locationIni.Ltd': {'gte': ltdMin, 'lte':ltdMax}})
             .limit(50)
             .exec(function(err, races) {
                 if(!err) {

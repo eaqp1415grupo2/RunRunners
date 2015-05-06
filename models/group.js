@@ -1,8 +1,15 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-var User = new Schema({Username: {type:String}});
-var Race = new Schema({Race: {type:String}});
-var Message = new Schema({Username: {type:String}, Message: {type:String}});
+var User = new Schema({UserID: {type: Schema.ObjectId, ref: 'User'}});
+
+var Race = new Schema({Race: {type: String}});
+
+var Message = new Schema({
+    UserID: {type: Schema.ObjectId, ref: 'User'},
+    Text: {type: String},
+    Answers: [{UserID: {type: Schema.ObjectId, ref: 'User'}},
+        {Answer: {type: String}}]
+});
 var groupSchema = new Schema({
     Name: {type: String},
     Info: {type: String},
@@ -15,9 +22,9 @@ var groupSchema = new Schema({
     },
     Admin_Group: {type: String},
     Users: [User],
-    RacesDone:[Race],
+    RacesDone: [Race],
     RacesPending: [Race],
     Messages: [Message]
-},{versionKey: false});
+}, {versionKey: false});
 
 module.exports = mongoose.model('Group', groupSchema);

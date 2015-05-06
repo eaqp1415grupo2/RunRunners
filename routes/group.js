@@ -1,6 +1,9 @@
 module.exports = function (app) {
 
-    var Group = require('../models/group.js');
+
+    var User  = require('../models/user.js');
+    var Groups = require('../models/group.js');
+    var Races = require('../models/race.js');
 
     findAllGroups = function (req, res) {
         Group.find(function (err, group) {
@@ -17,40 +20,44 @@ module.exports = function (app) {
     };
 
     createGroup = function (req, res) {
-        // if (Group.findOne({"Name": req.body.Name}) == null) {
-        var group = new Group({
-            Name: req.body.Name,
-            Info: req.body.Info,
-            Level: req.body.Level,
-            Location: req.body.Location,
-            Admin_Group: req.body.Admin_Group,
-            Users: [{Username: req.body.Admin_Group}]
+        Group.findOne({'Name': req.body.Name}, function (err, grupo) {
+            console.log(grupo);
+            if (grupo == null) {
+                var group = new Group({
+                    Name: req.body.Name,
+                    Info: req.body.Info,
+                    Level: req.body.Level,
+                    Location: req.body.Location,
+                    Admin_Group: req.body.Admin_Group,
+                    Users: [{Username: req.body.Admin_Group}]
+                });
+                console.log(group);
+                group.save(function (error) {
+                    if (error) console.log("Error: " + error);
+                    else console.log("Group Created");
+                });
+                res.send(group);
+            }
+            else {
+                res.send(500, "There is already a group with this name");
+            }
         });
-        console.log(group);
-        group.save(function (err) {
-            if (err) console.log("Error: " + err);
-            else console.log("Group Created");
-        });
-        res.send(group);
-        //}
-        //else console.log("There is already a group with this name");
     };
 
     addUser = function (req, res) {
-        console.log(req.params.name);
+        Group.find({'Name': req.params.name}, {'Users':[{'Username':req.body.username}]}, function (err, user) {
+            console.log(user);
+            if (user == undefined) {
+                user.Users.push(req.body);
+                // else console.log("Something wrong with: " + req.body);
+                user.save(function (err) {
+                    if (err) console.log("Error: " + err);
+                    else console.log("User Inserted in Group");
+                });
+                res.send(user);
+            }
 
-        Group.findOne({"Name": req.params.name}, function (err, user) {
-            console.log(req.body);
-            // if (Group.findOne({"Users.Username": req.body.Username}) == null) {
-            if (req.body.Username != null) user.Users.push(req.body);
-            else console.log("Something wrong with: " + req.body);
-            user.save(function (err) {
-                if (err) console.log("Error: " + err);
-                else console.log("User Inserted in Group");
-            });
-            res.send(user);
-            //  }
-            // else console.log("This User is inside this group already");
+            else    res.send(500, "This User is inside this group already");
         });
 
     };
@@ -66,7 +73,7 @@ module.exports = function (app) {
                 });
                 res.send(race);
             }
-            else console.log("This Race is already in this group");
+            else res.send(500, "This Race is already in this group");
         });
     };
 
@@ -84,11 +91,61 @@ module.exports = function (app) {
         });
     };
 
+    updateGroup = function (req, res) {
+        Group.findOne({"Name": req.params.name}, function (err, group) {
+            if (req.body.Name != null) group.Name = req.body.Name;
+            if (req.body.Info != null) group.Info = req.body.Info;
+            if (req.body.Level != null) group.Level = req.body.Level;
+            if (req.body.Location != null) group.Location = req.body.Location;
+            if (req.body.Admin_Group != null) group.Admin_Group = req.body.Admin_Group;
+            group.save(function (error) {
+                if (error) console.log("Error: " + error);
+                else console.log("Group Updated");
+            });
+
+            res.send(group);
+        });
+    };
+
+    deleteGroup = function (req, res) {
+        Group.findOne({"Name": req.params.name}, function (err, group) {
+            group.remove(function (err) {
+                if (err) res.send(500, "Error: " + err);
+                else res.send(200);
+            });
+        });
+    };
+
+    deleteRace = function (req, res) {
+        Group.findOne({"Name": req.params.name}, function (err, group) {
+            group.remove({" RacesPending.Race": req.body.Race}, function (err) {
+                if (err) res.send(500, "Error: " + err);
+                else res.send(200);
+            });
+        });
+    };
+
+    deleteUser = function (req, res) {
+        console.log("entro");
+        Group.findOne({"Name": req.params.name}, function (err, group) {
+
+            console.log(group.Users.User33._id);
+            group.save(function (err) {
+                console.log(err + "He entrado");
+                if (err) res.send(500, "Error: " + err);
+                else res.send(200);
+            });
+        });
+    };
+
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
     app.post('/groups', createGroup);
     app.put('/groups/:name/user', addUser);
     app.put('/groups/:name/race', addRace);
     app.put('/groups/:name/message', addMessage);
-
+    app.put('/groups/:name', updateGroup);
+    app.delete('/groups/:name', deleteGroup);
+    app.delete('/groups/:name/user', deleteUser);
+    app.delete('/groups/:name/race', deleteRace);
 };

@@ -27,8 +27,8 @@ app.get('/login', function(req, res) {
 
 
 routes = require('./routes/race')(app);
-routes2 = require('./routes/userRace')(app);
-routes3 = require('./routes/group')(app);
+routes2 = require('./routes/group')(app);
+routes3 = require('./routes/users')(app);
 
 mongoose.connect('mongodb://localhost/race', function(err, res) {
     if(err) {

@@ -22,7 +22,7 @@ module.exports = function (app) {
         User.findById(req.params.id, function(err, user){
             if(!user) {
                 res.statusCode = 404;
-                return res.send({ error: 'No se encuentra este nombre de usuario, revise la petición' });
+                 res.send({ error: 'No se encuentra este nombre de usuario, revise la peticiï¿½n' });
             }
             if(!err) {
                 lngMin = user.locationIni.Lng - 0.0015083; // - 10 km
@@ -33,7 +33,7 @@ module.exports = function (app) {
             } else {
                 res.statusCode = 500;
                 console.log('Internal error(%d): %s',res.statusCode,err.message);
-                return res.send({ error: 'Server error' });
+                 res.send({ error: 'Server error' });
             }
         });
         var query = Race.find()

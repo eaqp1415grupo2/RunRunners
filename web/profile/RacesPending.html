@@ -36,7 +36,7 @@
             src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="profile/jquery.js"></script>
     <script src="profile/jquery-1.10.2.min.js"></script>
-    <script src="profile/profile.js"></script>
+    <script src="profile/js/profile.js"></script>
     <style type="text/css">
         #map {
             width: 500px;
@@ -49,6 +49,15 @@
             width: 532px;
             height: 300px;
         <!--right: -500px;-->
+        }
+        span{
+
+            position:relative;
+            width:100px;
+            height:100px;
+            left:15px;
+            top:30px;
+            color: black;
         }
     </style>
 </head>
@@ -90,14 +99,10 @@
         <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview</a></li>
             <img src="profile/Images/deportistas.png"  class="img-rounded"/>
-            <!-- <p align="center">David Perez</p>-->
             <br>
-            <br>
-            <li><a href="#"  id="name"> </a></li>
-            <li><a href="#"  id="nameuser"> </a></li>
-            <li><a href="#"  id="email"> </a></li>
-            <li><a href="#"  id="level"> </a></li>
-            <li><a align="left"; href="/profile">Dashboard</a></li>
+            <span  id="get_result"></span>
+            <br><br>
+            <li><a href="/profile">Dashboard</a></li>
             <li><a href="/RacesDone">Races Done</a></li>
             <li><a href="/RacesPending">Races Pending</a></li>
         </ul>

@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 function Userdata() {
-    var url = 'http://localhost:3000/users/David';
+    var url = 'http://localhost:3000/user/David';
 
     console.log(url);
 
@@ -22,13 +22,15 @@ function Userdata() {
         var listausers = data;
         console.log(listausers);
 
+        console.log(listausers.Name);
+        $('<a href="#"  style="color: #00FF00"><strong> Username: </strong></a>' + listausers.Username + '<br>' ).appendTo($('#get_result'));
+        $('<a href="#"  style="color: #00FF00"><strong> Name: </strong></a>' + listausers.Name + '<br>').appendTo($('#get_result'));
+        $('<a href="#"  style="color: #00FF00"><strong> Email: </strong></a>' + listausers.Email + '<br>').appendTo($('#get_result'));
+        $('<a href="#"  style="color: #00FF00"><strong> Level: </strong></a>' + listausers.Level + '<br>').appendTo($('#get_result'));
 
 
 
 
-        $('<a href="#"  style="color: #00FF00"><strong> Name: </strong></a>' + listausers.name + '<br>').appendTo($('#name'));
-        //$('<a href="#"  style="color: #00FF00"><strong> Email: </strong></a>' + listausers.email + '<br>').appendTo($('#emailofuser'));
-        //$('<a href="#"  style="color: #00FF00"><strong> Description: </strong></a>' + listausers.description + '<br>').appendTo($('#descriptionofuser'));
 
 
 

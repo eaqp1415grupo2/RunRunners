@@ -23,7 +23,7 @@ function Userdata() {
         console.log(listausers);
 
         console.log(listausers.Name);
-        $('<a href="#"  style="color: #00FF00"><strong> Username: </strong></a>' + listausers.Username + '<br>').appendTo($('#name'));
+        $('<a href="#"  style="color: #00FF00"><strong> Username: </strong></a>' + listausers.Username + '<br>' ).appendTo($('#name'));
         $('<a href="#"  style="color: #00FF00"><strong> Name: </strong></a>' + listausers.Name + '<br>').appendTo($('#nameuser'));
         $('<a href="#"  style="color: #00FF00"><strong> Email: </strong></a>' + listausers.Email + '<br>').appendTo($('#email'));
         $('<a href="#"  style="color: #00FF00"><strong> Level: </strong></a>' + listausers.Level + '<br>').appendTo($('#level'));

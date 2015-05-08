@@ -34,7 +34,7 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
-            url: "http://localhost:3000/user",
+            url: "http://147.83.7.203:3000/user",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
@@ -47,7 +47,7 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
 
     this.loginUser = function(){
         var url;
-        url = "http://localhost:3000/user/" + this.user.Username;
+        url = "http://147.83.7.203:3000/user/" + this.user.Username;
         console.log("get");
         console.log(url);
         $http.get(url).success(function (data) {

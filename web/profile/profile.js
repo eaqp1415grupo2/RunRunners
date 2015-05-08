@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 function Userdata() {
-    var url = 'http://localhost:3000/user/David';
+    var url = 'http://147.83.7.203:3000/user/David';
 
     console.log(url);
 

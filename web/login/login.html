@@ -37,25 +37,25 @@
         </div>
 
         <script type="text/ng-template" id="signIn">
-            <div class="ngdialog-content">
-                <form name="userForm">
+            <div class="ngdialog-content" ng-controller="userController as userCtrl">
+                <form name="userFormSignIn" ng-submit="userFormSignIn.$valid && userCtrl.loginUser()" novalidate>
                     <h4>Sign In</h4>
                     <fieldset class="form-group">
                         <input ng-minlength=4 class="form-control" placeholder="Username"
-                               title="Username"/>
+                               title="Username" ng-model="userCtrl.user.Username" required/>
                         <input ng-minlength=8 class="form-control" placeholder="Password"
-                               title="Password"/>
+                               title="Password" ng-model="userCtrl.user.Password" type="password" required/>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <input type="submit" class="btn btn-primary pull-right"  value="Sign In"/>
                     </fieldset>
                 </form>
-                <div class="ngdialog-buttons mt">
-                    <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click="closeThisDialog()">Sign In</button>
-                </div>
             </div>
         </script>
 
         <script type="text/ng-template" id="signUp">
             <div class="ngdialog-content" ng-controller="userController as userCtrl">
-                <form name="userForm" ng-submit="userForm.$valid && userCtrl.addUser()" novalidate>
+                <form name="userFormSignUp" ng-submit="userFormSignUp.$valid && userCtrl.addUser()" novalidate>
                     <h4>Create user</h4>
                     <fieldset class="form-group">
                         <input ng-minlength=4 class="form-control" placeholder="Name"
@@ -90,7 +90,6 @@
                         <input type="submit" class="btn btn-primary pull-right"  value="Create user"/>
                     </fieldset>
                 </form>
-
             </div>
         </script>
         <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation" ng-controller="footerController">

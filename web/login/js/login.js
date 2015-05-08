@@ -23,12 +23,14 @@ app.controller('headerController', function($scope, ngDialog){
     };
 });
 
-app.controller('userController', ['$http', function ($http){
+
+
+app.controller('userController', ['$http', '$scope', function ($http, $scope){
     var loginRunRunners = this;
     var user = {};
     loginRunRunners.users = [];
-
-    this.addUser = function(){
+    console.log("controller");
+    this.addUser = function($location){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
@@ -36,12 +38,28 @@ app.controller('userController', ['$http', function ($http){
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
+            console.log("post");
         }).error(function(data) {
             window.alert("ERROR - Fallo al realizar el POST");
         });
         this.user = {};
     };
 
+    this.loginUser = function(){
+        var url;
+        url = "http://localhost:3000/user/" + this.user.Username;
+        console.log("get");
+        console.log(url);
+        $http.get(url).success(function (data) {
+            loginRunRunners.users = data;
+            console.log(loginRunRunners.users);
+            console.log("success");
+            user = data;
+            console.log(user);
+        }).error(function(data) {
+            window.alert("ERROR - Fallo al realizar el GET");
+        });
+    };
 }]);
 
 app.controller('footerController', function($scope){});

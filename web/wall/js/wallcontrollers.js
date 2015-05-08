@@ -57,3 +57,31 @@ wallControllers.controller('mapController', function ($scope,$http,$log) {
     }
 
 });
+
+wallControllers.controller('groupController', function ($scope,$http,$log) {
+ 
+	 var config={
+	 method:"GET",
+	 url:"wall/DummyData/groups.json"	 
+	 }
+	 var response=$http(config);
+	 response.success(function (data, status, headers, config) {
+	 var groups=data;//?? al quitarlo no coloca los markers
+	 $scope.groups=data;
+//	 for (i = 0; i < races.length; i++){
+  //      createMarker(races[i]);}
+	 	});
+});
+
+wallControllers.controller('messageController', function ($scope,$http,$log) {
+ 
+	 var config={
+	 method:"GET",
+	 url:"wall/DummyData/messages.json"	 
+	 }
+	 var response=$http(config);
+	 response.success(function (data, status, headers, config) {
+	 var messages=data;//?? al quitarlo no coloca los markers
+	 $scope.messages=data;
+	 	});
+});

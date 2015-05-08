@@ -1,0 +1,32 @@
+[
+{
+id: 1,
+username:'albert',
+text:'Hola, Mensaje de prueba'
+
+},
+{
+id: 2,
+username:'albert',
+text:'Hola, Mensaje de prueba'
+
+},
+{
+id: 3,
+username:'albert',
+text:'Hola, Mensaje de prueba'
+
+},
+{
+id: 4,
+username:'albert',
+text:'Hola, Mensaje de prueba'
+
+},
+{
+id: 5,
+username:'albert',
+text:'Hola, Mensaje de prueba'
+
+}
+]

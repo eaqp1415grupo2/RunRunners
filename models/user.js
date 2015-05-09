@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var RaceSchema = new Schema({
     _id: {type: Schema.ObjectId, ref: 'Races'},
+    Race: {type: String},
     State: {type: String, enum: ['Done','Pending']},
     Data: {
         Time: {type: Number},

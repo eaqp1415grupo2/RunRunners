@@ -17,11 +17,14 @@ var Users = new Schema({
 
 var Message = new Schema({
     UserID: {type: Schema.ObjectId, ref: 'User'},
+    Username: {type: String},
     Text: {type: String},
-    Answers: [{UserID: {type: Schema.ObjectId, ref: 'User'}},
-        {Answer: {type: String}}]
+    Answers: [{
+        UserID: {type: Schema.ObjectId, ref: 'User'},
+        Username: {type: String},
+        Answer: {type: String}
+    }]
 });
-
 var raceSchema = new Schema({
     Name: {type: String},
     Level: {type: String, enum: ['Beginner', 'Initiated', 'Professional']},

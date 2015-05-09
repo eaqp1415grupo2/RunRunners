@@ -1,17 +1,26 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-var User = new Schema({UserID: {type: Schema.ObjectId, ref: 'User'}});
+
+var User = new Schema({
+    _id: {type: Schema.ObjectId, ref: 'User'},
+    Username: {type: String}
+});
 
 var Race = new Schema({
     _id: {type: Schema.ObjectId, ref: 'Races'},
-    State: {type: String, enum: ['Done','Pending']}
+    Race: {type: String},
+    State: {type: String, enum: ['Done', 'Pending']}
 });
 
 var Message = new Schema({
     UserID: {type: Schema.ObjectId, ref: 'User'},
+    Username: {type: String},
     Text: {type: String},
-    Answers: [{UserID: {type: Schema.ObjectId, ref: 'User'}},
-        {Answer: {type: String}}]
+    Answers: [{
+        UserID: {type: Schema.ObjectId, ref: 'User'},
+        Username: {type: String},
+        Answer: {type: String}
+    }]
 });
 var groupSchema = new Schema({
     Name: {type: String},

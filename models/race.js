@@ -11,7 +11,8 @@ var Tags = new Schema({
 });
 
 var Users = new Schema({
-    _id: {type: Schema.ObjectId, ref: 'User'}
+    _id: {type: Schema.ObjectId, ref: 'User'},
+    Username: {type:String}
 });
 
 var Message = new Schema({

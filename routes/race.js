@@ -1,7 +1,7 @@
 module.exports = function (app) {
 
     var Race = require('../models/race.js');
-    var User = require('../models/user.js');
+    var Group = require('../models/user.js');
     var ObjectID = require('mongoose').ObjectID;
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
@@ -25,7 +25,7 @@ module.exports = function (app) {
             lngMax,
             ltdMin,
             ltdMax;
-        User.findById(req.params.id, function (err, user) {
+        Group.findById(req.params.id, function (err, user) {
             if (!user) {
 
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petici�n');
@@ -81,6 +81,7 @@ module.exports = function (app) {
             Level: req.body.Level,
             LocationIni: req.body.LocationIni,
             Distance: req.body.Distance,
+            Date: req.body.Date,
             Type: req.body.Type,
             Tags: req.body.Tags,
             Tour: req.body.Tour
@@ -148,27 +149,35 @@ module.exports = function (app) {
                 res.send(404, 'Race not found');
             } else {
                 Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
-                    console.log(id);
-                    console.log(users);
-                    if (!err && users == null) {
-                        race.Users.push(id);
-                        race.save(function (err) {
-                            if (!err) {
-                                console.log('Updated');
-                            } else {
-                                console.log('ERROR: ' + err);
-                            }
+                    Group.findOne({_id: id}, function (err, user) {
+                       // console.log(user);
+                        if (!err && users == null && user != null) {
+                            var racepush = ({_id: user._id, Username: user.Username});
+                            race.Users.push(racepush);
+                            race.save(function (err) {
+                                if (!err) {
+                                    console.log('Updated');
+                                } else {
+                                    console.log('ERROR: ' + err);
+                                }
+                            });
+                            var userpush = ({_id: race._id, Race: race.Name, State: 'Pending'});
+                            user.Races.push(userpush);
+                            user.save(function (err) {
+                                if (!err) {
+                                    console.log('Updated');
+                                } else {
+                                    console.log('ERROR: ' + err);
+                                }
+                            });
                             res.send(200, race);
-
-                        });
-                    } else {
-                        res.send(400, 'This user is in the race already');
-                    }
-
+                        } else {
+                            res.send(400, 'This user is in the race already');
+                        }
+                    })
                 });
             }
         });
-
     };
 
     addMessages = function (req, res) {

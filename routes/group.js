@@ -23,20 +23,33 @@ module.exports = function (app) {
         Group.findOne({'Name': req.body.Name}, function (err, grupo) {
             console.log(grupo);
             if (grupo == null) {
-                var group = new Group({
-                    Name: req.body.Name,
-                    Info: req.body.Info,
-                    Level: req.body.Level,
-                    Location: req.body.Location,
-                    Admin_Group: req.body.Admin_Group,
-                    Users: [{Username: req.body.Admin_Group}]
+                User.findOne({Username: req.body.Admin_Group}, function (err, user) {
+                    if (user == null) {
+                        res.send(404, "There is no User with this name");
+                    }
+                    else {
+                        var group = new Group({
+                            Name: req.body.Name,
+                            Info: req.body.Info,
+                            Level: req.body.Level,
+                            Location: req.body.Location,
+                            Admin_Group: user.Username,
+                            Users: [{_id: user._id, Username: user.Username}]
+                        });
+                        console.log(group);
+                        group.save(function (error) {
+                            if (error) console.log("Error: " + error);
+                            else console.log("Group Created");
+                        });
+                        var userpush = ({_id: group._id, Group: group.Name});
+                        user.Groups.push(userpush);
+                        user.save(function (err) {
+                            if (err) console.log("Error: " + err);
+                            else console.log("Updated");
+                        });
+                        res.send(group);
+                    }
                 });
-                console.log(group);
-                group.save(function (error) {
-                    if (error) console.log("Error: " + error);
-                    else console.log("Group Created");
-                });
-                res.send(group);
             }
             else {
                 res.send(500, "There is already a group with this name");
@@ -51,30 +64,36 @@ module.exports = function (app) {
                 res.send(404, 'Group not found');
             } else {
                 Group.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
-                    console.log(id);
-                    console.log(users);
-                    if (!err && users == null) {
-                        group.Users.push(id);
-                        group.save(function (err) {
-                            if (!err) {
-                                console.log('Updated');
-                            } else {
-                                res.send(500, "Mongo Error: "+ err);
-                                console.log('ERROR: ' + err);
-                            }
+                    User.findOne({_id: id}, function (err, user) {
+                        // console.log(user);
+                        if (!err && users == null && user != null) {
+                            var grouppush = ({_id: user._id, Username: user.Username});
+                            group.Users.push(grouppush);
+                            group.save(function (err) {
+                                if (!err) {
+                                    console.log('Updated');
+                                } else {
+                                    console.log('ERROR: ' + err);
+                                }
+                            });
+                            var userpush = ({_id: group._id, Group: group.Name});
+                            user.Groups.push(userpush);
+                            user.save(function (err) {
+                                if (!err) {
+                                    console.log('Updated');
+                                } else {
+                                    console.log('ERROR: ' + err);
+                                }
+                            });
                             res.send(200, group);
-
-                        });
-                    } else {
-                        res.send(400, 'This user is in the group already');
-                    }
-
+                        } else {
+                            res.send(400, 'This user is in the group already');
+                        }
+                    })
                 });
             }
         });
-
     };
-
 
     addRace = function (req, res) {
         var id = req.body._id;
@@ -106,7 +125,7 @@ module.exports = function (app) {
     };
 
     addMessage = function (req, res) {
-        Group.findOne({"Name": req.params.name}, function (err, message) {
+        Group.findOne({_id: req.params.id}, function (err, message) {
             if (req.body.Message != null && req.body.Username != null) {
                 message.Messages.push(req.body);
             }
@@ -136,7 +155,7 @@ module.exports = function (app) {
     };
 
     deleteGroup = function (req, res) {
-        Group.findOne({"Name": req.params.name}, function (err, group) {
+        Group.findOne({_id: req.params.id}, function (err, group) {
             group.remove(function (err) {
                 if (err) res.send(500, "Error: " + err);
                 else res.send(200);
@@ -145,7 +164,7 @@ module.exports = function (app) {
     };
 
     deleteRace = function (req, res) {
-        Group.findOne({"Name": req.params.name}, function (err, group) {
+        Group.findOne({_id: req.params.id}, function (err, group) {
             group.remove({" RacesPending.Race": req.body.Race}, function (err) {
                 if (err) res.send(500, "Error: " + err);
                 else res.send(200);
@@ -155,9 +174,8 @@ module.exports = function (app) {
 
     deleteUser = function (req, res) {
         console.log("entro");
-        Group.findOne({"Name": req.params.name}, function (err, group) {
+        Group.findOne({_id: req.params.id}, function (err, group) {
 
-            console.log(group.Users.User33._id);
             group.save(function (err) {
                 console.log(err + "He entrado");
                 if (err) res.send(500, "Error: " + err);
@@ -169,11 +187,11 @@ module.exports = function (app) {
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
     app.post('/groups', createGroup);
-    app.put('/groups/:name/user', addUser);
+    app.put('/groups/:id/user', addUser);
     app.put('/groups/:id/race', addRace);
-    app.put('/groups/:name/message', addMessage);
-    app.put('/groups/:name', updateGroup);
-    app.delete('/groups/:name', deleteGroup);
-    app.delete('/groups/:name/user', deleteUser);
-    app.delete('/groups/:name/race', deleteRace);
+    app.put('/groups/:id/message', addMessage);
+    app.put('/groups/:id', updateGroup);
+    app.delete('/groups/:idd', deleteGroup);
+    app.delete('/groups/:id/user', deleteUser);
+    app.delete('/groups/:id/race', deleteRace);
 };

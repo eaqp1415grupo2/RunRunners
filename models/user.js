@@ -12,7 +12,7 @@ var RaceSchema = new Schema({
 });
 
 var GroupSchema = new Schema({
-    _id: {type: Schema.ObjectId, ref:'Group'},
+    _id: {type: Schema.ObjectId, ref: 'Groups'},
     Group: {type: String}
 });
 

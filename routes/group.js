@@ -156,10 +156,22 @@ module.exports = function (app) {
 
     deleteGroup = function (req, res) {
         Group.findOne({_id: req.params.id}, function (err, group) {
-            group.remove(function (err) {
-                if (err) res.send(500, "Error: " + err);
-                else res.send(200);
-            });
+            if (!group) {
+                res.send(404, 'Group Not Found');
+            } else {
+                group.remove(function (err) {
+                    if (err) res.send(500, "Error: " + err);
+                });
+                User.find({'Groups._id': req.params.id}, function (err, users) {
+                    for (var i in users) {
+                        users[i].Groups.pull(req.params.id);
+                        users[i].save(function (err) {
+                            if (err) res.send(500, "Error: " + err);
+                            else res.send(200);
+                        });
+                    }
+                });
+            }
         });
     };
 
@@ -173,14 +185,25 @@ module.exports = function (app) {
     };
 
     deleteUser = function (req, res) {
-        console.log("entro");
+        var id = req.body._id;
         Group.findOne({_id: req.params.id}, function (err, group) {
+            if (!group) {
+                res.send(404, 'Group Not Found');
+            } else {
+                User.findOne({_id: req.params.id, 'Users._id': id}, function (error, user) {
+                    console.log(user);
+                    if (user == null) {
+                        res.send(404, 'There is no user with in this group');
+                    } else {
+                        group.Users.pull(id);
+                        group.save(function (err) {
+                            if (err) res.send(500, "Error: " + err);
+                            else res.send(200);
+                        });
 
-            group.save(function (err) {
-                console.log(err + "He entrado");
-                if (err) res.send(500, "Error: " + err);
-                else res.send(200);
-            });
+                    }
+                });
+            }
         });
     };
 
@@ -191,7 +214,7 @@ module.exports = function (app) {
     app.put('/groups/:id/race', addRace);
     app.put('/groups/:id/message', addMessage);
     app.put('/groups/:id', updateGroup);
-    app.delete('/groups/:idd', deleteGroup);
+    app.delete('/groups/:id', deleteGroup);
     app.delete('/groups/:id/user', deleteUser);
     app.delete('/groups/:id/race', deleteRace);
 };

@@ -11,6 +11,11 @@ var RaceSchema = new Schema({
     }
 });
 
+var GroupSchema = new Schema({
+    _id: {type: Schema.ObjectId, ref:'Group'},
+    Group: {type: String}
+});
+
 var userSchema = new Schema({
     Username : { type : String},
     Password : {type : String},

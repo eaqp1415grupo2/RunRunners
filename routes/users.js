@@ -1,6 +1,6 @@
 module.exports = function (app) {
 
-    var jwt = require('jwt-simple');
+    //var jwt = require('jwt-simple');
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');

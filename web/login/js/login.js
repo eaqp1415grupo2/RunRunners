@@ -1,5 +1,5 @@
 var app = angular.module('loginRunRunners',['ngDialog']);
-
+var url = "http://localhost:3000/";
 
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {
@@ -13,32 +13,25 @@ app.controller('headerController', function($scope, ngDialog){
             template: 'signIn'
         });
     };
-
-    $scope.createUser = function () {
-
-    };
-
-    $scope.loginUser = function () {
-
-    };
 });
 
 
 
-app.controller('userController', ['$http', '$scope', function ($http, $scope){
+app.controller('userController', ['$http', function ($http){
     var loginRunRunners = this;
     var user = {};
     loginRunRunners.users = [];
     console.log("controller");
-    this.addUser = function($location){
+    this.addUser = function(){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
-            url: "http://147.83.7.203:3000/user",
+            url: url+"user",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
             console.log("post");
+            window.location.href='/wall';
         }).error(function(data) {
             window.alert("ERROR - Fallo al realizar el POST");
         });
@@ -46,19 +39,22 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
     };
 
     this.loginUser = function(){
-        var url;
-        url = "http://147.83.7.203:3000/user/" + this.user.Username;
-        console.log("get");
         console.log(url);
-        $http.get(url).success(function (data) {
-            loginRunRunners.users = data;
-            console.log(loginRunRunners.users);
-            console.log("success");
-            user = data;
-            console.log(user);
+        console.log(this.user);
+        $http({
+            method: 'POST',
+            url: url+"user/auth",
+            data: this.user,
+            headers: {'Content-Type': 'application/json'}
+        }).success(function(data) {
+            console.log("auth");
+            console.log(data);
+            window.location.href='/wall';
         }).error(function(data) {
-            window.alert("ERROR - Fallo al realizar el GET");
+            console.log(data);
+            window.alert("ERROR - Fallo al realizar la autentificación");
         });
+        this.user = {};
     };
 }]);
 

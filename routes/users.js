@@ -58,8 +58,6 @@ module.exports = function (app) {
                 return res.send(200, user);
             } else {
                 console.log(err);
-
-
                 if (err.name == 'ValidationError') {
 
                     res.send(400, 'Validation error');
@@ -69,13 +67,11 @@ module.exports = function (app) {
                 console.log('Internal error: %s', err.message);
             }
         });
-
         res.send(user);
     };
 
     authenticate = function(req, res) {
         User.findOne({"Username": req.body.Username}, function(err, user) {
-
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
@@ -85,7 +81,7 @@ module.exports = function (app) {
                 } else {
                     var token = jwt.encode(user.Username, 'secret');
                     console.log(token);
-                    res.send(200, token);
+                    return res.send(200, token);
                 }
             }
         });

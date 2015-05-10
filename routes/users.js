@@ -1,6 +1,6 @@
 module.exports = function (app) {
 
-
+    var jwt = require('jwt-simple');
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
@@ -73,7 +73,23 @@ module.exports = function (app) {
         res.send(user);
     };
 
+    authenticate = function(req, res) {
+        User.findOne({"Username": req.body.Username}, function(err, user) {
 
+            if (err) throw err;
+            if (!user) {
+                res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
+            } else if (user) {
+                if (user.Password != req.body.Password) {
+                    res.send(404, 'Password error');
+                } else {
+                    var token = jwt.encode(user.Username, 'secret');
+                    console.log(token);
+                    res.send(200, token);
+                }
+            }
+        });
+    };
     //PUT - Update a register User already exists
     updateUser = function (req, res) {
         console.log("PUT - /user/:Name");
@@ -140,6 +156,7 @@ module.exports = function (app) {
     app.get('/users', findAllUsers);
     app.get('/user/:Username', findByUsername);
     app.post('/user', addUser);
+    app.post('/user/auth', authenticate);
     app.put('/user/:Name', updateUser);
     app.delete('/user/:Name', deleteUser);
 

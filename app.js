@@ -1,8 +1,10 @@
 var express = require("express"),
     app     = express(),
     http    = require("http"),
-    server  = http.createServer(app);
-    mongoose = require('mongoose');
+    server  = http.createServer(app),
+    mongoose = require('mongoose'),
+    jwt = require('jwt-simple');
+app.set('jwtTokenSecret', 'YOUR_SECRET_STRING');
 
 app.configure(function () {
     app.use(express.bodyParser());

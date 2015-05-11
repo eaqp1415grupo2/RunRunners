@@ -1,6 +1,6 @@
 module.exports = function (app) {
 
-    //var jwt = require('jwt-simple');
+    var jwt = require('jwt-simple');
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
@@ -80,7 +80,6 @@ module.exports = function (app) {
                     res.send(404, 'Password error');
                 } else {
                     var token = jwt.encode(user.Username, 'secret');
-                    console.log(token);
                     return res.send(200, token);
                 }
             }

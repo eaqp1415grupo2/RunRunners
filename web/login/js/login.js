@@ -1,6 +1,6 @@
 var app = angular.module('loginRunRunners',['ngDialog']);
 var url = "http://localhost:3000/";
-
+var token;
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {
         ngDialog.open({
@@ -47,9 +47,8 @@ app.controller('userController', ['$http', function ($http){
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
-            console.log("auth");
-            console.log(data);
-            window.location.href='/wall';
+            token = data;
+            window.location.href='/wall?user='+token;
         }).error(function(data) {
             console.log(data);
             window.alert("ERROR - Fallo al realizar la autentificación");

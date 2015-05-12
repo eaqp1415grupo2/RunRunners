@@ -152,7 +152,7 @@ module.exports = function (app) {
     app.get('/user/:Username', findByUsername);
     app.post('/user', addUser);
     app.post('/user/auth', authenticate);
-    app.put('/user/:Name', updateUser);
+    app.put('/user/:Username', updateUser);
     app.delete('/user/:Name', deleteUser);
 
 

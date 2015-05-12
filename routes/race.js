@@ -2,7 +2,6 @@ module.exports = function (app) {
 
     var Race = require('../models/race.js');
     var User = require('../models/user.js');
-    var ObjectID = require('mongoose').ObjectID;
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
         Race.find(function (err, races) {
@@ -129,32 +128,34 @@ module.exports = function (app) {
 
 //DELETE - Delete a TVShow with specified ID
     deleteRace = function (req, res) {
-        Race.findById(req.params.id, function (err, race) {
-
-            race.remove(function (err) {
-                if (!err) {
-                    console.log('Removed');
-                } else {
-                    console.log('ERROR: ' + err);
-                    res.send(500, "Mongo Error");
+        Race.findOne({_id: req.params.id}, function (err, race) {
+            if (!race) {
+                res.send(404, 'Race not found');
+            } else {
+                var users = race.Users;
+                for (var i = 0; i < users.length; i++) {
+                    User.findOne(users[i]._id, function (err, user) {
+                        user.Races.pull(race._id);
+                        user.save(function (err) {
+                            if (!err) {
+                                console.log('User   Removed');
+                            } else {
+                                console.log('ERROR: ' + err);
+                                res.send(500, "Mongo Error");
+                            }
+                        });
+                    });
                 }
-            });
-            User.find({'Races._id': req.params.id}, function(err, users){
-                console.log(users);
-               for(var i in users){
-                   users[i].Races.pull(req.params.id);
-                   users[i].save(function(err){
-                       if (!err) {
-                           console.log('Removed');
-                           res.send(200, 'OK');
-                       } else {
-                           console.log('ERROR: ' + err);
-                           res.send(500, "Mongo Error");
-                       }
-
-                   });
-               }
-            });
+                race.remove(function (err) {
+                    if (!err) {
+                        console.log('Removed');
+                        res.send(200, 'OK');
+                    } else {
+                        console.log('ERROR: ' + err);
+                        res.send(500, "Mongo Error");
+                    }
+                });
+            }
         });
     };
 
@@ -166,7 +167,7 @@ module.exports = function (app) {
             } else {
                 Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
                     User.findOne({_id: id}, function (err, user) {
-                       // console.log(user);
+                        // console.log(user);
                         if (!err && users == null && user != null) {
                             var racepush = ({_id: user._id, Username: user.Username});
                             race.Users.push(racepush);
@@ -220,4 +221,5 @@ module.exports = function (app) {
     app.put('/race/:id/user', addUser);
     app.put('/race/:id/message', addMessages);
 
-};
+}
+;

@@ -129,7 +129,7 @@ module.exports = function (app) {
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
         console.log("DELETE -/user/:Name");
-        User.findOne({"Name": req.params.NameRaces}, function (err, user) {
+        User.findOne({"Name": req.params.Name}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -152,7 +152,7 @@ module.exports = function (app) {
     app.get('/user/:Username', findByUsername);
     app.post('/user', addUser);
     app.post('/user/auth', authenticate);
-    app.put('/user/:Username', updateUser);
+    app.put('/user/:Name', updateUser);
     app.delete('/user/:Name', deleteUser);
 
 

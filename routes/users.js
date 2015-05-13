@@ -129,7 +129,7 @@ module.exports = function (app) {
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
         console.log("DELETE -/user/:Name");
-        User.findOne({"Name": req.params.NameRaces}, function (err, user) {
+        User.findOne({"Name": req.params.Name}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }

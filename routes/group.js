@@ -153,22 +153,32 @@ module.exports = function (app) {
         });
     };
 
-    addAnswer = function (req, res){
+    addAnswer = function (req, res) {
         Group.findOne({_id: req.params.id}, function (err, group) {
             if (!group) {
                 res.send(404, 'Group Not Found');
             } else {
-                //Falta Codigo para la respuesta
-                var id = req.body._id;
-                User.findOne({_id: id}, {Username: 1}, function (err, user) {
-                    console.log(user);
-                    var message = ({UserID: user._id, Username: user.Username, Text: req.body.Text});
-                    console.log(message);
-                    group.Messages.push(message);
-                    group.save(function (err) {
-                        if (err) res.send(500, "Mongo Error");
-                        else res.send(200, group);
-                    });
+                Group.findOne({_id: req.params.id, 'Messages._id' :req.params.message}, function (err, messages) {
+                    if (!messages) {
+                        res.send(404, 'Message Not Found');
+                    } else {
+                        var position;
+                        for(var i in messages.Messages){
+                            if(messages.Messages[i]._id.equals(req.params.message)){
+                                position = i;
+                                break;
+                            }
+                        }
+                        var id = req.body._id;
+                        User.findOne({_id: id}, {Username: 1}, function (err, user) {
+                            var answer = ({UserID: user._id, Username: user.Username, Answer: req.body.Answer});
+                            messages.Messages[position].Answers.push(answer);
+                            messages.save(function (err) {
+                                if (err) res.send(500, "Mongo Error");
+                                else res.send(200, messages);
+                            });
+                        });
+                    }
                 });
             }
         });
@@ -263,6 +273,7 @@ module.exports = function (app) {
     app.post('/groups/:id/race', addRace);
     app.post('/groups/:id/message', addMessage);
     app.put('/groups/:id', updateGroup);
+    app.put('/groups/:id/message/:message',addAnswer);
     app.delete('/groups/:id', deleteGroup);
     app.delete('/groups/:id/user', deleteUser);
     app.delete('/groups/:id/race', deleteRace);

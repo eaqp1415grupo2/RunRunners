@@ -72,7 +72,6 @@ module.exports = function (app) {
         });
     };
 
-
 //POST - Insert a new Race in the DB
     createRace = function (req, res) {
         var race = new Race({
@@ -126,7 +125,7 @@ module.exports = function (app) {
         });
     };
 
-//DELETE - Delete a TVShow with specified ID
+//DELETE - Delete a Race with specified ID
     deleteRace = function (req, res) {
         Race.findOne({_id: req.params.id}, function (err, race) {
             if (!race) {
@@ -210,6 +209,27 @@ module.exports = function (app) {
 
     };
 
+    deleteUser = function (req, res) {
+        var id = req.body._id;
+        Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, race) {
+            if (!race) {
+                res.send(404, 'User Not Found')
+            } else {
+                race.Users.pull(id);
+                race.save(function (err) {
+                    if (err) res.send(500, 'Mongo Error');
+                    else console.log('Race Removed');
+                });
+            }
+        });
+        User.findOne({_id: id}, function (err, user) {
+            user.Races.pull(req.params.id);
+            user.save(function (err) {
+                if (err) res.send(500, 'Mongo Error');
+                else res.send(200, 'OK');
+            });
+        });
+    };
 
 //Link routes and functions
     app.get('/race', findAllRaces);
@@ -219,6 +239,7 @@ module.exports = function (app) {
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);
     app.put('/race/:id/user', addUser);
+    app.delete('/race/:id/user', deleteUser);
     app.put('/race/:id/message', addMessages);
 
 }

@@ -1,6 +1,5 @@
 module.exports = function (app) {
 
-
     var User = require('../models/user.js');
     var Group = require('../models/group.js');
     var Race = require('../models/race.js');
@@ -184,7 +183,6 @@ module.exports = function (app) {
         });
     };
 
-
     updateGroup = function (req, res) {
         Group.findOne({"Name": req.params.name}, function (err, group) {
             if (req.body.Name != null) group.Name = req.body.Name;
@@ -196,7 +194,6 @@ module.exports = function (app) {
                 if (error) console.log("Error: " + error);
                 else console.log("Group Updated");
             });
-
             res.send(group);
         });
     };
@@ -217,7 +214,6 @@ module.exports = function (app) {
                                 console.log('ERROR: ' + err);
                                 res.send(500, "Mongo Error");
                             }
-
                         });
                     });
                 }
@@ -259,7 +255,6 @@ module.exports = function (app) {
                             if (err) res.send(500, "Error: " + err);
                             else res.send(200);
                         });
-
                     }
                 });
             }

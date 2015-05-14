@@ -27,6 +27,17 @@ module.exports = function (app) {
         });
     };
 
+    findGroupById = function(req, res){
+        Group.findById(req.params.id, function(err, group){
+            if(!group){
+                res.send(404,'Group Not Found');
+            }else{
+                if(err) res.send(500, 'Mongo Error');
+                else res.send(200, group);
+            }
+        })
+    };
+
     createGroup = function (req, res) {
         Group.findOne({'Name': req.body.Name}, function (err, grupo) {
             console.log(grupo);
@@ -263,6 +274,7 @@ module.exports = function (app) {
 
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
+    app-get('/groups/id/:id', findGroupById);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);

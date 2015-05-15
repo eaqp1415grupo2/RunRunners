@@ -1,5 +1,5 @@
 var app = angular.module('loginRunRunners',['ngDialog']);
-var url = "http://localhost:3000/";
+var url = "http://147.83.7.203:3030/";
 var token;
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {

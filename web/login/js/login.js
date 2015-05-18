@@ -1,13 +1,12 @@
 var app = angular.module('loginRunRunners',['ngDialog']);
-var url = "147.83.7.203:3000/";
 var token;
+
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {
         ngDialog.open({
             template: 'signUp'
         });
     };
-
     $scope.clickToOpenSignIn = function () {
         ngDialog.open({
             template: 'signIn'
@@ -26,7 +25,7 @@ app.controller('userController', ['$http', function ($http){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
-            url: url+"user",
+            url: "https://localhost:3030/user",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
@@ -43,12 +42,12 @@ app.controller('userController', ['$http', function ($http){
         console.log(this.user);
         $http({
             method: 'POST',
-            url: url+"user/auth",
+            url: "https://localhost:3030/user/auth",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
             token = data;
-            window.location.href='/wall?user='+token;
+            window.location.href='/wall';
         }).error(function(data) {
             console.log(data);
             window.alert("ERROR - Fallo al realizar la autentificación");

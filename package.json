@@ -1,12 +1,14 @@
 {
   "name": "application-name",
   "version": "0.0.1",
-
   "dependencies": {
-    "express": "~3.4.8",
+    "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",
-    "mongoose":"3.6.11",
-    "jwt-simple":"latest",
-    "bcrypt-nodejs":"latest"
+    "express": "~3.4.8",
+    "express-session": "^1.11.2",
+    "jwt-simple": "latest",
+    "mongoose": "3.6.11",
+    "passport": "^0.2.1",
+    "passport-facebook": "^2.0.0"
   }
 }

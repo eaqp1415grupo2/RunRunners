@@ -215,7 +215,7 @@ module.exports = function (app) {
     addMessage = function (req, res) {
         Race.findOne({_id: req.params.id}, function (err, race) {
             if (!race) {
-                res.send(404, 'Group Not Found');
+                res.send(404, 'Race Not Found');
             } else {
                 var id = req.body._id;
                 User.findOne({_id: id}, {Username: 1}, function (err, user) {
@@ -235,7 +235,7 @@ module.exports = function (app) {
     addAnswer = function (req, res) {
         Race.findOne({_id: req.params.id}, function (err, race) {
             if (!race) {
-                res.send(404, 'Group Not Found');
+                res.send(404, 'Race Not Found');
             } else {
                 Race.findOne({_id: req.params.id, 'Messages._id' :req.params.message}, function (err, messages) {
                     if (!messages) {

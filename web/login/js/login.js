@@ -1,6 +1,6 @@
 var app = angular.module('loginRunRunners',['ngDialog']);
 var token;
-
+var url = "https://147.83.7.203:3030/user";
 app.controller('headerController', function($scope, ngDialog){
     $scope.clickToOpenSignUp = function () {
         ngDialog.open({
@@ -25,7 +25,7 @@ app.controller('userController', ['$http', function ($http){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
-            url: "https://147.83.7.203:3030/user",
+            url: url,
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
@@ -40,13 +40,14 @@ app.controller('userController', ['$http', function ($http){
     this.loginUser = function(){
         console.log(url);
         console.log(this.user);
+        var urlauth = url+"/auth";
         $http({
             method: 'POST',
-            url: "https://147.83.7.203:3030/user/auth",
+            url: urlauth,
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
-            token = data;
+            console.log("postlogin");
             window.location.href='/wall';
         }).error(function(data) {
             console.log(data);

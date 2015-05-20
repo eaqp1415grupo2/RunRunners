@@ -59,7 +59,7 @@ angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlUpdate', functi
         $scope.okDelete= function () {
         $http.delete('user/David' )//+ cookie o token)
             .success(function(data) {
-                alert("acabas de borrar el usuario, le redigiremos al inicio")  //-cookie o token de usuario
+                alert("acabas de borrar el usuario, le redigiremos al inicio");  //-cookie o token de usuario
             window.location.href='/';
          })
             .error(function(data) {

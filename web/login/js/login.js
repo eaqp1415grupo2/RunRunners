@@ -25,7 +25,7 @@ app.controller('userController', ['$http', function ($http){
         loginRunRunners.users.push(this.user);
         $http({
             method: 'POST',
-            url: "https://localhost:3030/user",
+            url: "https://147.83.7.203:3030/user",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
@@ -42,7 +42,7 @@ app.controller('userController', ['$http', function ($http){
         console.log(this.user);
         $http({
             method: 'POST',
-            url: "https://localhost:3030/user/auth",
+            url: "https://147.83.7.203:3030/user/auth",
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {

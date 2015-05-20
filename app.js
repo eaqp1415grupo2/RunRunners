@@ -74,6 +74,9 @@ app.get('/profile', function(req, res) {
 app.get('/', function(req, res) {
   res.sendfile('./web/login/login.html');});
 
+app.get('/backoffice', function(req, res) {
+    res.sendfile('./web/Backoffice/index.html');});
+
 app.get('/auth/facebook',
     passport.authenticate('facebook'),
     function(req, res){
@@ -89,7 +92,7 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { failureRedirect: '/' }),
     function(req, res) {
-        console.log(res);
+        console.log(res.user);
         res.redirect('/wall');
     });
 
@@ -108,7 +111,7 @@ app.get('/logout', function(req, res){
 
 
 
-//Conexión DB Mongo
+//Conexiï¿½n DB Mongo
 routes = require('./routes/race')(app);
 routes2 = require('./routes/group')(app);
 routes3 = require('./routes/users')(app);

@@ -1,0 +1,97 @@
+<!doctype html>
+<html ng-app="MainApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EXAMEN</title>
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Angular js-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+
+    <script type="text/javascript" src="/Backoffice/js/app.js"></script>
+
+</head>
+<body ng-controller="mainController">
+<div class="navbar navbar-inverse">
+    <div class="navbar-header">
+        <a class="navbar-brand">Races Backoffice</a>
+    </div>
+</div>
+<div class="container">
+
+    <div class="col-sm-5 text-center">
+        <div class="panel panel-success">
+            <div class="panel-heading "><h3 class="panel-title">Race</h3></div>
+            <div class="panel-body">
+                <form name="myForm">
+                    <div class="form-group col-sm-offset-1">
+                        <input type="text" class="form-control input-lg text-center" placeholder="Name"
+                               ng-model="newObject.Name" required>
+                        <br>
+                        <input type="text" class="form-control input-lg text-center" placeholder="Level"
+                               ng-model="newObject.Level" required>
+                        <br>
+
+                        <input type="number" class="form-control input-lg text-center" placeholder="Distance"
+                               ng-model="newObject.Distance" required>
+                        <br>
+                        <input type="date" class="form-control input-lg text-center" placeholder="Date YYYY/MM/DD"
+                               ng-model="newObject.Date" >
+                        <br>
+                        <input type="number" class="form-control input-lg text-center" placeholder="Location Latitude"
+                               ng-model="newObject.LocationIni.Ltd" required>
+                        <br>
+                        <input type="number" class="form-control input-lg text-center" placeholder="Location Longitude"
+                               ng-model="newObject.LocationIni.Lng" required>
+                        <br>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg" ng-click="createObject()"
+                            ng-disabled="myForm.$invalid || selected">Create
+                    </button>
+                    <button type="submit" class="btn btn-info btn-lg" ng-click="updateObject(newObject)"
+                            ng-disabled="!newObject.Name ||!selected">
+                        Update
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-lg" ng-click="deleteObject(newObject)"
+                            ng-disabled="!newObject.Name || !newObject.Level || !newObject.Distance || !newObject.Date ||!selected">
+                        Delete
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="selectObject(newObject)"
+                            ng-disabled="!newObject.Name || selected">Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-7">
+        <div class="panel panel-primary">
+            <div class="panel-heading "><h3 class="panel-title text-center">Races</h3></div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr class="info  text-center">
+                        <td>Name</td>
+                        <td>Level</td>
+                        <td>Distance</td>
+                        <td>Date</td>
+
+                    </tr>
+                    <tr class="text-center" ng-repeat="object in objects" ng-click="selectObject(object)">
+                        <td>{{object.Name}}</td>
+                        <td>{{object.Level}}</td>
+                        <td>{{object.Distance}}</td>
+                        <td>{{object.Date}}</td>
+                    </tr>
+                </table>
+                </ul>
+                <div data-pagination="" data-num-pages="numPages()"
+                     data-current-page="currentPage" data-max-size="maxSize"
+                     data-boundary-links="true"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -274,7 +274,7 @@ module.exports = function (app) {
 
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
-    app-get('/groups/id/:id', findGroupById);
+    app.get('/groups/id/:id', findGroupById);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);

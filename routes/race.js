@@ -72,6 +72,22 @@ module.exports = function (app) {
         });
     };
 
+    findRaceByName = function (req, res) {
+        Race.findOne({"Name": req.params.name}, function (err, race) {
+            if (!race) {
+                res.send(404, "Race not found");
+            } else {
+                if (!err) {
+                    res.send(200, race);
+                } else {
+                    res.send(500, "Mongo Error");
+                    console.log('ERROR: ' + err);
+                }
+            }
+        });
+    };
+
+
 //POST - Insert a new Race in the DB
     createRace = function (req, res) {
         var race = new Race({
@@ -234,6 +250,7 @@ module.exports = function (app) {
 //Link routes and functions
     app.get('/race', findAllRaces);
     app.get('/user/:id/race', findRaceByVicinity);
+    app.get('/race/name/:name', findRaceByName);
     app.get('/race/:id', findRaceByID);
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);

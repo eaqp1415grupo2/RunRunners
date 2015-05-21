@@ -85,13 +85,14 @@ module.exports = function (app) {
             }
         });
     };
+
     //PUT - Update a register User already exists
     updateUser = function (req, res) {
-        console.log("PUT - /user/:Name");
+        console.log("PUT - /user/:Username");
         console.log(req.body);
-        User.findOne({"Name": req.params.Name}, function (err, user) {
+        User.findOne({"Username": req.params.Username}, function (err, user) {
             if (!user) {
-                 res.send(404, 'Not Found');
+                res.send(404, 'Not Found');
             }
             else {
                 if (req.body.Username != null) user.Username = req.body.Username;
@@ -128,8 +129,8 @@ module.exports = function (app) {
 
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
-        console.log("DELETE -/user/:Name");
-        User.findOne({"Name": req.params.Name}, function (err, user) {
+        console.log("DELETE -/user/:Username");
+        User.findOne({"Username": req.params.Username}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -148,12 +149,11 @@ module.exports = function (app) {
 
 
     //Link routes and functions
-    app.get('/users', findAllUsers);
+    app.get('/user', findAllUsers);
     app.get('/user/:Username', findByUsername);
     app.post('/user', addUser);
-    app.post('/user/auth', authenticate);
-    app.put('/user/:Name', updateUser);
-    app.delete('/user/:Name', deleteUser);
+    app.put('/user/:Username', updateUser);
+    app.delete('/user/:Username', deleteUser);
 
 
 };

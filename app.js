@@ -75,7 +75,7 @@ app.get('/', function(req, res) {
   res.sendfile('./web/login/login.html');});
 
 app.get('/backoffice', function(req, res) {
-    res.sendfile('./web/Backoffice/index.html');});
+    res.sendfile('./web/backoffice/backoffice.html');});
 
 app.get('/auth/facebook',
     passport.authenticate('facebook'),

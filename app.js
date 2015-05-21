@@ -77,6 +77,9 @@ app.get('/', function(req, res) {
 app.get('/backoffice', function(req, res) {
     res.sendfile('./web/backoffice/backoffice.html');});
 
+app.get('/backoffice2', function(req, res) {
+    res.sendfile('./web/backoffice/index.html');});
+
 app.get('/auth/facebook',
     passport.authenticate('facebook'),
     function(req, res){

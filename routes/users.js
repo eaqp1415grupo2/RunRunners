@@ -147,6 +147,33 @@ module.exports = function (app) {
         });
     };
 
+    findRaces = function(req,res){
+        User.findOne({Username: req.params.Username}, function(err, user){
+           if(!user){res.send(404,'User Not Found');}
+            else{
+               if(err) res.send(500, 'Mongo Error');
+               else {
+                   var races = user.Races;
+                   console.log(races);
+                   res.send(200, races);
+               }
+           }
+        });
+    };
+
+    findGroups = function(req,res){
+        User.findOne({Username: req.params.Username}, function(err, user){
+            if(!user){res.send(404,'User Not Found');}
+            else{
+                if(err) res.send(500, 'Mongo Error');
+                else {
+                    var groups = user.Groups;
+                    console.log(groups);
+                    res.send(200, groups);
+                }
+            }
+        });
+    };
 
     //Link routes and functions
     app.get('/user', findAllUsers);
@@ -154,6 +181,8 @@ module.exports = function (app) {
     app.post('/user', addUser);
     app.put('/user/:Username', updateUser);
     app.delete('/user/:Username', deleteUser);
+    app.get('/user/:Username/races', findRaces);
+    app.get('/user/:Username/groups', findGroups);
 
 
 };

@@ -12,6 +12,7 @@ $("#hechas").click(function () {
 $("#start").click(function () {
     window.location.href = "StartRace.html"
 });
+function change(){window.location.href = "StartRace.html"}
 function getRaceDone() {
     //var name = $("#name").val();
     var url = "https://localhost:3030/race/" ;
@@ -34,7 +35,7 @@ function getRaceDone() {
                     $('#list'));
 
                 $('<br> <br>').appendTo($('#list'));
-                $('<paper-button id="start" class="colored" raised="true" role="button">Actualizar Carrera</paper-button>').appendTo($('#list'));
+                $('<paper-button onclick="change()" class="colored" raised="true" role="button">Actualizar Carrera</paper-button>').appendTo($('#list'));
             }
         },
         error: function () {
@@ -67,7 +68,8 @@ function getRacePending() {
                     $('#list'));
 
                 $('<br> <br>').appendTo($('#list'));
-                $('<paper-button id=' + data[i]._id + ' class="coloredDelete" raised="true" role="button" onclick="deleteRace(id)">DETAIL</paper-button> <hr>').appendTo($('#list'));
+                $('<paper-button id="start" class="colored" raised="true" role="button">Actualizar Carrera</paper-button>').appendTo($('#list'));
+                //$('<paper-button id=' + data[i]._id + ' class="coloredDelete" raised="true" role="button" onclick="deleteRace(id)">DETAIL</paper-button> <hr>').appendTo($('#list'));
             }
         },
         error: function () {

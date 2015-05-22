@@ -1,84 +1,38 @@
-<!doctype html>
-
-<html ng-app="MainApp">
+<!-- index.html -->
+<!DOCTYPE html>
+<html ng-app='angularRoutingApp'>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Examen EA</title>
-	<!-- Cargamos bootstrap -->
-	<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"></link>
-	<!-- Cargamos angular -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-	<!-- Cargamos el javascript de angular -->
-	<script src="backoffice/core.js"></script>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
 </head>
-<body ng-controller="mainController">
-	<div class="container">
-
-		<div class="jumbotron text-center" ng-prueba>
-			<h1>Backoffice - Mensajería</h1>
-			<p></p>
-			<h2>Mensajes Registrados: <span class="label label-success">{{ messages.length }}</span></h2>
-
-
-		</div>
-
-		<div class="row">
-			<div class="col-sm-9">
-				<table class="table table-striped">
-					<tr class="info">
-						<td>id</td>
-						<td>User Name</td>
-						<td>GroupOrRace</td>
-						<td>ParentID</td>
-				      <td>Content</td>
-				      <td>Answer of</td>
-					</tr>
-					<tr ng-repeat="message in messages | filter:searchText | filter:search:strict track by $index" ng-click="selectObject(message)">
-						<td>{{ message._id }}</td>
-						<td>{{ message.Username }}</td>
-						<td>{{ message.GroupOrRace }}</td>
-						<td>{{ message.ParentID }}</td>
-				      <td>{{ message.Text }}</td>	
-				      <td>{{ message.ParentMessageID }}</td>						
-					</tr>
-				</table>					
-			</div>
-			<div class="col-sm-3 text-center">
-			<div>
-			<h3><span class="glyphicon glyphicon-th-list" ></span> CRUD Pannel</h3>
-				<form name="myForm">
-					<div class="form-group">
-						<input type="text" class="form-control input-lg text-center" placeholder="User Name" ng-model="newMessage.Username" required><br>
-						<input type="text" class="form-control input-lg text-center" placeholder="GroupOrRace" ng-model="newMessage.GroupOrRace" required><br>
-						<input type="text" class="form-control input-lg text-center" placeholder="ParentID" ng-model="newMessage.ParentID"><br>
-						<input type="text-area" class="form-control input-lg text-center" placeholder="Text" ng-model="newMessage.Text" required></div>
-
-					<!-- Acciones que podemos realizar en el formulario -->
-					<button type="submit" class="btn btn-success btn-lg btn-block" ng-click="registrarMessage()" ng-disabled=" selected">Registrar</button><br>
-					<button type="submit" class="btn btn-warning btn-lg btn-block" ng-click="modificarMessage(newMessage)" ng-disabled=" !selected">Modificar</button>
-					<br>
-					<button type="submit" class="btn btn-danger btn-lg btn-block" ng-click="borrarMessage(newMessage)" ng-disabled=" !selected">Borrar</button>
-				</form>
-				<span>
-				</div>
-				<p>
-				</p>
-<!--
-				<div>
-				<h1><span class="glyphicon glyphicon-search"></span>  Search Pannel</h1>
-				<form name="SearchForm">
-					<div class="form-group">
-					<input type="text" class="form-control input-lg text-center" placeholder="Any Field"ng-model="search.$"> <br>
-					<input type="text" class="form-control input-lg text-center" placeholder="Username only"ng-model="search.Username"><br>
-					<input type="text" class="form-control input-lg text-center" placeholder="Date only"ng-model="search.GroupOrRace"><br>
-					<input type="text" class="form-control input-lg text-center" placeholder="Racename only"ng-model="search.RaceID"><br>		
-					<input type="text" class="form-control input-lg text-center" placeholder="Content only"ng-model="search.Text"><br>		
-					</div>
-				</form></div>-->
-				</span>
-			</div>
-		</div>
+<body ng-controller='mainController' style="padding-top:50px">
+<div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="http://getbootstrap.com/examples/theme/#">RunRunners-BackOffice {{title}}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">Users</a></li>
+            <li><a href="#races">Races</a></li>
+            <li><a href="#message">Messages</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+<p>
+<p></p></p></div>
+	<div id="main"style="body-bar">
+	<!-- Aquí inyectamos las vistas -->
+		<div ng-view></div>
 	</div>
+
+	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+ 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.7/angular.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.3/angular-route.js"></script>
+  	<script src="backoffice/main.js"></script>
+  	<script src="backoffice/js/ngDialog.js"></script>
+  	<script src="backoffice/js/backoffice.js"></script>
 </body>
 </html>

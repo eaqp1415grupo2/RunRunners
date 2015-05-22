@@ -1,25 +1,122 @@
-var app = angular.module('backOffice',['ngDialog', 'ui.bootstrap']);
-var url = 'https://localhost:3030/';
-app.controller('headerController', function($scope, ngDialog){
-    $scope.clickToOpenSignUp = function () {
-        ngDialog.open({
-            template: 'addUser'
-        });
-    };
+// Creación del módulo
+var angularRoutingApp = angular.module('angularRoutingApp', ['ngRoute']);
+
+// Configuración de las rutas
+angularRoutingApp.config(function($routeProvider) {
+
+	$routeProvider
+		.when('/', {
+			templateUrl	: 'backoffice/pages/users.html',
+			controller 	: 'raceController'
+		})
+		.when('/message', {
+			templateUrl : 'backoffice/pages/message.html',
+			controller 	: 'msgController'
+		})
+		.when('/races', {
+			templateUrl : 'backoffice/pages/race.html',
+			controller 	: 'raceController'
+		})
+		.otherwise({
+			redirectTo: '/'
+		});
 });
 
-app.controller('TabController', function(){
-    this.tab = 1;
 
-    this.setTab = function(setTab){
-        this.tab = setTab;
-    };
-    this.isSet = function(isSet){
-        return this.tab === isSet;
-    };
+angularRoutingApp.controller('mainController', function($scope) {
+	$scope.message = 'Hola, Mundo!';
 });
 
-app.controller('userController', ['$http', '$scope', 'ngDialog', 'filterFilter', function ($http, $scope, ngDialog,filterFilter){
+angularRoutingApp.controller('aboutController', function($scope) {
+	$scope.message = 'Esta es la página "Acerca de"';
+});
+
+
+angularRoutingApp.controller('msgController',function msgController($scope, $http) {
+	$scope.newMessage = {};
+	$scope.messages = {};
+	$scope.selected = false;
+
+	var URL='https://localhost:3030';
+	var nMsg=0;
+
+	// Obtenemos todos los datos de la base de datos
+	$http.get(URL+'/message').success(function(data) {
+		$scope.messages = data;
+		$scope.nMsg=messages.length;
+
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	// Función para registrar un message
+	$scope.registrarMessage = function() {
+		$http.post(URL+'/message', $scope.newMessage)
+		.success(function(data) {
+				$scope.newMessage = {}; // Borramos los datos del formulario
+				$scope.messages = data;
+				
+			})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+		$http.get(URL+'/message').success(function(data) {
+		$scope.messages = data;
+		})
+		.error(function(data) {
+		console.log('Error: ' + data);
+		});
+	};
+
+	// Función para editar los datos de una message
+	$scope.modificarMessage = function(newMessage) {
+		$http.put(URL+'/message/' + $scope.newMessage._id, $scope.newMessage)
+		.success(function(data) {
+				$scope.newMessage = {}; // Borramos los datos del formulario
+				$scope.messages = data;
+				$scope.selected = false;
+			})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+		$http.get(URL+'/message').success(function(data) {
+		$scope.messages = data;
+		})
+		.error(function(data) {
+		console.log('Error: ' + data);
+		});
+	};
+
+	// Función que borra un message message conocido su id
+	$scope.borrarMessage = function(newMessage) {
+		console.log('Borrar: '+newMessage);
+		$http.delete(URL+'/message/' + $scope.newMessage._id)
+		.success(function(data) {
+			$scope.newMessage = {};
+			$scope.messages = data;
+			$scope.selected = false;
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+		$http.get(URL+'/message').success(function(data) {
+		$scope.messages = data;
+		})
+		.error(function(data) {
+		console.log('Error: ' + data);
+		});
+	};
+
+	// Función para coger el message seleccionado en la tabla
+	$scope.selectObject = function(message) {
+		$scope.newMessage = message;
+		$scope.selected = true;
+		console.log($scope.newMessage, $scope.selected);
+	};
+
+});
+
+angularRoutingApp.controller('userController', ['$http', '$scope', 'ngDialog', 'filterFilter', function ($http, $scope, ngDialog,filterFilter){
     var backOffice = this;
     var user = {};
     backOffice.users = [];
@@ -113,8 +210,7 @@ app.controller('userController', ['$http', '$scope', 'ngDialog', 'filterFilter',
         $scope.currentPage = 1;
     }, true);
 }]);
-
-app.controller('raceController', ['$scope','$http', function($scope, $http) {
+angularRoutingApp.controller('raceController', ['$scope','$http', function($scope, $http) {
     $scope.newObject = {};
     $scope.objects = {};
     $scope.selected = false;
@@ -192,29 +288,3 @@ app.controller('raceController', ['$scope','$http', function($scope, $http) {
     };
 
 }]);
-
-app.config(['ngDialogProvider', function (ngDialogProvider) {
-    ngDialogProvider.setDefaults({
-        className: 'ngdialog-theme-default',
-        plain: false,
-        showClose: true,
-        closeByDocument: true,
-        closeByEscape: true,
-        appendTo: false,
-        preCloseCallback: function () {
-            console.log('default pre-close callback');
-        }
-    });
-}]);
-
-app.controller('footerController', function($scope){});
-
-app.filter('startFrom', function () {
-    return function (input, start) {
-        if (input) {
-            start = +start;
-            return input.slice(start);
-        }
-        return [];
-    };
-});

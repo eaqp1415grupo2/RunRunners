@@ -1,0 +1,63 @@
+<div ng-controller="msgController"class="container">
+		<div class="row">
+			<div class="col-sm-8">
+				<table class="table table-striped">
+					<tr class="info">
+						<h4><th class="text-center">ID'S</th>
+						<th class="text-center">USERNAME</th>
+						<th class="text-center">GROUP</th>
+				      <th class="text-center">TEXT</th></h4>
+					</tr>
+					<tr ng-repeat="message in messages | filter:searchText | filter:search:strict track by $index | orderBy : 'id'" ng-click="selectObject(message)">
+						<td><h6><p>id: {{ message._id }}</p> 
+								  <p>Parent: {{ message.ParentID }}</p> 
+								  <p>Answer of: {{ message.ParentMessageID }}</p></h6></td>
+						<td class="text-center">{{ message.Username }}</td>
+						<td class="text-center">{{ message.GroupOrRace }}</td>
+				      <td class="text-center">{{ message.Text }}</td>	
+			
+					</tr>
+				</table>					
+			</div>
+
+		<div class="col-sm-4 text-center">
+		<button class="btn btn-lg text-center"><h4>Mensajes Registrados: <span class="label label-success">{{ messages.length }}</span></h4></button>
+		<div class="col-sm-6 text-center">
+			<div>
+			<h3><span class="glyphicon glyphicon-th-list" ></span> CRUD Pannel</h3>
+				<form name="myForm">
+					<div class="form-group">
+						<input type="text" class="form-control text-center" placeholder="User Name" ng-model="newMessage.Username" required><br>
+						<input type="text" class="form-control text-center" placeholder="GroupOrRace" ng-model="newMessage.GroupOrRace" required><br>
+						<input type="text" class="form-control text-center" placeholder="ParentID" ng-model="newMessage.ParentID" required><br>
+						<input type="text" class="form-control text-center" placeholder="ParentMessageID" ng-model="newMessage.ParentMessageID"><br>
+						<textarea rows="4" class="form-control text-center" placeholder="Text" ng-model="newMessage.Text" required></textarea></div>
+
+					<!-- Acciones que podemos realizar en el formulario -->
+					<button type="submit" class="btn btn-success btn-lg btn-block" ng-click="registrarMessage()" ng-disabled=" selected">Registrar</button><br>
+					<button type="submit" class="btn btn-warning btn-lg btn-block" ng-click="modificarMessage(newMessage)" ng-disabled=" !selected">Modificar</button>
+					<br>
+					<button type="submit" class="btn btn-danger btn-lg btn-block" ng-click="borrarMessage(newMessage)" ng-disabled=" !selected">Borrar</button>
+				</form>
+				<span>
+				</div>
+			</div>
+			<div class="col-sm-6 text-center">
+				<div>
+				<h3><span class="glyphicon glyphicon-search"></span>  Search Pannel</h3>
+				<form name="SearchForm">
+					<div class="form-group">
+					<input type="text" class="form-control text-center" placeholder="Any Field"ng-model="search.$"> <br>
+					<input type="text" class="form-control text-center" placeholder="Username only"ng-model="search.Username"><br>
+					<input type="text" class="form-control text-center" placeholder="Group?"ng-model="search.GroupOrRace"><br>
+					<input type="text" class="form-control text-center" placeholder="ParentID only"ng-model="search.ParentID"><br>	
+					<input type="text" class="form-control text-center" placeholder="Parent Message ID only"ng-model="search.ParentMessageID"><br>		
+					<input type="text" class="form-control text-center" placeholder="Text Message only"ng-model="search.Text"><br>		
+					</div>
+				</form></div>
+				</span>
+			</div>
+		 </div> 
+		</div>
+	</div>
+

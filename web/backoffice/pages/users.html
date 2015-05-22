@@ -1,4 +1,5 @@
 <div ng-controller="userController as userCtrl">
+  <div class="container theme-showcase" role="main">
    <div class="row">
       <div class="panel panel-default">
          <div class="panel-heading">
@@ -40,57 +41,7 @@
 <pagination page="currentPage" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit"></pagination>
 
     </div>            
-                
-        <script type="text/ng-template" id="addUser">
-            <div class="ngdialog-content" ng-controller="userController as userCtrl">
-                <form name="userFormAddUser" ng-submit="userFormAddUser.$valid && userCtrl.addUser()" novalidate>
-                    <h4>Add user</h4>
-                    <fieldset class="form-group">
-                        <input ng-minlength=4 class="form-control" placeholder="Name"
-                               title="Name" ng-model="userCtrl.user.Name" required/>
-                        <input ng-minlength=4 class="form-control" placeholder="Surname"
-                               title="Surname" ng-model="userCtrl.user.Surname" required/>
-                        <input ng-minlength=4 class="form-control" placeholder="Username"
-                               title="Username" ng-model="userCtrl.user.Username" required/>
-                        <input ng-minlength=8 class="form-control" placeholder="Password  (Min. 8 characters)"
-                               title="Password" ng-model="userCtrl.user.Password" type="password" required/>
+  						</div>              
 
-                        <input ng-minlength=4 class="form-control" placeholder="Email"
-                               title="Email" type="email" ng-model="userCtrl.user.Email" required/>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <input type="submit" class="btn btn-primary pull-right"  value="Create user"/>
-                    </fieldset>
-                </form>
-            </div>
-        </script>
         
-        <script type="text/ng-template" id="updateUser">
-            <div class="ngdialog-content" ng-controller="userController as userCtrl">
-                <form name="userFormUpdateUser" ng-submit="userFormUpdateUser.$valid && userCtrl.updateUser(Username,Name, Surname,Email)" novalidate>
-                    <h4>Update user</h4>
-                    <fieldset class="form-group">
-                        <input ng-minlength=4 disabled class="form-control" title="Username" type="text"
-                               ng-model="Username" required/>
-                        <input ng-minlength=4 class="form-control" title="Name" type="text"
-                               ng-model="Name" required/>
-                        <input ng-minlength=4 class="form-control" title="Surname" type="text"
-                               ng-model="Surname" required/>
-                        <input ng-minlength=4 class="form-control" title="Email" type="text"
-                               ng-model="Email" required/>
-                    </fieldset>
-                    <fieldset class="form-group">
-                        <input type="submit" class="btn btn-primary pull-right"  value="Update user"/>
-                    </fieldset>
-                </form>
-            </div>
-        </script>
-        
-        
-<!------------------------------------------------------------------------------>        
-        
-        
-        
-        
-        
-        
+<!------------------------------------------------------------------------------> 

@@ -1,34 +1,64 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html ng-app='angularRoutingApp'>
-<head>
-  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
-</head>
-<body style="padding-top:50px">
-<div>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="">RunRunners-BackOffice</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#">Users</a></li>
-            <li><a href="#races">Races</a></li>
-            <li><a href="#message">Messages</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-<p>
-<p></p></p></div>
-	<div id="main"style="body-bar">
-	<!-- Aquí inyectamos las vistas -->
-		<div ng-view></div>
-	</div>
+<html lang="es" >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <title>Backoffice -RunRunners</title>
+        <link rel="stylesheet" href="../resources/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="backoffice/css/ngDialog.min.css">
+        <link rel="stylesheet" href="backoffice/css/ngDialog-theme-default.min.css">
+        <link rel="stylesheet" href="backoffice/css/ngDialog-theme-plain.min.css">
+        <link rel="stylesheet" href="backoffice/css/backoffice.css">
+    </head>
+    <body>
+        
+ <div ng-controller="userController as userCtrl">
+  <div class="container theme-showcase" role="main">
+   <div class="row">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <div class="row">
+               <div class="col-sm-3"><h4><span class="glyphicon glyphicon-user" aria-hidden="true"></span>  User Panel</h4>
+               </div>
+               <div class="col-sm-7">
+			         <div class="input-group">
+					       <span class="input-group-addon">Search</span>
+                      <input type="text" class="form-control" ng-model="search"> 
+                  </div>
+               </div>
+               <div class="col-sm-2"ng-controller="headerController">		
+                  <button class="btn signup-btn" ng-click="clickToOpenSignUp()" >ADD User</button>
+               </div>                            			
+            </div>                      
+          </div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Email</th>
+                                        <th>Ver</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody ng-repeat="user in userCtrl.users | filter:search | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+                                    <tr>
+                                        <th>{{user.Username}}</th>
+                                        <th>{{user.Name}}</th>
+                                        <th>{{user.Surname}}</th>
+                                        <th>{{user.Email}}</th>
+                                        <th><button type="button" class="btn " ng-click="clickToView(user.Username)" >View</button></th>
+                                        <th><button type="button" class="btn " ng-click="clickToDelete(user.Username)" >Delete</button></th>
+                                    </tr>
+                                    </tbody>
 
-
-  	        <script type="text/ng-template" id="addUser">
+                                </table>
+                            </div>
+                        </div>
+                        <pagination page="currentPage" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit"></pagination>
+                    </div>
+						</div>
+        <script type="text/ng-template" id="addUser">
             <div class="ngdialog-content" ng-controller="userController as userCtrl">
                 <form name="userFormAddUser" ng-submit="userFormAddUser.$valid && userCtrl.addUser()" novalidate>
                     <h4>Add user</h4>
@@ -51,7 +81,6 @@
                 </form>
             </div>
         </script>
-        
         <script type="text/ng-template" id="updateUser">
             <div class="ngdialog-content" ng-controller="userController as userCtrl">
                 <form name="userFormUpdateUser" ng-submit="userFormUpdateUser.$valid && userCtrl.updateUser(Username,Name, Surname,Email)" novalidate>
@@ -77,12 +106,5 @@
         <script type="text/javascript" src="backoffice/js/ngDialog.js"></script>
         <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js" type="text/javascript"></script>
         <script type="text/javascript" src="backoffice/js/backoffice.js"></script>
-        	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
- 			<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
-  			<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.7/angular.min.js"></script>
-  			<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.3/angular-route.js"></script>
-  			<script src="backoffice/main.js"></script>
-  			<script src="backoffice/js/ngDialog.js"></script>
-  			<script src="backoffice/js/backoffice.js"></script>
-</body>
+    </body>
 </html>

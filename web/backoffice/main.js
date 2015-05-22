@@ -7,7 +7,7 @@ angularRoutingApp.config(function($routeProvider) {
 	$routeProvider
 		.when('/', {
 			templateUrl	: 'backoffice/pages/users.html',
-			controller 	: 'raceController'
+			controller 	: 'userController'
 		})
 		.when('/message', {
 			templateUrl : 'backoffice/pages/message.html',
@@ -21,16 +21,6 @@ angularRoutingApp.config(function($routeProvider) {
 			redirectTo: '/'
 		});
 });
-
-
-angularRoutingApp.controller('mainController', function($scope) {
-	$scope.message = 'Hola, Mundo!';
-});
-
-angularRoutingApp.controller('aboutController', function($scope) {
-	$scope.message = 'Esta es la página "Acerca de"';
-});
-
 
 angularRoutingApp.controller('msgController',function msgController($scope, $http) {
 	$scope.newMessage = {};
@@ -210,6 +200,29 @@ angularRoutingApp.controller('userController', ['$http', '$scope', 'ngDialog', '
         $scope.currentPage = 1;
     }, true);
 }]);
+/*
+angularRoutingApp.controller('headerController', function($scope, ngDialog){
+    $scope.clickToOpenSignUp = function () {
+        ngDialog.open({
+            template: 'addUser'
+        });
+    };
+});
+
+angularRoutingApp.config(['ngDialogProvider', function (ngDialogProvider) {
+    ngDialogProvider.setDefaults({
+        className: 'ngdialog-theme-default',
+        plain: false,
+        showClose: true,
+        closeByDocument: true,
+        closeByEscape: true,
+        appendTo: false,
+        preCloseCallback: function () {
+            console.log('default pre-close callback');
+        }
+    });
+}]);*/
+
 angularRoutingApp.controller('raceController', ['$scope','$http', function($scope, $http) {
     $scope.newObject = {};
     $scope.objects = {};

@@ -12,12 +12,12 @@ var groupid='555db5a80a9995be10000009';
  */
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
-		.state('menu', {url: "/map", abstract: true, templateUrl: "www-ionic/www/templates/menu.html"})
-		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: 'www-ionic/www/templates/map.html', controller: 'GpsCtrl'} }  })
-		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: 'www-ionic/www/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.single', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "www-ionic/www/templates/group.html",controller: 'GroupCtrl'}}})
-		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: 'www-ionic/www/templates/profile.html', controller: 'GpsCtrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: 'www-ionic/www/templates/logout.html', controller: 'MainCtrl'} }  });
+		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
+		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
+		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
+		.state('menu.single', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/map/home');
@@ -114,13 +114,13 @@ function GroupsCtrl($scope, $ionicLoading, GroupsService, $log) {
 
 function GroupsService($http, $log) {
     this.loadGroups = function() {
-        return ($http.get(URL+'groups'));
+        return ($http.get('https://localhost:3030/groups'));
     }
 }
 
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get(URL+'/message/group/'+$stateParams.groupId));
+        return ($http.get('https://localhost:3030/message/group/'+$stateParams.groupId));
     }
 }
 

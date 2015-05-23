@@ -62,8 +62,12 @@ var secureServer = https.createServer(sslOptions,app).listen('3030', function(){
 
 
 //habilita los archivos secundarios de resources y js necesarios de /web
-app.use(express.static('web'));
+//app.use(express.static('web'));
+app.use('/www',express.static(_dirmame+'www-ionic'));
 //de momento redirige a wall, a la espera de login
+
+app.get('/ionic', function(req, res) {
+  res.sendfile('./www-ionic/www/index.html');});
 
 app.get('/wall', function(req, res) {
   res.sendfile('./web/wall/wall.html');});

@@ -1,0 +1,288 @@
+<body>
+
+<div class="row row-offcanvas row-offcanvas-left" >
+
+    <div class="col-sm-3 col-md-2 sidebar-offcanvas" id="sidebar" role="navigation">
+
+        <ul class="nav nav-sidebar" >
+            <li class="active"><a href="#">Overview</a></li>
+            <img src="profile/Images/deportistas.png"  class="img-rounded"/>
+            <br><br>
+            <div ng-controller="GetCtrl" >
+                <!--<ul ng-repeat="user in users">-->
+                <li> Name : {{users.Name}}  <br> Username: {{users.Username}}   <br> Email: {{users.Email}} <br> Level: {{users.Level}}
+                    <br> Gender: {{users.Gender}}</li>
+          <!--  </ul>-->
+            </div>
+
+            <!-- modal update -->
+            <div ng-controller="ModalDemoCtrl">
+                <script type="text/ng-template" id="ModalUpdate">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Update User</h3>
+                        <h4 >Puede actualizar un campo o los que quiera</h4>
+                    </div>
+                    <form novalidate class="form" align="center">
+                            Username:  <input type="text"     placeholder="Username" class="form-control"  name="Username" required ng-model="updateUser.Username"/>
+                            Password : <input type="password" placeholder="Password" class="form-control" name="Password" required ng-model="updateUser.Password"/>
+                            Name:      <input type="text"     placeholder="Name"  class="form-control" name="Name" required ng-model="updateUser.Name"/>
+                            Surname:   <input type="text"     placeholder="Surname" class="form-control" name="Surname" required  ng-model="updateUser.Surname"/>
+                            Email:     <input type="email"    placeholder="nombre@dominio" class="form-control"  name="Email" required ng-model="updateUser.Email"/>
+                            Birthdate: <input type="date"     placeholder="Birthdate" class="form-control" name="Birthdate" required  ng-model="updateUser.Birthdate"/>
+                            Gender:    <input type="text"     placeholder="Gender" class="form-control" name="Gender" required  ng-model="updateUser.Gender"/>
+                            <br>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="okUpdate()">Update</button>
+                        <button class="btn btn-warning" ng-click="cancelUpdate()">Cancel</button>
+                    </div>
+                    </form>
+                </script>
+
+                <button type="button" id="update" class="btn btn-outline btn-info" ng-click="openUpdate()">Update User</button>
+            </div>
+
+            <div ng-controller="ModalDemoCtrl">
+                <!-- modal delete -->
+                <script type="text/ng-template" id="ModalDelete">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Delete User</h3>
+                    </div>
+                    <div class="modal-body" align="center">
+                       <h4>Are you sure to delete this user ?</h4>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="okDelete()">Yes</button>
+                        <button class="btn btn-warning" ng-click="cancelDelete()">No</button>
+                    </div>
+                </script>
+
+                <button type="button" id="delete" class="btn btn-outline btn-danger" ng-click="openDelete()">Delete User</button>
+            </div>
+
+        </ul>
+
+    </div><!--/span-->
+
+
+    <div class="col-sm-9 col-md-10 main">
+
+        <!--toggle sidebar button-->
+        <p class="visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="glyphicon glyphicon-chevron-left"></i></button>
+        </p>
+
+        <h1 class="page-header">
+
+            <p class="lead"><a href="https://www.bootply.com/128936"></a></p>
+        </h1>
+    </div><!--/span-->
+
+    <div class="col-md-8" align="center" id="evolution">
+        <h3>My Evolution</h3>
+        <br><br><br>
+        <canvas id="buyers" width="350" height="150"></canvas>
+
+    </div>
+
+    <div class="col-md-8" id="panelmap">
+        <div class="panel panel-primary">
+            <div class="panel-heading" align="center">
+                <h3 class="panel-title">   <i class="fa fa-bar-chart-o"></i> My Map</h3>
+            </div>
+            <div id="map"></div>
+
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="col-md-4" align="center" id="global">
+    <h3>Global statistics</h3>
+    <br>
+    <div><b > Distance:</b><a> 40Km</a></div>
+    <div><b > Time:</b><a> 04:25</a></div>
+    <div><b> Level:</b><a> Initiated</a></div>
+    <div><b> Type :</b><a> Urban</a></div>
+
+
+</div><!--/span-->
+
+<div class="col-md-4" align="center" id="races">
+    <h3>Races Done/Pending</h3>
+    <br>
+    <div>
+        <b> Races Done:</b><br>
+        </div>
+            <div ng-controller="ModalDemoCtrl3">
+                <script type="text/ng-template" id="statistics2">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Cursa 1</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div  align="center">
+                            <h3>Race statistics</h3>
+                            </ul>
+                            <div><b > Carrera:</b><a> Cursa 1</a></div>
+                            <div><b > Distancia:</b><a> 15Km</a></div>
+                            <div><b > Tipo:</b><a> Mountain</a></div>
+                            <div><b > Fecha:</b><a> 05/05/2015</a></div>
+                            <div> <b >Nivel:</b><a> Medium</a></div>
+                            <div> <b >...</b><a> ...</a></div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button class="btn btn-warning" ng-click="cancelstatistics2()">Ok</button>
+                        <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                        <div id="map3"></div>
+                    </div>
+                </script>
+                <a> Cursa 1 </a>
+                <button type="button"  ng-click="openstatistics2('lg')">Ver</button>
+            </div>
+
+    <div ng-controller="ModalDemoCtrl4">
+        <script type="text/ng-template" id="statistics3">
+            <div class="modal-header">
+                <h3 class="modal-title">Cursa 2</h3>
+            </div>
+            <div class="modal-body">
+                <div  align="center">
+                    <h3>Race statistics</h3>
+                    </ul>
+                    <div><b > Carrera:</b><a> Cursa 2</a></div>
+                    <div><b > Distancia:</b><a> 20Km</a></div>
+                    <div><b > Tipo:</b><a> Urbana</a></div>
+                    <div><b > Fecha:</b><a> 07/05/2015</a></div>
+                    <div> <b >Nivel:</b><a> Medium</a></div>
+                    <div> <b >...</b><a> ...</a></div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" ng-click="cancelstatistics3()">Ok</button>
+                <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                <div id="map4"></div>
+            </div>
+        </script>
+        <a> Cursa 2 </a>
+        <button type="button"  ng-click="openstatistics3('lg')">Ver</button>
+    </div>
+
+    <div>
+        <b > Races Pending:</b><br>
+
+        <div ng-controller="ModalDemoCtrl2">
+            <script type="text/ng-template" id="statistics">
+                <div class="modal-header">
+                    <h3 class="modal-title">Cursa Bombers</h3>
+                </div>
+                <div class="modal-body">
+                    <div  align="center">
+                        <h3>Race information</h3>
+                        <ul id="Race">
+                        </ul>
+                        <div><b > Carrera:</b><a> Cursa Bombers</a></div>
+                        <div><b > Distancia:</b><a> 10Km</a></div>
+                        <div><b > Tipo:</b><a> Urbana</a></div>
+                        <div><b > Fecha:</b><a> 20/05/2015</a></div>
+                        <div> <b >Nivel:</b><a> Medio</a></div>
+                        <div> <b >...</b><a> ...</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" ng-click="cancelstatistics()">Ok</button>
+                    <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                    <div id="map2"></div>
+                </div>
+            </script>
+            <a> Cursa de Bombers </a>
+            <button type="button" ng-click="openstatistics('lg')">Ver</button>
+    </div>
+</div>
+</div>
+
+<script>
+
+    // line chart data
+    var buyerData = {
+        labels : ["1-05-2015","2-05-2015","3-05-2015","4-05-2015","5-05-2015","6-05-2015"],
+        datasets : [
+            {
+                fillColor : "rgba(255, 168, 63, 1.0)",
+                strokeColor : "#ff8c00",
+                pointColor : "#fff",
+                pointStrokeColor : "#ffa83f",
+                data : [10,0,5,15,10,0]
+            }
+        ]
+    }
+    // get line chart canvas
+    var buyers = document.getElementById('buyers').getContext('2d');
+    // draw line chart
+    new Chart(buyers).Line(buyerData);
+
+</script>
+<script type="text/javascript">
+
+//var map;
+//$(document).ready(function() {
+   var map = new GMaps({
+        el: '#map',
+        lat: 41.3931136,
+        lng: 2.1442971
+    });
+    map.addMarker({
+        lat: 41.3927395,
+        lng: 2.1435036,
+        title: 'Running Diagonal',
+        infoWindow: {
+            content: '<p>Running Diagonal: 5km por la diagonal</p>'
+        }
+    });
+map.addMarker({
+    lat: 41.3741459,
+    lng: 2.150023,
+    title: 'Cursa Bombers',
+    infoWindow: {
+        content: '<p>Cursa bombers: distancia:10km</p>'
+    }
+});
+map.addMarker({
+    lat: 41.4066626,
+    lng: 2.1090847,
+    title: 'Carretera Aigues',
+    infoWindow: {
+        content: '<p>Carretera Aigues :15km</p>'
+    }
+});
+map.drawRoute({
+    origin: [41.3741459, 2.150023],
+    destination: [41.410505, 2.216299],
+    travelMode: 'walking',
+    strokeColor: '#131540',
+    strokeOpacity: 0.6,
+    strokeWeight: 6
+});
+map.drawRoute({
+    origin: [41.3927395, 2.1435036],
+    destination: [41.3846735, 2.106584],
+    travelMode: 'walking',
+    strokeColor: '#131540',
+    strokeOpacity: 0.6,
+    strokeWeight: 6
+});
+//});
+
+</script>
+
+
+
+
+
+</body>
+
+
+</html>

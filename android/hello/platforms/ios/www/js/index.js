@@ -16,9 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-$("#getTodoBtn").click(function () {
-    window.location.href = "getTodo.html"
+//$("#getTodoBtn").click(function () {
+//    window.location.href = "getTodo.html"
+//});
+$("#postTodoBtn").click(function () {
+    window.location.href = "postTodo.html"
 });
+
+$("#getTodoBtn").click(function () {
+    window.location.href = "getTodoBy.html"
+});
+
+$("#deleteTodoBy").click(function () {
+    window.location.href = "deleteTodo.html"
+});
+$("#getUpdateBtn").click(function () {
+    window.location.href = "UpdateUser.html"
+});
+
+
+
+
 var app = {
     // Application Constructor
     initialize: function() {

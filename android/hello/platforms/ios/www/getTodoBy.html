@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Listar según</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+    <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+    <link rel="import" href="bower_components/core-menu/core-menu.html">
+    <link rel="import" href="bower_components/core-item/core-item.html">
+    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+    <link rel="import" href="bower_components/paper-fab/paper-fab.html">
+    <link rel="import" href="bower_components/paper-tabs/paper-tab.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <link rel="stylesheet" type="text/css" href="css/custom.css" media="screen"/>
+</head>
+
+<body>
+<core-toolbar id="core_toolbar">
+    <label flex="twelve">Perfil Usuario</label>
+</core-toolbar>
+<div class="wrapper">
+    <label></label>
+    <paper-input id="Username" label="Introduzca el perfil que desee ver" floatinglabel="true"></paper-input>
+    <label> Datos Usuario : </label>
+    <span id="list"></span><br><br>
+    <label> Carrera/s Usuario : </label>
+    <span id="listRaces"></span><br><br>
+    <paper-button id="getListarBtn" class="colored" raised="true" role="button">Listar</paper-button>
+    <paper-button id="getDeleteBtn" class="colored" raised="true" role="button">Borrar</paper-button>
+    <paper-button id="getUpdateBtn" class="colored" raised="true" role="button">Update</paper-button>
+    <paper-button id="atras" class="colored" raised="true" role="button">Inicio</paper-button>
+</div>
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    $("#atras").click(function () {
+        window.location.href = "index.html"
+    });
+
+    $("#getListarBtn").click(function () {
+        getTodo();
+
+
+    });
+
+    $("#getDeleteBtn").click(function () {
+        window.location.href = "deleteTodo.html"
+    });
+    $("#getUpdateBtn").click(function () {
+        window.location.href = "UpdateUser.html"
+    })
+
+// Obtener datos por nombre
+function getTodo() {
+var Username = $("#Username").val();
+    $.ajax({
+        url: "https://localhost:3030/user/" + Username,
+        type: 'GET',
+        crossDomain: true,
+        dataType: 'json',
+        success: function (data) {
+
+                $('<h2>' + data.Username + '</h2>').appendTo($('#list'));
+                $('<strong> Name: </strong> ' + data.Name + '<br>').appendTo($('#list'));
+                $('<strong> Surname: </strong> ' + data.Surname + '<br>').appendTo($('#list'));
+                $('<strong> Email: </strong> ' + data.Email + '<br>').appendTo($('#list'));
+                $('<strong> Birthdate: </strong> ' + data.Birthdate + '<br>').appendTo($('#list'));
+                $('<strong> Level: </strong> ' + data.Level + '<br>').appendTo($('#list'));
+                document.getElementById('getListarBtn').style.display = 'none';
+
+            for (i = 0; i < data.Races.length; i++) {
+                $('<h2>' + data.Races[i].Race + '</h2>').appendTo($('#listRaces'));
+                $('<strong> Style: </strong> ' + data.Races[i].State + '<br>').appendTo($('#listRaces'));
+
+            }
+
+        },
+        error: function () {
+            window.alert("Error o Usuario no existe, por favor registrese en el layout principal");
+        }
+    });
+}
+
+</script>
+
+</body>
+
+</html>

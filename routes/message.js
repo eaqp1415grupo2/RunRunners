@@ -60,19 +60,19 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User not Found');
             } else {
-                Race.findOne({_id: id}, function (err, result) {
+                Race.findOne({_id: id, 'Users._id':userid}, function (err, result) {
                     if (!result) {
                         race = null;
                     }
                 });
-                Group.findOne({_id: id}, function (err, result2) {
+                Group.findOne({_id: id, 'Users._id':userid}, function (err, result2) {
                     if (!result2) {
                         group = null;
                     }
                 });
                 console.log(race, group);
                 if (!race && !group) {
-                    res.send(404, 'No parentID with this ID');
+                    res.send(404, 'Not Found');
 
                 } else {
                     var message = new Message({

@@ -4,6 +4,7 @@ module.exports = function (app) {
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
+    var Secret = require ('../config/secret.js');
 
     findAllUsers = function (req, res) {
         console.log("GET - /users");
@@ -19,7 +20,8 @@ module.exports = function (app) {
     findByUsername = function (req, res) {
         console.log("GET - /user/:Username");
         //  var name = req.params.Name;
-        User.findOne({"Username": req.params.Username}, function (err, user) {
+        var id = jwt.decode(req.params.id,Secret);
+        User.findOne({_id:id}, function (err, user) {
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             }
@@ -79,8 +81,8 @@ module.exports = function (app) {
                 if (user.Password != req.body.Password) {
                     res.send(404, 'Password error');
                 } else {
-                    var token = jwt.encode(user.Username, 'secret');
-                    return res.send(200, token);
+                    var token = jwt.encode(user._id, Secret);
+                    res.send(200, token);
                 }
             }
         });
@@ -90,7 +92,8 @@ module.exports = function (app) {
     updateUser = function (req, res) {
         console.log("PUT - /user/:Username");
         console.log(req.body);
-        User.findOne({"Username": req.params.Username}, function (err, user) {
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -129,8 +132,9 @@ module.exports = function (app) {
 
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
-        console.log("DELETE -/user/:Username");
-        User.findOne({"Username": req.params.Username}, function (err, user) {
+        console.log("DELETE -/user/:id");
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({"_id": id}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -148,21 +152,25 @@ module.exports = function (app) {
     };
 
     findRaces = function(req,res){
-        User.findOne({Username: req.params.Username}, function(err, user){
-           if(!user){res.send(404,'User Not Found');}
+
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id}, function(err, user){
+            if(!user){res.send(404,'User Not Found');}
             else{
-               if(err) res.send(500, 'Mongo Error');
-               else {
-                   var races = user.Races;
-                   console.log(races);
-                   res.send(200, races);
-               }
-           }
+                if(err) res.send(500, 'Mongo Error');
+                else {
+                    var races = user.Races;
+                    console.log(races);
+                    res.send(200, races);
+                }
+            }
         });
     };
 
     findGroups = function(req,res){
-        User.findOne({Username: req.params.Username}, function(err, user){
+
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id}, function(err, user){
             if(!user){res.send(404,'User Not Found');}
             else{
                 if(err) res.send(500, 'Mongo Error');
@@ -177,13 +185,13 @@ module.exports = function (app) {
 
     //Link routes and functions
     app.get('/user', findAllUsers);
-    app.get('/user/:Username', findByUsername);
+    app.get('/user/:id', findByUsername);
     app.post('/user', addUser);
     app.post('/user/auth', authenticate);
-    app.put('/user/:Username', updateUser);
-    app.delete('/user/:Username', deleteUser);
-    app.get('/user/:Username/races', findRaces);
-    app.get('/user/:Username/groups', findGroups);
+    app.put('/user/:id', updateUser);
+    app.delete('/user/:id', deleteUser);
+    app.get('/user/:id/races', findRaces);
+    app.get('/user/:id/groups', findGroups);
 
 
 };

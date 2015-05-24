@@ -3,6 +3,8 @@ module.exports = function (app) {
     var User = require('../models/user.js');
     var Group = require('../models/group.js');
     var Race = require('../models/race.js');
+    var Secret = require ('../config/secret.js');
+    var jwt = require('jwt-simple');
 
     findAllGroups = function (req, res) {
 

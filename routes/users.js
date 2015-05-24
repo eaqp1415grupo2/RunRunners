@@ -179,6 +179,7 @@ module.exports = function (app) {
     app.get('/user', findAllUsers);
     app.get('/user/:Username', findByUsername);
     app.post('/user', addUser);
+    app.post('/user/auth', authenticate);
     app.put('/user/:Username', updateUser);
     app.delete('/user/:Username', deleteUser);
     app.get('/user/:Username/races', findRaces);

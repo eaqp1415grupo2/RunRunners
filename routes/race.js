@@ -2,6 +2,8 @@ module.exports = function (app) {
 
     var Race = require('../models/race.js');
     var User = require('../models/user.js');
+    var Secret = require ('../config/secret.js');
+    var jwt = require('jwt-simple');
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
         Race.find(function (err, races) {
@@ -175,7 +177,7 @@ module.exports = function (app) {
     };
 
     addUser = function (req, res) {
-        var id = req.body._id;
+        var id = jwt.decode(req.body._id,Secret);
         Race.findOne({_id: req.params.id}, function (error, race) {
             if (!race) {
                 res.send(404, 'Race not found');
@@ -217,7 +219,7 @@ module.exports = function (app) {
             if (!race) {
                 res.send(404, 'Race Not Found');
             } else {
-                var id = req.body._id;
+                var id = jwt.decode(req.body._id,Secret);
                 User.findOne({_id: id}, {Username: 1}, function (err, user) {
                     console.log(user);
                     var message = ({UserID: user._id, Username: user.Username, Text: req.body.Text});
@@ -264,7 +266,7 @@ module.exports = function (app) {
     };
 
     deleteUser = function (req, res) {
-        var id = req.body._id;
+        var id = jwt.decode(req.body._id,Secret);
         Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, race) {
             if (!race) {
                 res.send(404, 'User Not Found')

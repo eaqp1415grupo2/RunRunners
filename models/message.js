@@ -1,15 +1,16 @@
-var mongoose = require('mongoose');
+    var mongoose = require('mongoose');
     Schema = mongoose.Schema;
 
 var messageSchema = new Schema({
     UserID: {type: Schema.ObjectId, ref: 'User'},
     Username: {type: String},
     Text: {type: String},
-    GroupOrRace:{type:Boolean},
-    ParentID:{type:String},
-    GroupID:{type:Schema.ObjectId, ref:'Group'},
-    RaceID:{type:Schema.ObjectId, ref:'Race'},
-    ParentMessageID: {type: Schema.ObjectId, ref: 'Message'},
-});
+    ParentID: {type: Schema.ObjectId},
+    Answers: [{
+        UserID: {type: Schema.ObjectId, ref: 'User'},
+        Username: {type: String},
+        Answer: {type: String}
+    }]
+},  {versionKey: false});
 
 module.exports = mongoose.model('Message', messageSchema);

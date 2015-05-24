@@ -77,7 +77,7 @@ module.exports = function (app) {
     };
 
     addUser = function (req, res) {
-        var id = req.body._id;
+        var id = jwt.decode(req.body._id,Secret);
         Group.findOne({_id: req.params.id}, function (error, group) {
             if (!group) {
                 res.send(404, 'Group not found');
@@ -251,7 +251,7 @@ module.exports = function (app) {
     };
 
     deleteUser = function (req, res) {
-        var id = req.body._id;
+        var id = jwt.decode(req.body._id,Secret);
         Group.findOne({_id: req.params.id}, function (err, group) {
             if (!group) {
                 res.send(404, 'Group Not Found');

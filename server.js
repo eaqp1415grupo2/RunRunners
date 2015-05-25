@@ -33,7 +33,7 @@ passport.use(new FacebookStrategy({
     }
 ));
 
-var app     = express();
+var app = express();
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -76,7 +76,7 @@ app.get('/profile', function(req, res) {
     res.sendfile('./web/profile/profile.html');});
 
 app.get('/', function(req, res) {
-    res.sendfile('./web/login/login.html');});
+    res.sendfile('./www/login.html');});
 
 app.get('/backoffice', function(req, res) {
     res.sendfile('./web/backoffice/backoffice.html');});
@@ -84,24 +84,20 @@ app.get('/backoffice', function(req, res) {
 app.get('/backoffice2', function(req, res) {
     res.sendfile('./web/backoffice/index.html');});
 
-app.get('/auth/facebook',
-    passport.authenticate('facebook'),
-    function(req, res){
+app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
         // The request will be redirected to Facebook for authentication, so this
         // function will not be called.
-    });
+});
 
 // GET /auth/facebook/callback
 //   Use passport.authenticate() as route middleware to authenticate the
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/' }),
-    function(req, res) {
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
         console.log(res.user);
-        res.redirect('/wall');
-    });
+        res.redirect('/ionic');
+});
 
 
 app.get('/RacesDone', function(req, res) {

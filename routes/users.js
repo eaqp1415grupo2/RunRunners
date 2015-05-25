@@ -1,6 +1,7 @@
 module.exports = function (app) {
 
     var jwt = require('jwt-simple');
+    var moment = require('moment');
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
@@ -56,8 +57,9 @@ module.exports = function (app) {
 
         user.save(function (err) {
             if (!err) {
-                console.log("User created");
-                return res.send(200, user);
+                var expires = moment().add(2, 'days').valueOf();
+                var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+                res.send(200, token);
             } else {
                 console.log(err);
                 if (err.name == 'ValidationError') {
@@ -73,15 +75,18 @@ module.exports = function (app) {
     };
 
     authenticate = function(req, res) {
+        console.log(req.body);
         User.findOne({"Username": req.body.Username}, function(err, user) {
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             } else if (user) {
+                console.log(user);
                 if (user.Password != req.body.Password) {
                     res.send(404, 'Password error');
                 } else {
-                    var token = jwt.encode(user._id, Secret);
+                    var expires = moment().add(2, 'days').valueOf();
+                    var token = jwt.encode({iss: user._id, exp: expires}, Secret);
                     res.send(200, token);
                 }
             }

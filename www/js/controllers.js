@@ -1,9 +1,5 @@
 'use strict';
-var MapApp = angular.module('MapApp', [
-	'ionic']);
-
-
-
+var MapApp = angular.module('MapApp', ['ionic']);
 
 var URL='https://localhost:3030/';
 var groupid='555db5a80a9995be10000009';
@@ -53,7 +49,6 @@ MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
     $scope.whoiswhere = [];
     $scope.basel = { lat: 47.55633987116614, lon: 7.576619513223015 };
 
-
     // check login code
 	$ionicPlatform.ready(function() {	navigator.geolocation.getCurrentPosition(function(position) {
 		    $scope.position=position;
@@ -65,23 +60,21 @@ MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
 	        if ($scope.lat != lat || $scope.lon != lon) {
 	            $scope.basel = { lat: lat, lon: lon };
 	            if (!$scope.$$phase) $scope.$apply("basel");
-				}
-			};
+			}
+		};
 
-		    // some points of interest to show on the map
-		    // to be user as markers, objects should have "lat", "lon", and "name" properties
-		    $scope.whoiswhere = [
-		        { "name": "My Marker", "lat": $scope.basel.lat, "lon": $scope.basel.lon },
-				];
-
-			});
+		// some points of interest to show on the map
+		// to be user as markers, objects should have "lat", "lon", and "name" properties
+		$scope.whoiswhere = [
+			{ "name": "My Marker", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
+		];
+	});
 
 }]);
 
 /**
  * MAIN CONTROLLER - handle inapp browser
  */
-
 function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $log) {
     $scope.message = [];
               console.log($stateParams);
@@ -163,9 +156,6 @@ function GroupsService($http, $log) {
     }
 }
 */
-
-
-
 
 // formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
 MapApp.filter('lat', function () {

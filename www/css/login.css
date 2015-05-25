@@ -1,0 +1,16 @@
+.ng-invalid.ng-dirty {
+    border-color: red;
+}
+
+.ng-valid.ng-dirty {
+    border-color: green;
+}
+
+.navbar-default .navbar-brand{
+    color:#ffffff;
+    font-size:20px;
+}
+
+.rowsign {
+    padding-top: 200px;
+}

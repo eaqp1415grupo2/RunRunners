@@ -143,7 +143,34 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
-
+            var races = user.Races;
+            var groups = user.Groups;
+            for (var i = 0; i < races.length; i++) {
+                Race.findOne(races[i]._id, function (err, race) {
+                    race.Users.pull(id.iss);
+                    race.save(function (err) {
+                        if (!err) {
+                            console.log('User Removed');
+                        } else {
+                            console.log('ERROR: ' + err);
+                            res.send(500, "Mongo Error");
+                        }
+                    });
+                });
+            }
+            for (var j = 0; j < races.length; j++) {
+                Group.findOne(groups[j]._id, function (err, group) {
+                    group.Users.pull(id.iss);
+                    group.save(function (err) {
+                        if (!err) {
+                            console.log('User Removed');
+                        } else {
+                            console.log('ERROR: ' + err);
+                            res.send(500, "Mongo Error");
+                        }
+                    });
+                });
+            }
             user.remove(function (err) {
                 if (!err) {
                     console.log('Removed user');

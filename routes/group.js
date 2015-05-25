@@ -80,13 +80,14 @@ module.exports = function (app) {
 
     addUser = function (req, res) {
         var id = jwt.decode(req.body._id,Secret);
+        console.log(id);
         Group.findOne({_id: req.params.id}, function (error, group) {
             if (!group) {
                 res.send(404, 'Group not found');
             } else {
-                Group.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
-                    User.findOne({_id: id}, function (err, user) {
-                        // console.log(user);
+                Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
+                    User.findOne({_id: id.iss}, function (err, user) {
+                         console.log(user);
                         if (!err && users == null && user != null) {
                             var grouppush = ({_id: user._id, Username: user.Username});
                             group.Users.push(grouppush);
@@ -258,12 +259,12 @@ module.exports = function (app) {
             if (!group) {
                 res.send(404, 'Group Not Found');
             } else {
-                User.findOne({_id: req.params.id, 'Users._id': id}, function (error, user) {
+                User.findOne({_id: req.params.id, 'Users._id': id.iss}, function (error, user) {
                     console.log(user);
                     if (user == null) {
                         res.send(404, 'There is no user with in this group');
                     } else {
-                        group.Users.pull(id);
+                        group.Users.pull(id.iss);
                         group.save(function (err) {
                             if (err) res.send(500, "Error: " + err);
                             else res.send(200);
@@ -274,9 +275,18 @@ module.exports = function (app) {
         });
     };
 
+    findNoUserGroup = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        Group.find({'Users._id':{$nin:[id.iss]}}, function(err, user){
+            if(err)res.send(500, 'Mongo Error');
+            else res.send(user);
+        });
+    };
+
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
     app.get('/groups/id/:id', findGroupById);
+    app.get('/groups/no/:id', findNoUserGroup);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);
@@ -286,4 +296,5 @@ module.exports = function (app) {
     app.delete('/groups/:id', deleteGroup);
     app.delete('/groups/:id/user', deleteUser);
     app.delete('/groups/:id/race', deleteRace);
+
 };

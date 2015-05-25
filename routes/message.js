@@ -56,7 +56,7 @@ module.exports = function (app) {
         var race = true;
         var group = true;
         var userid = jwt.decode(req.body.UserID, Secret);
-        User.findOne({_id: userid}, function (err, user) {
+        User.findOne({_id: userid.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'User not Found');
             } else {
@@ -93,7 +93,7 @@ module.exports = function (app) {
 
     addAnswer = function (req, res) {
         var id = jwt.decode(req.body.UserID, Secret);
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'User Not Found');
             } else {
@@ -102,7 +102,7 @@ module.exports = function (app) {
                         res.send(404, 'Message Not Found');
                     } else {
                         var answer = ({
-                            UserID: id,
+                            UserID: id.iss,
                             Username: user.Username,
                             Answer: req.body.Answer
                         });
@@ -119,7 +119,7 @@ module.exports = function (app) {
 
     deleteMessage = function (req, res) {
         var id = jwt.decode(req.body.UserID, Secret);
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'User Not Found');
             } else {
@@ -127,7 +127,7 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        if (message.UserID != id) {
+                        if (message.UserID != id.iss) {
                             res.send(400, 'Bad User');
                         } else {
                             message.remove(function (err) {
@@ -144,7 +144,7 @@ module.exports = function (app) {
     deleteAnswer = function (req, res) {
         var id = jwt.decode(req.body.UserID, Secret);
         var answer = req.body.AnswerID;
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'User Not Found');
             } else {
@@ -152,7 +152,7 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        if (message.UserID != id) {
+                        if (message.UserID != id.iss) {
                             res.send(400, 'Bad User');
                         } else {
                             message.Answers.pull(answer);

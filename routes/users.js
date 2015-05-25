@@ -22,7 +22,7 @@ module.exports = function (app) {
         console.log("GET - /user/:Username");
         //  var name = req.params.Name;
         var id = jwt.decode(req.params.id,Secret);
-        User.findOne({_id:id}, function (err, user) {
+        User.findOne({_id:id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             }
@@ -98,7 +98,7 @@ module.exports = function (app) {
         console.log("PUT - /user/:Username");
         console.log(req.body);
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -139,7 +139,7 @@ module.exports = function (app) {
     deleteUser = function (req, res) {
         console.log("DELETE -/user/:id");
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({"_id": id}, function (err, user) {
+        User.findOne({"_id": id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -159,7 +159,7 @@ module.exports = function (app) {
     findRaces = function(req,res){
 
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({_id: id}, function(err, user){
+        User.findOne({_id: id.iss}, function(err, user){
             if(!user){res.send(404,'User Not Found');}
             else{
                 if(err) res.send(500, 'Mongo Error');
@@ -175,7 +175,7 @@ module.exports = function (app) {
     findGroups = function(req,res){
 
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({_id: id}, function(err, user){
+        User.findOne({_id: id.iss}, function(err, user){
             if(!user){res.send(404,'User Not Found');}
             else{
                 if(err) res.send(500, 'Mongo Error');

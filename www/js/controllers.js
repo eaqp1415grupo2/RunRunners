@@ -11,7 +11,9 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.single', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
+		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  });
 
@@ -25,6 +27,12 @@ MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessa
 MapApp.controller("GroupsCtrl",["$scope", "$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
 MapApp.controller("GroupCtrl",["$scope", "$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
+
+MapApp.service("RacesService",["$http", "$log", RacesService ]);
+MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
+
+MapApp.controller("RacesCtrl",["$scope", "$ionicLoading", "RacesService", "$log", RacesCtrl]);
+MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
 /**
  * HEADER - handle menu toggle
  */
@@ -73,7 +81,7 @@ MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
 }]);
 
 /**
- * MAIN CONTROLLER - handle inapp browser
+ * Group CONTROLLERS 
  */
 function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $log) {
     $scope.message = [];
@@ -117,6 +125,48 @@ function GroupMessageService($http, $log,$stateParams) {
     }
 }
 
+
+function RaceCtrl($scope, $stateParams ,$ionicLoading, RaceMessageService, $log) {
+    $scope.message = [];
+              console.log($stateParams);
+    $scope.raceId=$stateParams.raceId;
+
+    $scope.loadRaceMessages = function() {
+		RaceMessageService.loadRacesMessages()
+		     .success(function(result) {
+				$scope.messages=result;
+      console.log("YY"+$scope.races);
+                      $ionicLoading.hide();
+      });
+    } 	          		
+}
+
+
+function RacesCtrl($scope, $ionicLoading, RacesService, $log) {
+    $scope.races = []; 
+    $scope.infiniteLoad = false;
+    
+    $scope.loadRaces = function() {
+		RacesService.loadRaces()
+		     .success(function(result) {
+				$scope.races=result;
+      console.log($scope.races);
+                      $ionicLoading.hide();
+      });
+    }
+}
+
+function RacesService($http, $log) {
+    this.loadRaces = function() {
+        return ($http.get('https://localhost:3030/race'));
+    }
+}
+
+function RaceMessageService($http, $log,$stateParams) {
+        this.loadRaceMessages = function() {     
+        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.raceId));
+    }
+}
 /*
 function GroupsCtrl($scope, $sce, $ionicLoading, GroupsService, $log) {
     $scope.groups = [];

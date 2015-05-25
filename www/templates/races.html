@@ -8,17 +8,17 @@
         <script src="index.js"></script>
         
         
-<body data-ng-controller="GroupsCtrl" onload="loadGroups()">
+<body data-ng-controller="RacesCtrl" onload="loadRaces()">
 
         <ion-header-bar class="bar-assertive">
-            <h1 class="title">Groups</h1>
+            <h1 class="title">Races</h1>
         </ion-header-bar>
         <ion-content>
-            <ion-refresher on-refresh="loadGroups()">            
+            <ion-refresher on-refresh="loadRaces()">            
             </ion-refresher>
             
             
-            <div data-ng-if="!groups.length">
+            <div data-ng-if="!races.length">
                 <center>                                        
                     <br>
                     <h2> Pull down to load </h2>
@@ -27,22 +27,21 @@
 
         
         <div class="list card">
-<ion-item data-ng-repeat="g in groups track by $index" href="#/map/group/{{g._id}}">
+<ion-item data-ng-repeat="r in races track by $index" href="#/map/race/{{r._id}}">
   
 <div class="card">
 <div class="item item-avatar" >
-    <h2>{{g.Name}}</h2> 
-    <p>{{g.Level}}</p>
+    <h2>{{r.Name}}</h2> 
+    <p>{{r.Level}}</p>
   </div>
 
   <div class="item item-body">
     <p>
-     {{ g.Info}}
+     {{ r.Distance}}
     </p>
     <p>
-      <a href="#" class="subdued">Members {{g.Users.length}}</a>
-      <a href="#" class="subdued">Races {{g.Users.length}}</a>
-      <a href="#" class="subdued">Administrador {{g.Admin_Group}}</a>
+      <a href="#" class="subdued">Members {{r.Users.length}}</a>
+      <a href="#" class="subdued">Administrador </a>
     </p>
   </div>
 
@@ -60,8 +59,6 @@
 </ion-item>
 </div>
 
-            <ion-infinite-scroll on-infinite="moreBlogs()" 
-                    data-ng-if="infiniteLoad" icon="">
-            </ion-infinite-scroll>
+
         </ion-content>
     </body>

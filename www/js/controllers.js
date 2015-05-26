@@ -121,7 +121,7 @@ function GroupsService($http, $log) {
 
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get('https://localhost:3030/message/group/'+$stateParams.groupId));
+        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.groupId));
     }
 }
 
@@ -263,6 +263,13 @@ MapApp.directive("appMap", function ($window) {
             var currentMarkers;
    	        var callbackName = 'InitMapCb';
 
+				//Obtener la posicion y centrar
+            navigator.geolocation.getCurrentPosition(function(pos) {
+              map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+            }, function(error) {
+              alert('Unable to get location: ' + error.message);
+            });
+
    			// callback when google maps is loaded
 			$window[callbackName] = function() {
 				console.log("map: init callback");
@@ -290,7 +297,7 @@ MapApp.directive("appMap", function ($window) {
 			function createMap() {
 				console.log("map: create map start");
 				var mapOptions = {
-					zoom: 13,
+					zoom: 16,
 					center: new google.maps.LatLng(47.55, 7.59),
 					mapTypeId: google.maps.MapTypeId.ROADMAP,
 					panControl: true,

@@ -1,4 +1,4 @@
-   <ion-view title="Races Map">
+<ion-view title="Races Map">
 <ion-content class="has-header padding">
 
 <!-- map directive-->
@@ -9,6 +9,70 @@
 	> 
 </app-map>
 
+
+<div class="row" data-ng-controller="RacesCtrl" >
+   <div class="col">
+   
+  <div class="item item-input-inset">
+    <label class="item-input-wrapper">
+      <input type="text" placeholder="Races">
+    </label>
+    <button class="button button-small" onclick="loadRaces()">
+      Refresh
+    </button>
+</div>
+   <center>
+   
+    <div class="list card">
+<ion-item data-ng-repeat="r in races track by $index" href="#/map/race/{{r._id}}">
+  
+<div class="card">
+<div class="item item-avatar" >
+    <h2>{{r.Name}}</h2> 
+    <p>{{r.Level}}</p>
+  </div>
+
+  <div class="item item-body">
+    <p>
+     {{ r.Distance}}
+    </p>
+    <p>
+      <a href="#" class="subdued">Members {{r.Users.length}}</a>
+      <a href="#" class="subdued">Administrador </a>
+    </p>
+  </div>
+
+  <div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item" href="#">
+      <i class="icon ion-thumbsup"></i>
+      Like
+    </a>
+    <a class="tab-item" href="#">
+      <i class="icon ion-chatbox"></i>
+      Comment
+    </a>
+  </div>
+
+</ion-item>
+</div>
+   
+   
+   
+   </center>
+   </div>
+   <div class="col">
+   <center>Others...
+   
+   
+   
+   
+   
+   </center>
+   
+   </div>
+
+
+</div>
 
 
 </ion-content>

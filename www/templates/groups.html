@@ -9,31 +9,40 @@
         
         
 <body data-ng-controller="GroupsCtrl" onload="loadGroups()">
-<ion-view title="Groups">
-        <ion-header-bar class="bar-assertive">
+<ion-view title="Groups">        
+        <ion-header-bar class="bar-assertive item-input-inset">
             <h1 class="title">Groups</h1>
-        </ion-header-bar>
+		</ion-header-bar>
         <ion-content>
+
             <ion-refresher on-refresh="loadGroups()">            
             </ion-refresher>
             
             
             <div data-ng-if="!groups.length">
-                <center>                                        
+                <right>                                        
                     <br>
-                    <h2> Pull down to load </h2>
-                </center>
+                    <h4> Pull down to load </h4>
+                </right>
             </div>
-
         
-        <div class="list card">
+
+
+<div class="list">
+
+  <div class="item item-divider">
+    Mis Grupos
+  </div>
+
 <ion-item data-ng-repeat="g in groups track by $index" href="#/map/group/{{g._id}}">
   
 <div class="card">
-<div class="item item-avatar" >
-    <h2>{{g.Name}}</h2> 
-    <p>{{g.Level}}</p>
-  </div>
+	<div class="item item-avatar" style="background-color: #D2F8D2">
+
+    			<h2>{{g.Name}}</h2> 
+    			<p>{{g.Level}}</p>
+
+	</div>
 
   <div class="item item-body">
     <p>
@@ -47,22 +56,64 @@
   </div>
 
   <div class="item tabs tabs-secondary tabs-icon-left">
-    <a class="tab-item" href="#">
-      <i class="icon ion-thumbsup"></i>
-      Like
+    <a class="tab-item " href="#" style="color: red;">
+      <i class="icon ion-minus-circled"></i>
+      Dejar el Grupo
     </a>
     <a class="tab-item" href="#">
       <i class="icon ion-chatbox"></i>
       Comment
     </a>
   </div>
+</div>
+
+</ion-item>
+
+  <div class="item item-divider">
+    Otros Grupos
+  </div>
+<ion-item data-ng-repeat="g in groups track by $index" href="#/map/group/{{g._id}}">
+  
+<div class="card">
+	<div class="item item-avatar" style="background-color: #F8EBD2">
+
+    			<h2>{{g.Name}}</h2> 
+    			<p>{{g.Level}}</p>
+
+	</div>
+
+  <div class="item item-body">
+    <p>
+     {{ g.Info}}
+    </p>
+    <p>
+      <a href="#" class="subdued">Members {{g.Users.length}}</a>
+      <a href="#" class="subdued">Races {{g.Users.length}}</a>
+      <a href="#" class="subdued">Administrador {{g.Admin_Group}}</a>
+    </p>
+  </div>
+
+  <div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item " href="#" style="color: green;">
+      <i class="icon ion-plus-circled"></i>
+      Entrar en el grupo
+    </a>
+    <a class="tab-item" href="#">
+      <i class="icon ion-chatbox"></i>
+      Comment
+    </a>
+  </div>
+</div>
 
 </ion-item>
 </div>
-
             <ion-infinite-scroll on-infinite="moreBlogs()" 
                     data-ng-if="infiniteLoad" icon="">
             </ion-infinite-scroll>
+            
+            
         </ion-content>
+        
+        
         </ion-view>
     </body>

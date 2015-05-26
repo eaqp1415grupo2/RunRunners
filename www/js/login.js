@@ -20,6 +20,7 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
             console.log("post");
+            window.localStorage.token = data;
             window.location.href='/ionic';
         }).error(function(data) {
             window.alert("ERROR - POST");
@@ -36,7 +37,8 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
-            console.log("postlogin");
+            console.log(data);
+            window.localStorage.token = data;
             window.location.href='/ionic';
         }).error(function(data) {
             window.alert("ERROR - AUTH");
@@ -47,6 +49,29 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
     $scope.loginFacebook = function(){
         window.location.href='/auth/facebook';
     }
+}]);
+
+app.controller('facebookController', ['$http', '$scope', function ($http, $scope){
+    var loginRunRunners = this;
+
+    loginRunRunners.users = [];
+    console.log($scope.user);
+    loginRunRunners.users.push(this.user);
+    $http({
+        method: 'POST',
+        url: URL,
+        data: this.user,
+        headers: {'Content-Type': 'application/json'}
+    }).success(function(data, headers) {
+        console.log("post");
+        console.log(headers);
+        //window.location.href='/ionic';
+    }).error(function(data) {
+        window.alert("ERROR - POST");
+    });
+    this.user = {};
+
+
 }]);
 
 app.controller('TabController', function(){

@@ -23,7 +23,7 @@ var userSchema = new Schema({
     Surname : {type : String},
     Email : { type : String},
     Birthdate : {type : Date , format : "YYYY-MM-DD HH:mm:ss"},
-    Gender : {type : String, enum: ['Male', 'Female']},
+    Gender : {type : String, enum: ['male', 'female']},
     Location: {
         Lng: {type: Number},
         Ltd: {type: Number}

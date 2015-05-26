@@ -8,36 +8,21 @@
         <!-- bootstrap -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <!-- ionic css -->
-        <link href="https://code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
-        <script src="https://code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
         <link rel="stylesheet" href="css/login.css">
         <!-- cordova script -->
-        <script src="cordova.js"></script>
+        <!--script src="cordova.js"></script>
         <!-- your app's script -->
-        <script type="text/javascript" src="lib/ionic/js/angular/angular.min.js"></script>
+        <script type="text/javascript" src="lib/ionic/js/angular/angular.js"></script>
         <script type="text/javascript" src="lib/ionic/js/angular/angular-resource.js"></script>
         <script src="js/login.js"></script>
     </head>
 
     <!-- 'starter' is the name of this angular module (js/app.js)-->
     <body >
-        <ion-header-bar>
-            <nav id="navbarid" class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
-                <div class= "container clearfix">
-                    <div class="navbar-header">
-                        <a id="home" class="navbar-brand">RunRunners</a>
-                    </div>
-                    <!--
-                    <div class="collapse navbar-collapse" id="navbar-buttons" ng-controller="headerController">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="" class="btn signin-btn" ng-click="clickToClose()" >Close</a>
-                            </li>
-                        </ul>
-                    </div>
-                    -->
-                </div>
-            </nav>
+        <ion-header-bar class="bar bar-dark">
+            <a id="home" class="title">RunRunners</a>
         </ion-header-bar>
         <ion-content>
             <div class="row rowsign">

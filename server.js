@@ -67,7 +67,12 @@ app.use(express.static('www'));
 //de momento redirige a wall, a la espera de login
 
 app.get('/ionic', function(req, res) {
-    res.sendfile('./www/index.html');});
+    res.sendfile('./www/index.html');
+});
+
+app.get('/loginfacebook', function(req, res) {
+    res.sendfile('./www/templates/loginfacebook.html',{user:req.user});
+});
 
 app.get('/wall', function(req, res) {
     res.sendfile('./web/wall/wall.html');});
@@ -95,8 +100,35 @@ app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
-        console.log(res.user);
-        res.redirect('/ionic');
+
+    var User = require('./models/user.js');
+    var jwt = require('jwt-simple');
+    var moment = require('moment');
+    var Secret = require ('./config/secret.js');
+    var user = new User({
+        Username: req.user.username,
+        Password: req.user.id,
+        Name: req.user.name.givenName,
+        Surname: req.user.name.familyName,
+        Gender: req.user.gender
+    });
+    console.log(user);
+    user.save(function (err) {
+        if (!err) {
+            var expires = moment().add(2, 'days').valueOf();
+            var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+            headers = {token: token};
+            res.sendfile('./www/index.html',headers);
+        } else {
+            console.log(err);
+            if (err.name == 'ValidationError') {
+                res.send(400, 'Validation error');
+            } else {
+                res.send(500, 'Server error');
+            }
+            console.log('Internal error: %s', err.message);
+        }
+    });
 });
 
 

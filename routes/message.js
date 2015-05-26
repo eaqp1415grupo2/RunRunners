@@ -97,20 +97,37 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User Not Found');
             } else {
+                var race = true;
+                var group = true;
                 Message.findOne({_id: req.params.id}, function (err, message) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        var answer = ({
-                            UserID: id.iss,
-                            Username: user.Username,
-                            Answer: req.body.Answer
+                        Race.findOne({_id: id, 'Users._id':userid}, function (err, result) {
+                            if (!result) {
+                                race = null;
+                            }
                         });
-                        message.Answers.push(answer);
-                        message.save(function (err) {
-                            if (err) res.send(500, 'Mongo Error');
-                            else res.send(200, message);
-                        })
+                        Group.findOne({_id: id, 'Users._id':userid}, function (err, result2) {
+                            if (!result2) {
+                                group = null;
+                            }
+                        });
+                        console.log(race, group);
+                        if (!race && !group) {
+                            res.send(404, 'Not Found');
+                        }else {
+                            var answer = ({
+                                UserID: id.iss,
+                                Username: user.Username,
+                                Answer: req.body.Answer
+                            });
+                            message.Answers.push(answer);
+                            message.save(function (err) {
+                                if (err) res.send(500, 'Mongo Error');
+                                else res.send(200, message);
+                            })
+                        }
                     }
                 });
             }

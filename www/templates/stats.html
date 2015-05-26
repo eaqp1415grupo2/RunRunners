@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html ng-app="Stats" >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>RunRunners</title>
+    <!-- ionic css -->
+
+    <link href="https://code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
+    <script src="https://code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
+
+    <script type="text/javascript"
+            src="https://www.google.com/jsapi?autoload={
+            'modules':[{
+              'name':'visualization',
+              'version':'1',
+              'packages':['corechart']
+            }]
+          }"></script>
+
+    <script type="text/javascript">
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Day', 'Km'],
+                ['23-05-2015',  15,],
+                ['24-05-2015',  5],
+                ['25-05-2015',  10],
+                ['26-05-2015',  0]
+            ]);
+
+            var options = {
+                title: 'Stadistics',
+                curveType: 'function',
+                legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+    <link rel="stylesheet" href="css/index.css">
+    <!-- cordova script -->
+    <!-- your app's script -->
+    <style type="text/css">
+        #map {
+            width: 430px;
+            height: 255px;
+        }
+        #panelmap {
+            width: 462px;
+            height: 245px;
+            top: -270px;
+            left:65px;
+        }
+        #map2, #map3, #map4 {
+            width: 430px;
+            height: 255px;
+            right: -75px;
+        }
+        #global{
+            right : -280px;
+            top: -190px;
+        }
+        #evolution {
+            right: -385px;
+            top: 10px;
+        }
+        #update{
+            border: 2px #0000FF solid;
+            margin: 28px 0 0 28px;
+        }
+        #update:hover {
+            background: #0000FF;
+        }
+        #delete{
+            border: 2px red solid;
+            margin: 30px 0 0 30px;
+        }
+        #delete:hover{
+            background: red;
+        }
+        #races{
+            right : -390px;
+            top: -190px;
+        }
+        <!--span{
+                position:relative;
+                width:90px;
+                height:90px;
+                left:5px;
+                top:30px;
+                color: black;
+            }-->
+        .form input{
+            display:block;
+            align:center;
+        }
+        .form input.ng-valid {
+            border: thin solid #090;
+        }
+        .form input.ng-invalid {
+            border: thin solid #FA787E;
+        }
+    </style>
+</head>
+
+<!-- 'starter' is the name of this angular module (js/app.js)-->
+<body >
+
+
+
+
+<br>
+<div class="col-md-4" align="center" id="global">
+    <h3>Global statistics</h3>
+    <br>
+    <div><b > Distance:</b><a> 40Km</a></div>
+    <div><b > Time:</b><a> 04:25</a></div>
+    <div><b> Level:</b><a> Initiated</a></div>
+    <div><b> Type :</b><a> Urban</a></div>
+
+
+
+
+
+
+</div><!--/span-->
+
+
+<div div class="col-md-4" align="center" >
+    <div id="curve_chart" style="width: 500px; height: 200px"></div>
+    </div>
+
+
+</div>
+<div class="col-md-4" align="center" id="races">
+    <h3>Races Done/Pending</h3>
+    <br>
+    <div>
+        <b> Races Done:</b><br>
+    </div>
+    <div ng-controller="ModalDemoCtrl3">
+        <script type="text/ng-template" id="statistics2">
+            <div class="modal-header">
+                <h3 class="modal-title">Cursa 1</h3>
+            </div>
+            <div class="modal-body">
+                <div  align="center">
+                    <h3>Race statistics</h3>
+                    </ul>
+                    <div><b > Carrera:</b><a> Cursa 1</a></div>
+                    <div><b > Distancia:</b><a> 15Km</a></div>
+                    <div><b > Tipo:</b><a> Mountain</a></div>
+                    <div><b > Fecha:</b><a> 05/05/2015</a></div>
+                    <div> <b >Nivel:</b><a> Medium</a></div>
+                    <div> <b >...</b><a> ...</a></div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+
+                <button class="btn btn-warning" ng-click="cancelstatistics2()">Ok</button>
+                <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                <div id="map3"></div>
+            </div>
+        </script>
+        <a> Cursa 1 </a>
+        <button type="button"  ng-click="openstatistics2('lg')">Ver</button>
+    </div>
+
+    <div ng-controller="ModalDemoCtrl4">
+        <script type="text/ng-template" id="statistics3">
+            <div class="modal-header">
+                <h3 class="modal-title">Cursa 2</h3>
+            </div>
+            <div class="modal-body">
+                <div  align="center">
+                    <h3>Race statistics</h3>
+                    </ul>
+                    <div><b > Carrera:</b><a> Cursa 2</a></div>
+                    <div><b > Distancia:</b><a> 20Km</a></div>
+                    <div><b > Tipo:</b><a> Urbana</a></div>
+                    <div><b > Fecha:</b><a> 07/05/2015</a></div>
+                    <div> <b >Nivel:</b><a> Medium</a></div>
+                    <div> <b >...</b><a> ...</a></div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" ng-click="cancelstatistics3()">Ok</button>
+                <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                <div id="map4"></div>
+            </div>
+        </script>
+        <a> Cursa 2 </a>
+        <button type="button"  ng-click="openstatistics3('lg')">Ver</button>
+    </div>
+
+    <div>
+        <b > Races Pending:</b><br>
+
+        <div ng-controller="ModalDemoCtrl2">
+            <script type="text/ng-template" id="statistics">
+                <div class="modal-header">
+                    <h3 class="modal-title">Cursa Bombers</h3>
+                </div>
+                <div class="modal-body">
+                    <div  align="center">
+                        <h3>Race information</h3>
+                        <ul id="Race">
+                        </ul>
+                        <div><b > Carrera:</b><a> Cursa Bombers</a></div>
+                        <div><b > Distancia:</b><a> 10Km</a></div>
+                        <div><b > Tipo:</b><a> Urbana</a></div>
+                        <div><b > Fecha:</b><a> 20/05/2015</a></div>
+                        <div> <b >Nivel:</b><a> Medio</a></div>
+                        <div> <b >...</b><a> ...</a></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" ng-click="cancelstatistics()">Ok</button>
+                    <button class="btn btn-warning" ng-click="showmap()">Show Race map</button><br><br>
+                    <div id="map2"></div>
+                </div>
+            </script>
+            <a> Cursa de Bombers </a>
+            <button type="button" ng-click="openstatistics('lg')">Ver</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+<script src="js/stats.js"></script>
+<script src="js/controllers.js"></script>
+
+</body>
+</html>

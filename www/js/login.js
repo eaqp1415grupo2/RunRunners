@@ -6,7 +6,7 @@ app.controller('headerController', function($scope, ngDialog){
 
 });
 
-app.controller('userController', ['$http', '$scope', function ($http, $scope){
+app.controller('userController', ['$http', '$scope', '$window', function ($http, $scope, $window){
     var loginRunRunners = this;
     var user = {};
     loginRunRunners.users = [];
@@ -19,8 +19,8 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
-            console.log("post");
-            window.localStorage.token = data;
+            console.log(data);
+            $window.localStorage.token = data;
             window.location.href='/ionic';
         }).error(function(data) {
             window.alert("ERROR - POST");
@@ -38,7 +38,7 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
             console.log(data);
-            window.localStorage.token = data;
+            $window.localStorage.token = data;
             window.location.href='/ionic';
         }).error(function(data) {
             window.alert("ERROR - AUTH");
@@ -53,6 +53,7 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
 
 app.controller('facebookController', ['$http', '$scope', function ($http, $scope){
     var loginRunRunners = this;
+    console.log($scope.options);
 
     loginRunRunners.users = [];
     console.log($scope.user);

@@ -48,31 +48,16 @@ app.controller('userController', ['$http', '$scope', '$window', function ($http,
     };
 
     $scope.loginFacebook = function(){
+        console.log('facebook');
         window.location.href='/auth/facebook';
     }
 }]);
 
 app.controller('facebookController', ['$http', '$scope', function ($http, $scope){
     var loginRunRunners = this;
-    console.log($scope.options);
-
     loginRunRunners.users = [];
     console.log($scope.user);
     loginRunRunners.users.push(this.user);
-    $http({
-        method: 'POST',
-        url: URL,
-        data: this.user,
-        headers: {'Content-Type': 'application/json'}
-    }).success(function(data, headers) {
-        console.log("post");
-        console.log(headers);
-        //window.location.href='/ionic';
-    }).error(function(data) {
-        window.alert("ERROR - POST");
-    });
-    this.user = {};
-
 
 }]);
 

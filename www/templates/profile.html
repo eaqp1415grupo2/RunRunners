@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="ui.bootstrap.demo">
+<html ng-app="profileapp">
 <head lang="en">
 
     <meta charset="utf-8">
@@ -13,7 +13,9 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.js"></script>
+
 
     <title>RunRunners</title>
 </head>
@@ -60,18 +62,16 @@
 <img  src="http://www.xtec.cat/~jcruz/castellano/recursos_files/runner.gif"  class="img-rounded"/>
         <br><br>
         <h2>User information</h2>
-        <div ng-controller="GetCtrl" >
-            <!--<ul ng-repeat="user in users">-->
+        <div  data-ng-controller="getctrl" onload="listartodo">
             <ul> <h4> {{users.Name}} </h4> Username: {{users.Username}}   <br> Email: {{users.Email}} <br> Level: {{users.Level}}
                 <br> Gender: {{users.Gender}} <br> </ul>
-            <!--  </ul>-->
         </div>
 
 <br><br>
 
 
         <!-- modal update -->
-        <div ng-controller="ModalDemoCtrl">
+      <div ng-controller="ModalDemoCtrl">
             <script type="text/ng-template" id="ModalUpdate" class="modal">
                 <div class="modal-header">
                     <h3 class="modal-title">Update User</h3>
@@ -97,7 +97,7 @@
 <br>
         <div ng-controller="ModalDemoCtrl">
             <!-- modal delete -->
-            <script type="text/ng-template" id="ModalDelete" class="modal">
+           <script type="text/ng-template" id="ModalDelete" class="modal">
                 <div class="modal-header">
                     <h3 class="modal-title">Delete User</h3>
                 </div>

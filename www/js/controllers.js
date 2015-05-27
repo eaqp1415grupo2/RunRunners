@@ -1,5 +1,7 @@
 'use strict';
 var MapApp = angular.module('MapApp', ['ionic']);
+var token=window.localStorage.token;
+console.log('token '+token);
 
 var URL='https://localhost:3030/';
 var groupid='555db5a80a9995be10000009';
@@ -11,7 +13,8 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: "/group:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
@@ -24,14 +27,14 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
-MapApp.controller("GroupsCtrl",["$scope", "$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
-MapApp.controller("GroupCtrl",["$scope", "$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
+MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
+MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 
 MapApp.service("RacesService",["$http", "$log", RacesService ]);
 MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
 
-MapApp.controller("RacesCtrl",["$scope", "$ionicLoading", "RacesService", "$log", RacesCtrl]);
+MapApp.controller("RacesCtrl",["$scope", "$http","$ionicLoading", "RacesService", "$log", RacesCtrl]);
 MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
 /**
  * HEADER - handle menu toggle
@@ -44,15 +47,16 @@ MapApp.controller('HeaderCtrl', function($scope) {
  * MAIN CONTROLLER - handle inapp browser
  */
 MapApp.controller('MainCtrl', ['$scope', function($scope) {
-  // do something
+
 }]);
 
 /**
  * A google map / GPS controller.
  */
-MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
-	function($scope, $ionicPlatform, $location) {
+MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
+	function($scope,$http, $ionicPlatform, $location) {
 
+	 $scope.races = {};
 	// init gps array
     $scope.whoiswhere = [];
     $scope.basel = { lat: 47.55633987116614, lon: 7.576619513223015 };
@@ -70,6 +74,17 @@ MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
 	            if (!$scope.$$phase) $scope.$apply("basel");
 			}
 		};
+	//Obtener carreras
+	$http.get(URL+'race').success(function(data) {
+		$scope.races = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+
+
+
+
 
 		// some points of interest to show on the map
 		// to be user as markers, objects should have "lat", "lon", and "name" properties
@@ -78,15 +93,28 @@ MapApp.controller('GpsCtrl', ['$scope','$ionicPlatform', '$location',
 		];
 	});
 
-}]);
+}
+
+
+
+
+]);
 
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $log) {
-    $scope.message = [];
-              console.log($stateParams);
+function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
+    $scope.groupmessages = [];
+    // console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
+ 	 console.log($scope.groupId);
+ 	/*
+	$http.get(URL+'js/testData/messages.json').success(function(data) {
+		$scope.groupmessages = data;
+	})
+	.error(function(data) {
+		console.log(' Error: ' + data);
+	});*/
 
     $scope.loadGroupMessages = function() {
 		GroupMessageService.loadGroupMessages()
@@ -95,14 +123,30 @@ function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $lo
       console.log("XX"+$scope.groups);
                       $ionicLoading.hide();
       });
-    } 	          		
+    }	          		
 }
 
 
-function GroupsCtrl($scope, $ionicLoading, GroupsService, $log) {
-    $scope.groups = []; 
-    $scope.infiniteLoad = false;
+function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
+    $scope.owngroups = []; 
+    $scope.othergroups = [];
     
+        	//Obtener Grupos propios
+	$http.get(URL+'groups').success(function(data) {
+		$scope.owngroups = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+    
+            	//Obtener Otros Grupos
+	$http.get(URL+'groups').success(function(data) {
+		$scope.othergroups = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+    /*$scope.infiniteLoad = false;
     $scope.loadGroups = function() {
 		GroupsService.loadGroups()
 		     .success(function(result) {
@@ -110,18 +154,21 @@ function GroupsCtrl($scope, $ionicLoading, GroupsService, $log) {
       console.log($scope.groups);
                       $ionicLoading.hide();
       });
-    }
+    }*/
 }
 
+
+//Unused
 function GroupsService($http, $log) {
     this.loadGroups = function() {
-        return ($http.get('https://localhost:3030/groups'));
+        return ($http.get(URL+'groups'));
     }
 }
 
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.groupId));
+        return ($http.get(URL+'js/testData/messages.json'));
+        //return ($http.get(URL+'message/parent/'+$stateParams.groupId));
     }
 }
 
@@ -142,9 +189,26 @@ function RaceCtrl($scope, $stateParams ,$ionicLoading, RaceMessageService, $log)
 }
 
 
-function RacesCtrl($scope, $ionicLoading, RacesService, $log) {
-    $scope.races = []; 
-    $scope.infiniteLoad = false;
+function RacesCtrl($scope, $http ,$ionicLoading, $log) {
+    $scope.ownraces = []; 
+    $scope.otherraces = []; 
+    
+    	//Obtener carreras propias
+	$http.get(URL+'race').success(function(data) {
+		$scope.ownraces = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	
+	    	//Obtener otras carreras
+	$http.get(URL+'race').success(function(data) {
+		$scope.otherraces = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+    /*$scope.infiniteLoad = false;
     
     $scope.loadRaces = function() {
 		RacesService.loadRaces()
@@ -153,19 +217,21 @@ function RacesCtrl($scope, $ionicLoading, RacesService, $log) {
       console.log($scope.races);
                       $ionicLoading.hide();
       });
-    }
+    }*/
 }
 
+//Unused
 function RacesService($http, $log) {
     this.loadRaces = function() {
-        return ($http.get('https://localhost:3030/race'));
+        return ($http.get(URL+'race'));
     }
 }
-
+//return ($http.get(URL+'message/parent/'+$stateParams.raceId));
 function RaceMessageService($http, $log,$stateParams) {
+	console.log("aaaaaaaaaaaaaaaaaaaaaaaa");
         this.loadRaceMessages = function() {     
-        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.raceId));
-    }
+        return ($http.get(URL+'js/testData/messages.json'));
+            }
 }
 /*
 function GroupsCtrl($scope, $sce, $ionicLoading, GroupsService, $log) {
@@ -297,7 +363,7 @@ MapApp.directive("appMap", function ($window) {
 			function createMap() {
 				console.log("map: create map start");
 				var mapOptions = {
-					zoom: 16,
+					zoom: 15,
 					center: new google.maps.LatLng(47.55, 7.59),
 					mapTypeId: google.maps.MapTypeId.ROADMAP,
 					panControl: true,

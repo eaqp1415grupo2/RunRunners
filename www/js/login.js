@@ -6,7 +6,8 @@ app.controller('headerController', function($scope, ngDialog){
 
 });
 
-app.controller('userController', ['$http', '$scope', '$window', function ($http, $scope, $window){
+app.controller('userController', ['$http', '$scope', '$window', function ($http, $scope,$window){
+
     var loginRunRunners = this;
     var user = {};
     loginRunRunners.users = [];

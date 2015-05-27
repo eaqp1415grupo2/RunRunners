@@ -1,29 +1,5 @@
-        <!--Setup library-->
-        <link rel="stylesheet" href="lib/ionic/css/ionic.css">
-        <script src="lib/ionic/js/ionic.bundle.js"></script>
-        <script src="cordova.js"></script>
-
-        <!--Setup app-->
-        <link rel="stylesheet" href="css/index.css">
-        <script src="index.js"></script>
-
-
-<body data-ng-controller="GroupCtrl">
-
-        <ion-header-bar class="bar-assertive">
-            <h1 class="title">Groups</h1>
-        </ion-header-bar>
-        <ion-content>
-            <ion-refresher on-refresh="loadGroupMessages()">            
-            </ion-refresher>
-            
-            
-            <div data-ng-if="!groups.length">
-                <center>                                        
-                    <br>
-                    <h2> Pull down to load </h2>
-                </center>
-            </div>
+<ion-view>
+<ion-content>
 
 <div class="list card">
 <div class="card" data-ng-repeat="m in messages track by $index">
@@ -47,7 +23,7 @@
 
 </div>
 
-        </body>
+
 
 
 
@@ -55,4 +31,4 @@
 
 
 </ion-content>
-</ion-view></body>
+</ion-view>

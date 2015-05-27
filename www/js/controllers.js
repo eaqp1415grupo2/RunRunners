@@ -152,13 +152,13 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 //Unused
 function GroupsService($http, $log) {
     this.loadGroups = function() {
-        return ($http.get('https://localhost:3030/groups'));
+        return ($http.get(URL+'groups'));
     }
 }
 
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.groupId));
+        return ($http.get(URL+'message/parent/'+$stateParams.groupId));
     }
 }
 
@@ -180,11 +180,20 @@ function RaceCtrl($scope, $stateParams ,$ionicLoading, RaceMessageService, $log)
 
 
 function RacesCtrl($scope, $http ,$ionicLoading, $log) {
-    $scope.races = []; 
+    $scope.ownraces = []; 
+    $scope.otherraces = []; 
     
-    	//Obtener carreras
+    	//Obtener carreras propias
 	$http.get(URL+'race').success(function(data) {
-		$scope.races = data;
+		$scope.ownraces = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	
+	    	//Obtener otras carreras
+	$http.get(URL+'race').success(function(data) {
+		$scope.otherraces = data;
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
@@ -204,13 +213,13 @@ function RacesCtrl($scope, $http ,$ionicLoading, $log) {
 //Unused
 function RacesService($http, $log) {
     this.loadRaces = function() {
-        return ($http.get('https://localhost:3030/race'));
+        return ($http.get(URL+'race'));
     }
 }
 
 function RaceMessageService($http, $log,$stateParams) {
         this.loadRaceMessages = function() {     
-        return ($http.get('https://localhost:3030/message/parent/'+$stateParams.raceId));
+        return ($http.get(URL+'message/parent/'+$stateParams.raceId));
     }
 }
 /*

@@ -18,8 +18,8 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  });
-
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  })
+.state('menu.stats',{url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'MainCtrl'} }  });
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/map/home');
 }]);

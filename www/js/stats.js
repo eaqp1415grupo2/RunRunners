@@ -1,8 +1,28 @@
 /**
  * Created by david on 25/05/2015.
  */
-angular.module('Stats', ['ionic'])
-angular.module('Stats').controller('ModalDemoCtrl2', function ($scope, $modal, $http) {
+//var token=window.localStorage.token;
+var app = angular.module('stats', [])
+    app.controller("getraces", function($scope, $http) {
+
+        $http.get('https://localhost:3030/user/'+ window.localStorage.token +'/races')
+            .success(function (data) {
+                $scope.users = data;
+                console.log(data);
+            })
+            .error(function (data) {
+                console.log('Error:' + data);
+            });
+
+    });
+//$http.get('https://localhost:3030/user/'+token +'/races').success(function(data) {
+  //  $scope.users = data;
+//})
+  //  .error(function(data) {
+    //    console.log('Error: ' + data);
+    //});
+/*
+angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl2', function ($scope, $modal) {
 
 
     $scope.openstatistics = function () {
@@ -10,13 +30,13 @@ angular.module('Stats').controller('ModalDemoCtrl2', function ($scope, $modal, $
         var modalInstance = $modal.open({
             templateUrl: 'statistics',
             controller: 'ModalInstanceCtrlStatistics'
-            //  controller: "ModalInstanceCtrlUpdate" ///añadimos el controller que configuraremos update
+            //  controller: "ModalInstanceCtrlUpdate" ///aï¿½adimos el controller que configuraremos update
         });
     }
 
 });
 
-angular.module('Stats').controller('ModalInstanceCtrlStatistics', function ($scope, $modalInstance, $http) {
+angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics', function ($scope, $modalInstance) {
 
     $scope.cancelstatistics = function () {
         $modalInstance.dismiss('cancel');
@@ -32,7 +52,7 @@ angular.module('Stats').controller('ModalInstanceCtrlStatistics', function ($sco
 });
 
 
-angular.module('Stats').controller('ModalInstanceCtrlStatistics2', function ($scope, $modalInstance, $http) {
+angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics2', function ($scope, $modalInstance) {
 
     $scope.cancelstatistics2 = function () {
         $modalInstance.dismiss('cancel');
@@ -47,7 +67,7 @@ angular.module('Stats').controller('ModalInstanceCtrlStatistics2', function ($sc
     };
 });
 
-angular.module('Stats').controller('ModalDemoCtrl4', function ($scope, $modal, $http) {
+angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl4', function ($scope, $modal) {
 
 
     $scope.openstatistics3 = function () {
@@ -55,13 +75,13 @@ angular.module('Stats').controller('ModalDemoCtrl4', function ($scope, $modal, $
         var modalInstance = $modal.open({
             templateUrl: 'statistics3',
             controller: 'ModalInstanceCtrlStatistics3'
-            //  controller: "ModalInstanceCtrlUpdate" ///añadimos el controller que configuraremos update
+            //  controller: "ModalInstanceCtrlUpdate" ///aï¿½adimos el controller que configuraremos update
         });
     }
 
 });
 
-angular.module('Stats').controller('ModalInstanceCtrlStatistics3', function ($scope, $modalInstance, $http) {
+angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics3', function ($scope, $modalInstance) {
 
     $scope.cancelstatistics3 = function () {
         $modalInstance.dismiss('cancel');
@@ -75,3 +95,4 @@ angular.module('Stats').controller('ModalInstanceCtrlStatistics3', function ($sc
         var map = new google.maps.Map(document.getElementById("map4"),mapOptions)
     };
 });
+    */

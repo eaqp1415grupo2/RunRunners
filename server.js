@@ -78,7 +78,11 @@ app.get('/wall', function(req, res) {
     res.sendfile('./web/wall/wall.html');});
 
 app.get('/profile', function(req, res) {
-    res.sendfile('./web/profile/profile.html');});
+    res.sendfile('./www/templates/profile.html');});
+
+app.get('/stats', function(req, res) {
+    res.sendfile('./www/templates/stats.html');});
+
 
 app.get('/', function(req, res) {
     res.sendfile('./www/login.html');});

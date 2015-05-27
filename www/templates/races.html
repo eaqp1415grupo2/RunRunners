@@ -8,24 +8,13 @@
         <script src="index.js"></script>
         
         
-<body data-ng-controller="RacesCtrl" onload="loadRaces()">
+<body data-ng-controller="RacesCtrl">
 <ion-view title="Races">
         <ion-header-bar class="bar-assertive">
             <h1 class="title">Races</h1>
         </ion-header-bar>
         <ion-content>
-            <ion-refresher on-refresh="loadRaces()">            
-            </ion-refresher>
-            
-            
-            <div data-ng-if="!races.length">
-                <center>                                        
-                    <br>
-                    <h2> Pull down to load </h2>
-                </center>
-            </div>
-
-        
+  
         <div class="list card">
 <ion-item data-ng-repeat="r in races track by $index" href="#/map/race/{{r._id}}">
   

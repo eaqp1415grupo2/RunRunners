@@ -6,7 +6,7 @@ app.controller('headerController', function($scope, ngDialog){
 
 });
 
-app.controller('userController', ['$http', '$scope', function ($http, $scope){
+app.controller('userController', ['$http', '$scope','$window', function ($http, $scope,$window){
     var loginRunRunners = this;
     var user = {};
     loginRunRunners.users = [];
@@ -36,7 +36,9 @@ app.controller('userController', ['$http', '$scope', function ($http, $scope){
             data: this.user,
             headers: {'Content-Type': 'application/json'}
         }).success(function(data) {
-            console.log("postlogin");
+            console.log("postlogin "+data);
+            $window.localStorage.token=data;
+            window.alert("token "+$window.localStorage.token);
             window.location.href='/ionic';
         }).error(function(data) {
             window.alert("ERROR - AUTH");

@@ -1,7 +1,7 @@
 'use strict';
 var MapApp = angular.module('MapApp', ['ionic']);
 var token=window.localStorage.token;
-
+console.log('token '+token);
 
 var URL='https://localhost:3030/';
 var groupid='555db5a80a9995be10000009';
@@ -13,7 +13,8 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: "/group:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
@@ -27,7 +28,7 @@ MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
 MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
-MapApp.controller("GroupCtrl",["$scope", "$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
+MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 
 MapApp.service("RacesService",["$http", "$log", RacesService ]);
@@ -102,10 +103,18 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $log) {
-    $scope.message = [];
-              console.log($stateParams);
+function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
+    $scope.groupmessages = [];
+    // console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
+ 	 console.log($scope.groupId);
+ 	/*
+	$http.get(URL+'js/testData/messages.json').success(function(data) {
+		$scope.groupmessages = data;
+	})
+	.error(function(data) {
+		console.log(' Error: ' + data);
+	});*/
 
     $scope.loadGroupMessages = function() {
 		GroupMessageService.loadGroupMessages()
@@ -114,7 +123,7 @@ function GroupCtrl($scope, $stateParams ,$ionicLoading, GroupMessageService, $lo
       console.log("XX"+$scope.groups);
                       $ionicLoading.hide();
       });
-    } 	          		
+    }	          		
 }
 
 
@@ -158,7 +167,8 @@ function GroupsService($http, $log) {
 
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get(URL+'message/parent/'+$stateParams.groupId));
+        return ($http.get(URL+'js/testData/messages.json'));
+        //return ($http.get(URL+'message/parent/'+$stateParams.groupId));
     }
 }
 
@@ -216,11 +226,12 @@ function RacesService($http, $log) {
         return ($http.get(URL+'race'));
     }
 }
-
+//return ($http.get(URL+'message/parent/'+$stateParams.raceId));
 function RaceMessageService($http, $log,$stateParams) {
+	console.log("aaaaaaaaaaaaaaaaaaaaaaaa");
         this.loadRaceMessages = function() {     
-        return ($http.get(URL+'message/parent/'+$stateParams.raceId));
-    }
+        return ($http.get(URL+'js/testData/messages.json'));
+            }
 }
 /*
 function GroupsCtrl($scope, $sce, $ionicLoading, GroupsService, $log) {

@@ -122,7 +122,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.owngroups = []; 
     $scope.othergroups = [];
     
-        	//Obtener carreras
+        	//Obtener Grupos propios
 	$http.get(URL+'groups').success(function(data) {
 		$scope.owngroups = data;
 	})
@@ -130,7 +130,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 		console.log('Error: ' + data);
 	});
     
-            	//Obtener carreras
+            	//Obtener Otros Grupos
 	$http.get(URL+'groups').success(function(data) {
 		$scope.othergroups = data;
 	})
@@ -148,6 +148,8 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     }*/
 }
 
+
+//Unused
 function GroupsService($http, $log) {
     this.loadGroups = function() {
         return ($http.get('https://localhost:3030/groups'));
@@ -341,7 +343,7 @@ MapApp.directive("appMap", function ($window) {
 			function createMap() {
 				console.log("map: create map start");
 				var mapOptions = {
-					zoom: 16,
+					zoom: 15,
 					center: new google.maps.LatLng(47.55, 7.59),
 					mapTypeId: google.maps.MapTypeId.ROADMAP,
 					panControl: true,

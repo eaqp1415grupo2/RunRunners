@@ -4,7 +4,7 @@ var token=window.localStorage.token;
 console.log('token '+token);
 
 var URL='https://localhost:3030/';
-var groupid='555db5a80a9995be10000009';
+//var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
  */
@@ -13,13 +13,12 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
-		.state('menu.group', {url: "/group:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: '/group/:groupId',views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
-		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'GpsCtrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  })
-.state('menu.stats',{url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'MainCtrl'} }  });
+		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'ProfileCtrl'} }  })
+		//.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  })
+		.state('menu.stats',{url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'StatsCtrl'} }  });
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/map/home');
 }]);
@@ -35,24 +34,22 @@ MapApp.service("RacesService",["$http", "$log", RacesService ]);
 MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
 
 MapApp.controller("RacesCtrl",["$scope", "$http","$ionicLoading", "RacesService", "$log", RacesCtrl]);
-MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
+MapApp.controller("RaceCtrl",["$scope", "$http","$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
 /**
  * HEADER - handle menu toggle
  */
-MapApp.controller('HeaderCtrl', function($scope) {
-	// Main app controller, empty for the example
+MapApp.controller('MainCtrl', function($scope, $http) {
 
 });
-/**
- * MAIN CONTROLLER - handle inapp browser
- */
-MapApp.controller('MainCtrl', ['$scope', function($scope) {
+
+MapApp.controller('StatsCtrl', function($scope, $http) {
+
+});
+
+MapApp.controller('ProfileCtrl', ['$scope', function($scope) {
 
 }]);
 
-/**
- * A google map / GPS controller.
- */
 MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 	function($scope,$http, $ionicPlatform, $location) {
 
@@ -103,27 +100,18 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
-    $scope.groupmessages = [];
-    // console.log($stateParams);
+function GroupCtrl($scope, $http, $stateParams ,$ionicLoading, GroupMessageService, $log) {
+    $scope.messages = [];
+    console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
- 	 console.log($scope.groupId);
- 	/*
-	$http.get(URL+'js/testData/messages.json').success(function(data) {
-		$scope.groupmessages = data;
+
+	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+		$scope.messages = data;
+		console.log(data);
 	})
 	.error(function(data) {
-		console.log(' Error: ' + data);
-	});*/
-
-    $scope.loadGroupMessages = function() {
-		GroupMessageService.loadGroupMessages()
-		     .success(function(result) {
-				$scope.messages=result;
-      console.log("XX"+$scope.groups);
-                      $ionicLoading.hide();
-      });
-    }	          		
+		console.log('Error: ' + data);
+	});	         		
 }
 
 
@@ -132,16 +120,18 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.othergroups = [];
     
         	//Obtener Grupos propios
-	$http.get(URL+'groups').success(function(data) {
+	$http.get(URL+'groups/no/'+token).success(function(data) {
 		$scope.owngroups = data;
+		console.log('own G:'+$scope.owngroups);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
     
             	//Obtener Otros Grupos
-	$http.get(URL+'groups').success(function(data) {
+	$http.get(URL+'groups/no/'+token).success(function(data) {
 		$scope.othergroups = data;
+			console.log('other G:'+data);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
@@ -173,19 +163,17 @@ function GroupMessageService($http, $log,$stateParams) {
 }
 
 
-function RaceCtrl($scope, $stateParams ,$ionicLoading, RaceMessageService, $log) {
-    $scope.message = [];
-              console.log($stateParams);
+function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService, $log) {
+    $scope.messages = [];
+    console.log($stateParams);
     $scope.raceId=$stateParams.raceId;
 
-    $scope.loadRaceMessages = function() {
-		RaceMessageService.loadRacesMessages()
-		     .success(function(result) {
-				$scope.messages=result;
-      console.log("YY"+$scope.races);
-                      $ionicLoading.hide();
-      });
-    } 	          		
+	$http.get(URL+'message/parent/'+$stateParams.raceId).success(function(data) {
+		$scope.messages = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});	          		
 }
 
 

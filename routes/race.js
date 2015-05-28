@@ -182,9 +182,10 @@ module.exports = function (app) {
             if (!race) {
                 res.send(404, 'Race not found');
             } else {
+			console.log('id: '+id+'race :'+race);
                 Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
                     User.findOne({_id: id}, function (err, user) {
-                        // console.log(user);
+                         console.log(user);
                         if (!err && users == null && user != null) {
                             var racepush = ({_id: user._id, Username: user.Username});
                             race.Users.push(racepush);

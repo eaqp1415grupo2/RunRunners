@@ -3,13 +3,9 @@ var MapApp = angular.module('MapApp', ['ionic']);
 var token=window.localStorage.token;
 console.log('token '+token);
 
-<<<<<<< HEAD
 //var URL='https://localhost:3030/';
 var URL='https://147.83.7.203:3030/';
-=======
-var URL='https://localhost:3030/';
-//var groupid='555db5a80a9995be10000009';
->>>>>>> origin/Develop
+
 /**
  * Routing table including associated controllers.
  */
@@ -125,11 +121,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.othergroups = [];
     
         	//Obtener Grupos propios
-<<<<<<< HEAD
 	$http.get(URL+'groups/user/'+token).success(function(data) {
-=======
-	$http.get(URL+'groups/no/'+token).success(function(data) {
->>>>>>> origin/Develop
 		$scope.owngroups = data;
 		console.log('own G:'+$scope.owngroups);
 	})

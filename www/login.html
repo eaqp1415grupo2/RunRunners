@@ -45,18 +45,8 @@
                         <div ng-show="tab.isSet(1)">
                             
                             <form name="userFormSignIn" ng-submit="userFormSignIn.$valid && userCtrl.loginUser()" novalidate>
-<<<<<<< HEAD
-                                <fieldset class="form-group">
-                                    <input ng-minlength=4 class="form-control" placeholder="Username"
-                                           title="Username" ng-model="userCtrl.user.Username" type="text" required/>
-                                    <input ng-minlength=8 class="form-control" placeholder="Password"
-                                           title="Password" ng-model="userCtrl.user.Password" type="password"/>
-                                    <input type="submit" class="button button-small button-energized"  value="Sign In"/>
-                                </fieldset>
-                            </form>
-=======
-										<p></p>
-                              <label class="item item-input">
+                                <p></p>
+                                <label class="item item-input">
                                   <input ng-minlength=4 placeholder="Username" 
                                   			title="Username" ng-model="userCtrl.user.Username" type="text" required/>
   										</label>
@@ -64,13 +54,12 @@
     										<input ng-minlength=8  placeholder="Password"
                                            title="Password" ng-model="userCtrl.user.Password" type="password"/>
   										</label>
-                            <br>
+                                <br>
              					 <input type="submit" class="button button-block button-balanced" value="Sign In"/>
          						 <button class="button  button-block button-positive " ng-click="loginFacebook()">
   											<span class="ion-social-facebook" style="font-size: 145%">   </span>Log with Facebook!
 									 </button>
-               				</form>         
->>>>>>> origin/Develop
+               				</form>
                         </div>
                         
                         <div ng-show="tab.isSet(2)">

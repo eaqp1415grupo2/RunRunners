@@ -178,16 +178,19 @@ module.exports = function (app) {
 
     addUser = function (req, res) {
         var id = jwt.decode(req.body._id,Secret);
+        console.log('id: '+id);
         Race.findOne({_id: req.params.id}, function (error, race) {
             if (!race) {
                 res.send(404, 'Race not found');
             } else {
-			console.log('id: '+id+'race :'+race);
+			console.log('id: '+id+' race :'+race);
                 Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
                     User.findOne({_id: id}, function (err, user) {
-                         console.log(user);
-                        if (!err && users == null && user != null) {
+                         console.log('user to put: '+user);
+                        //if (!err && users == null && user != null) {
+                        if (!err && users == null) {
                             var racepush = ({_id: user._id, Username: user.Username});
+                            console.log('RP: '+racepush);
                             race.Users.push(racepush);
                             race.save(function (err) {
                                 if (!err) {
@@ -290,11 +293,23 @@ module.exports = function (app) {
 
     findNoUserRace = function(req, res){
         var id = jwt.decode(req.params.id, Secret);
-        Race.find({'Users._id':{$nin:[id.iss]}}, function(err, user){
+        Race.find({'Users._id':{$nin:[id.iss]}}, function(err, data){
+            console.log('No User races: '+data);
             if(err)res.send(500, 'Mongo Error');
-            else res.send(user);
+            else res.send(data);
         });
     };
+
+        findUserRace = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        Race.find({'Users._id':id.iss}, function(err, data){
+        	console.log('User races: '+data);
+            if(err)res.send(500, 'Mongo Error');
+            else res.send(data);
+        });
+    };
+
+
 
 //Link routes and functions
     app.get('/race', findAllRaces);
@@ -302,6 +317,7 @@ module.exports = function (app) {
     app.get('/race/name/:name', findRaceByName);
     app.get('/race/:id', findRaceByID);
     app.get('/race/no/:id', findNoUserRace);
+    app.get('/race/user/:id', findUserRace);
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);

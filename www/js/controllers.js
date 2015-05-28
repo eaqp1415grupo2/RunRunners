@@ -17,7 +17,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile.html', controller: 'ProfileCtrl'} }  })
-		//.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  })
+		//.state('menu.logout', {url: '../', views: {'menuContent': { controller: 'MainCtrl'} }  })
 		.state('menu.stats',{url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'StatsCtrl'} }  });
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/map/home');
@@ -180,7 +180,25 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 function RacesCtrl($scope, $http ,$ionicLoading, $log) {
     $scope.ownraces = []; 
     $scope.otherraces = []; 
-    
+   
+       	//Obtener carreras propias
+	$http.get(URL+'race/user/'+token).success(function(data) {
+		$scope.ownraces = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	
+	    	//Obtener otras carreras
+	$http.get(URL+'race/no/'+token).success(function(data) {
+		$scope.otherraces = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	
+	
+	/*
     	//Obtener carreras propias
 	$http.get(URL+'race').success(function(data) {
 		$scope.ownraces = data;

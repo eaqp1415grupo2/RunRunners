@@ -1,9 +1,11 @@
 module.exports = function (app) {
 
     var jwt = require('jwt-simple');
+    var moment = require('moment');
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
+    var Secret = require ('../config/secret.js');
 
     findAllUsers = function (req, res) {
         console.log("GET - /users");
@@ -17,6 +19,26 @@ module.exports = function (app) {
 
     //GET - Return a User with specified Name
     findByUsername = function (req, res) {
+        console.log("GET - /user/:Username");
+        //  var name = req.params.Name;
+        var id = jwt.decode(req.params.id,Secret);
+        User.findOne({_id:id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
+            }
+            if (!err) {
+                res.send(200, user);
+
+            } else {
+                console.log('Internal error: %s', err.message);
+                res.send(500, 'Server error');
+            }
+        });
+    };
+
+    //GET - Return a User with specified Name
+    //GET - Return a User with specified Name
+    findUsername = function (req, res) {
         console.log("GET - /user/:Username");
         //  var name = req.params.Name;
         User.findOne({"Username": req.params.Username}, function (err, user) {
@@ -54,8 +76,9 @@ module.exports = function (app) {
 
         user.save(function (err) {
             if (!err) {
-                console.log("User created");
-                return res.send(200, user);
+                var expires = moment().add(2, 'days').valueOf();
+                var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+                res.send(200, token);
             } else {
                 console.log(err);
                 if (err.name == 'ValidationError') {
@@ -71,16 +94,19 @@ module.exports = function (app) {
     };
 
     authenticate = function(req, res) {
+        console.log(req.body);
         User.findOne({"Username": req.body.Username}, function(err, user) {
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             } else if (user) {
+                console.log(user);
                 if (user.Password != req.body.Password) {
                     res.send(404, 'Password error');
                 } else {
-                    var token = jwt.encode(user.Username, 'secret');
-                    return res.send(200, token);
+                    var expires = moment().add(2, 'days').valueOf();
+                    var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+                    res.send(200, token);
                 }
             }
         });
@@ -90,7 +116,8 @@ module.exports = function (app) {
     updateUser = function (req, res) {
         console.log("PUT - /user/:Username");
         console.log(req.body);
-        User.findOne({"Username": req.params.Username}, function (err, user) {
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
@@ -129,12 +156,40 @@ module.exports = function (app) {
 
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
-        console.log("DELETE -/user/:Username");
-        User.findOne({"Username": req.params.Username}, function (err, user) {
+        console.log("DELETE -/user/:id");
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({"_id": id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
-
+            var races = user.Races;
+            var groups = user.Groups;
+            for (var i = 0; i < races.length; i++) {
+                Race.findOne(races[i]._id, function (err, race) {
+                    race.Users.pull(id.iss);
+                    race.save(function (err) {
+                        if (!err) {
+                            console.log('User Removed');
+                        } else {
+                            console.log('ERROR: ' + err);
+                            res.send(500, "Mongo Error");
+                        }
+                    });
+                });
+            }
+            for (var j = 0; j < races.length; j++) {
+                Group.findOne(groups[j]._id, function (err, group) {
+                    group.Users.pull(id.iss);
+                    group.save(function (err) {
+                        if (!err) {
+                            console.log('User Removed');
+                        } else {
+                            console.log('ERROR: ' + err);
+                            res.send(500, "Mongo Error");
+                        }
+                    });
+                });
+            }
             user.remove(function (err) {
                 if (!err) {
                     console.log('Removed user');
@@ -148,21 +203,25 @@ module.exports = function (app) {
     };
 
     findRaces = function(req,res){
-        User.findOne({Username: req.params.Username}, function(err, user){
-           if(!user){res.send(404,'User Not Found');}
+
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function(err, user){
+            if(!user){res.send(404,'User Not Found');}
             else{
-               if(err) res.send(500, 'Mongo Error');
-               else {
-                   var races = user.Races;
-                   console.log(races);
-                   res.send(200, races);
-               }
-           }
+                if(err) res.send(500, 'Mongo Error');
+                else {
+                    var races = user.Races;
+                    console.log(races);
+                    res.send(200, races);
+                }
+            }
         });
     };
 
     findGroups = function(req,res){
-        User.findOne({Username: req.params.Username}, function(err, user){
+
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function(err, user){
             if(!user){res.send(404,'User Not Found');}
             else{
                 if(err) res.send(500, 'Mongo Error');
@@ -177,12 +236,14 @@ module.exports = function (app) {
 
     //Link routes and functions
     app.get('/user', findAllUsers);
-    app.get('/user/:Username', findByUsername);
+    app.get('/user/:id', findByUsername);
     app.post('/user', addUser);
-    app.put('/user/:Username', updateUser);
-    app.delete('/user/:Username', deleteUser);
-    app.get('/user/:Username/races', findRaces);
-    app.get('/user/:Username/groups', findGroups);
+    app.post('/user/auth', authenticate);
+    app.put('/user/:id', updateUser);
+    app.delete('/user/:id', deleteUser);
+    app.get('/user/:id/races', findRaces);
+    app.get('/user/:id/groups', findGroups);
+    app.get('/user/username/:Username', findUsername);
 
 
 };

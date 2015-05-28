@@ -1,0 +1,62 @@
+[
+{
+"_id": "555db5a80a9995be10000009",
+"Name": "Grup Raval",
+"Info": "Lorem fistrum llevame al sircoo a gramenawer torpedo papaar papaar fistro al ataquerl. Fistro diodeno ahorarr hasta luego Lucas torpedo quietooor diodeno te va a hasé pupitaa a peich papaar papaar diodenoo.",
+"Level": "Initiated",
+"Admin_Group": "car22",
+"Messages": [ ],
+"Races": [ ],
+"Users": [
+{
+"_id": "555db59a0a9995be10000008",
+"Username": "car22"
+}
+]
+},
+{
+"_id": "555dc867d1e07a271500000a",
+"Name": "Grup MOMOMOMO",
+"Info": "Lorem fistrum llevame al sircoo a gramenawer torpedo papaar papaar fistro al ataquerl. Fistro diodeno ahorarr hasta luego Lucas torpedo quietooor diodeno te va a hasé pupitaa a peich papaar papaar diodenoo.",
+"Level": "Initiated",
+"Admin_Group": "Carlos",
+"Messages": [ ],
+"Races": [ ],
+"Users": [
+{
+"_id": "555db8aac2dd92941100000b",
+"Username": "Carlos"
+}
+]
+},
+{
+"_id": "555fe60e45c68e8f12000008",
+"Name": "Grupooooo 5",
+"Info": "Lorem fistrum llevame al sircoo a gramenawer torpedo papaar papaar fistro al ataquerl. Fistro diodeno ahorarr hasta luego Lucas torpedo quietooor diodeno te va a hasé pupitaa a peich papaar papaar diodenoo.",
+"Level": "Initiated",
+"Admin_Group": "car22",
+"Messages": [ ],
+"Races": [ ],
+"Users": [
+{
+"_id": "555db59a0a9995be10000008",
+"Username": "car22"
+}
+]
+},
+{
+"_id": "555fe62045c68e8f12000009",
+"Name": "Grup MOMO",
+"Info": "Lorem fistrum llevame al sircoo a gramenawer torpedo papaar papaar fistro al ataquerl. Fistro diodeno ahorarr hasta luego Lucas torpedo quietooor diodeno te va a hasé pupitaa a peich papaar papaar diodenoo.",
+"Level": "Initiated",
+"Admin_Group": "Carlos",
+"Messages": [ ],
+"Races": [ ],
+"Users": [
+{
+"_id": "555db8aac2dd92941100000b",
+"Username": "Carlos"
+}
+]
+}
+]

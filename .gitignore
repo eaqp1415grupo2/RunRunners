@@ -1,5 +1,11 @@
-node_modules
+# Specifies intentionally untracked files to ignore when using Git
+# http://git-scm.com/docs/gitignore
+
+config/
+node_modules/
+platforms/
+plugins/
+
 .idea
 npm-debug.log
 *.*~
-config

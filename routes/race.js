@@ -2,6 +2,8 @@ module.exports = function (app) {
 
     var Race = require('../models/race.js');
     var User = require('../models/user.js');
+    var Secret = require ('../config/secret.js');
+    var jwt = require('jwt-simple');
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
         Race.find(function (err, races) {
@@ -175,16 +177,20 @@ module.exports = function (app) {
     };
 
     addUser = function (req, res) {
-        var id = req.body._id;
+        var id = jwt.decode(req.body._id,Secret);
+        console.log('id: '+id);
         Race.findOne({_id: req.params.id}, function (error, race) {
             if (!race) {
                 res.send(404, 'Race not found');
             } else {
-                Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, users) {
+			console.log('id: '+id+' race :'+race);
+                Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
                     User.findOne({_id: id}, function (err, user) {
-                        // console.log(user);
-                        if (!err && users == null && user != null) {
+                         console.log('user to put: '+user);
+                        //if (!err && users == null && user != null) {
+                        if (!err && users == null) {
                             var racepush = ({_id: user._id, Username: user.Username});
+                            console.log('RP: '+racepush);
                             race.Users.push(racepush);
                             race.save(function (err) {
                                 if (!err) {
@@ -217,8 +223,8 @@ module.exports = function (app) {
             if (!race) {
                 res.send(404, 'Race Not Found');
             } else {
-                var id = req.body._id;
-                User.findOne({_id: id}, {Username: 1}, function (err, user) {
+                var id = jwt.decode(req.body._id,Secret);
+                User.findOne({_id: id.iss}, {Username: 1}, function (err, user) {
                     console.log(user);
                     var message = ({UserID: user._id, Username: user.Username, Text: req.body.Text});
                     console.log(message);
@@ -249,7 +255,7 @@ module.exports = function (app) {
                             }
                         }
                         var id = req.body._id;
-                        User.findOne({_id: id}, {Username: 1}, function (err, user) {
+                        User.findOne({_id: id.iss}, {Username: 1}, function (err, user) {
                             var answer = ({UserID: user._id, Username: user.Username, Answer: req.body.Answer});
                             messages.Messages[position].Answers.push(answer);
                             messages.save(function (err) {
@@ -264,8 +270,8 @@ module.exports = function (app) {
     };
 
     deleteUser = function (req, res) {
-        var id = req.body._id;
-        Race.findOne({_id: req.params.id, 'Users._id': id}, function (err, race) {
+        var id = jwt.decode(req.body._id,Secret);
+        Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, race) {
             if (!race) {
                 res.send(404, 'User Not Found')
             } else {
@@ -276,7 +282,7 @@ module.exports = function (app) {
                 });
             }
         });
-        User.findOne({_id: id}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             user.Races.pull(req.params.id);
             user.save(function (err) {
                 if (err) res.send(500, 'Mongo Error');
@@ -285,11 +291,33 @@ module.exports = function (app) {
         });
     };
 
+    findNoUserRace = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        Race.find({'Users._id':{$nin:[id.iss]}}, function(err, data){
+            console.log('No User races: '+data);
+            if(err)res.send(500, 'Mongo Error');
+            else res.send(data);
+        });
+    };
+
+        findUserRace = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        Race.find({'Users._id':id.iss}, function(err, data){
+        	console.log('User races: '+data);
+            if(err)res.send(500, 'Mongo Error');
+            else res.send(data);
+        });
+    };
+
+
+
 //Link routes and functions
     app.get('/race', findAllRaces);
     app.get('/user/:id/race', findRaceByVicinity);
     app.get('/race/name/:name', findRaceByName);
     app.get('/race/:id', findRaceByID);
+    app.get('/race/no/:id', findNoUserRace);
+    app.get('/race/user/:id', findUserRace);
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);

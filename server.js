@@ -154,7 +154,7 @@ routes4 = require('./routes/group')(app);
 routes3 = require('./routes/users')(app);
 routes2 = require('./routes/message')(app);
 
-mongoose.connect('mongodb://localhost:27017/runrunners', function(err, res) {
+mongoose.connect('mongodb://localhost:27017/race', function(err, res) {
 //mongoose.connect('mongodb://localhost/race', function(err, res) {
     if(err) {
         console.log('ERROR: connecting to Database. ' + err);

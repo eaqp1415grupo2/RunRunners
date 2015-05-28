@@ -60,19 +60,24 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User not Found');
             } else {
-                Race.findOne({_id: id, 'Users._id':userid}, function (err, result) {
-                    if (!result) {
+		console.log("User: "+user);
+		console.log("ParentID: "+id);
+                Race.findOne({_id: id, 'Users._id':userid.iss}, function (err, result){
+                   console.log("Result: "+result);
+			if (!result) {
                         race = null;
                     }
                 });
-                Group.findOne({_id: id, 'Users._id':userid}, function (err, result2) {
-                    if (!result2) {
+
+                Group.findOne({_id: id, 'Users._id':userid.iss}, function (err, result2) {
+                   console.log("Result2: "+result2);
+			if (!result2) {
                         group = null;
                     }
                 });
-                console.log(race, group);
+                console.log('Race: '+race, 'Group: '+group);
                 if (!race && !group) {
-                    res.send(404, 'Not Found');
+                    res.send(404, 'Race and Group not Found');
 
                 } else {
                     var message = new Message({
@@ -92,9 +97,13 @@ module.exports = function (app) {
     };
 
     addAnswer = function (req, res) {
-        var id = jwt.decode(req.body.UserID, Secret);
-        User.findOne({_id: id.iss}, function (err, user) {
-            if (!user) {
+	console.log("Hola");
+	var id=req.params.id;
+        var userid = jwt.decode(req.body.UserID, Secret);
+	console.log('id: '+userid);
+        User.findOne({_id: userid.iss}, function (err, user) {
+            	console.log('u: '+user);
+	    if (!user) {
                 res.send(404, 'User Not Found');
             } else {
                 var race = true;
@@ -103,12 +112,12 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        Race.findOne({_id: id, 'Users._id':userid}, function (err, result) {
+                        Race.findOne({_id: id, 'Users._id':userid.iss}, function (err, result) {
                             if (!result) {
                                 race = null;
                             }
                         });
-                        Group.findOne({_id: id, 'Users._id':userid}, function (err, result2) {
+                        Group.findOne({_id: id, 'Users._id':userid.iss}, function (err, result2) {
                             if (!result2) {
                                 group = null;
                             }

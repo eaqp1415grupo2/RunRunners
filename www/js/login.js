@@ -1,6 +1,6 @@
-var app = angular.module('loginRunRunners',[]);
-var URL = "https://localhost:3030/user";
-
+var app = angular.module('loginRunRunners',['ionic']);
+//var URL = "https://localhost:3030/user";
+var URL='https://147.83.7.203:3030/user';
 
 app.controller('headerController', function($scope, ngDialog){
 

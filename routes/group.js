@@ -282,11 +282,20 @@ module.exports = function (app) {
             else res.send(user);
         });
     };
+    
+    findUserGroup = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        Group.find({'Users._id':id.iss}, function(err, user){
+            if(err)res.send(500, 'Mongo Error');
+            else res.send(user);
+        });
+    };
 
     app.get('/groups', findAllGroups);
     app.get('/groups/:name', findGroupByName);
     app.get('/groups/id/:id', findGroupById);
     app.get('/groups/no/:id', findNoUserGroup);
+    app.get('/groups/user/:id', findUserGroup);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);

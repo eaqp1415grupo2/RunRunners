@@ -36,6 +36,25 @@ module.exports = function (app) {
         });
     };
 
+    //GET - Return a User with specified Name
+    //GET - Return a User with specified Name
+    findUsername = function (req, res) {
+        console.log("GET - /user/:Username");
+        //  var name = req.params.Name;
+        User.findOne({"Username": req.params.Username}, function (err, user) {
+            if (!user) {
+                res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
+            }
+            if (!err) {
+                res.send(200, user);
+
+            } else {
+                console.log('Internal error: %s', err.message);
+                res.send(500, 'Server error');
+            }
+        });
+    };
+
 
     //POST - Insert a new User in the DB
     addUser = function (req, res) {
@@ -224,6 +243,7 @@ module.exports = function (app) {
     app.delete('/user/:id', deleteUser);
     app.get('/user/:id/races', findRaces);
     app.get('/user/:id/groups', findGroups);
+    app.get('/user/username/:Username', findUsername);
 
 
 };

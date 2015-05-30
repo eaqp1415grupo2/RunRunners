@@ -1,6 +1,6 @@
 var app = angular.module('loginRunRunners',['ionic']);
-//var URL = "https://localhost:3030/user";
-var URL='https://147.83.7.203:3030/user';
+var URL = "https://localhost:3030/user";
+//var URL='https://147.83.7.203:3030/user';
 
 app.controller('headerController', function($scope, ngDialog){
 
@@ -9,9 +9,8 @@ app.controller('headerController', function($scope, ngDialog){
 app.controller('userController', ['$http', '$scope', '$window', function ($http, $scope,$window){
 
     var loginRunRunners = this;
-    var user = {};
     loginRunRunners.users = [];
-    console.log("controller");
+
     this.addUser = function(){
         loginRunRunners.users.push(this.user);
         $http({

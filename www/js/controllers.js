@@ -18,7 +18,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'MainCtrl'} }  });
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/map/home');
@@ -111,6 +111,7 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 			$http.delete('user/' + window.localStorage.token)//+ cookie o token)
 				.success(function (data) {
 					alert("acabas de borrar el usuario, le redigiremos al inicio");
+					window.localStorage.token = {};
 					window.location.href = '/';
 				})
 				.error(function (data) {
@@ -124,6 +125,15 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
  */
 MapApp.controller('MainCtrl', ['$scope', function($scope) {
 
+}]);
+
+/**
+ * LOG OUT CONTROLLER - handle inapp browser
+ */
+MapApp.controller('logOutCtrl', ['$scope', function($scope) {
+	alert("Vas a salir");
+	window.localStorage.token = {};
+	window.location.href = '/';
 }]);
 
 /**

@@ -67,7 +67,8 @@ app.use(express.static('www'));
 //de momento redirige a wall, a la espera de login
 
 app.get('/ionic', function(req, res) {
-    res.sendfile('./www/index.html');});
+    res.sendfile('./www/index.html');
+});
 
 app.get('/', function(req, res) {
     res.sendfile('./www/login.html');});
@@ -89,8 +90,42 @@ app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
-        console.log(res.user);
-        res.redirect('/ionic');
+    var User = require('./models/user.js');
+    var jwt = require('jwt-simple');
+    var moment = require('moment');
+    var Secret = require ('./config/secret.js');
+    var newUser = new User({
+        Username: req.user.id,
+        Password: req.user.id,
+        Name: req.user.name.givenName,
+        Surname: req.user.name.familyName,
+        Gender: req.user.gender
+    });
+
+    User.findOne({"Username": newUser.Username}, function (err, user) {
+        if (!user) {
+            newUser.save(function (err) {
+                if (!err) {
+
+                } else {
+                    console.log(err);
+                    if (err.name == 'ValidationError') {
+
+                        res.send(400, 'Validation error');
+                    } else {
+                        res.send(500, 'Server error');
+                    }
+                    console.log('Internal error: %s', err.message);
+                }
+            });
+        }
+        if (!err) {
+            res.redirect('/ionic');
+        } else {
+            console.log('Internal error: %s', err.message);
+            res.send(500, 'Server error');
+        }
+    });
 });
 
 

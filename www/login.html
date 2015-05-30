@@ -8,12 +8,14 @@
         <!-- bootstrap -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <!-- ionic css -->
-        <link href="https://code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
-        <script src="https://code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
+        <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <script src="lib/ionic/js/ionic.bundle.js"></script>
 
         <link rel="stylesheet" href="css/login.css">
+
         <!-- cordova script -->
-       
+        <script type="text/javascript" src="cordova.js"></script>
+
         <!-- your app's script -->
         <script type="text/javascript" src="lib/ionic/js/angular/angular-resource.js"></script>
         <script src="js/login.js"></script>
@@ -22,30 +24,24 @@
     <!-- 'starter' is the name of this angular module (js/app.js)-->
     <body >
         <ion-header-bar>
-            <nav id="navbarid" class="bar bar-header bar-stable" role="navigation">
+            <nav id="navbarid" class="bar bar-header bar-stable bar-dark" role="navigation">
  					<h1 class="title">Wellcome to RunRunners</h1>
             </nav>
         </ion-header-bar>
         
         <ion-content>
             <div class="row rowsign">
-                <div class="col-25"></div>
-                <div class="col" ng-controller="userController as userCtrl">
+
+                <div class="col col-33 col-offset-33" ng-controller="userController as userCtrl">
                     <section class="tab" ng-controller="TabController as tab">
-                        <ul class="nav nav-pills">
-                            <li ng-class="{ active: tab.isSet(1) }">
-                                <a ng-click="tab.setTab(1)">Sign In</a></li>
-                            <li ng-class="{ active: tab.isSet(2) }">
-                                <a ng-click="tab.setTab(2)">Sign Up</a></li>
-                        </ul>
-                        
+                        <div align="center">
+                            <a><img align= "c" src="./img/runrunners.png"></a>
+                        </div>
+
                         <br>
-                        
-                        
+
                         <div ng-show="tab.isSet(1)">
-                            
                             <form name="userFormSignIn" ng-submit="userFormSignIn.$valid && userCtrl.loginUser()" novalidate>
-<<<<<<< HEAD
                                 <fieldset class="form-group">
                                     <input ng-minlength=4 class="form-control" placeholder="Username"
                                            title="Username" ng-model="userCtrl.user.Username" type="text" required/>
@@ -54,23 +50,6 @@
                                     <input type="submit" class="button button-small button-energized"  value="Sign In"/>
                                 </fieldset>
                             </form>
-=======
-										<p></p>
-                              <label class="item item-input">
-                                  <input ng-minlength=4 placeholder="Username" 
-                                  			title="Username" ng-model="userCtrl.user.Username" type="text" required/>
-  										</label>
-  										<label class="item item-input">
-    										<input ng-minlength=8  placeholder="Password"
-                                           title="Password" ng-model="userCtrl.user.Password" type="password"/>
-  										</label>
-                            <br>
-             					 <input type="submit" class="button button-block button-balanced" value="Sign In"/>
-         						 <button class="button  button-block button-positive " ng-click="loginFacebook()">
-  											<span class="ion-social-facebook" style="font-size: 145%">   </span>Log with Facebook!
-									 </button>
-               				</form>         
->>>>>>> origin/Develop
                         </div>
                         
                         <div ng-show="tab.isSet(2)">
@@ -87,18 +66,21 @@
                                            title="Password" ng-model="userCtrl.user.Password" type="password" required/>
                                     <input ng-minlength=4 class="form-control" placeholder="Email"
                                            title="Email" ng-model="userCtrl.user.Email" type="email" required/>
-                                    <input type="submit" class="btn btn-primary pull-right" value="Create user"/>
+                                    <input type="submit" class="button button-small button-energized" value="Create user"/>
                                 </fieldset>
                             </form>
                         </div>
-								<!--
-                        <a href="" class="btn" ng-click="loginFacebook()"><img src="./img/fblogin.png" width="154" height="22"></a>-->
+                        <div class="button-bar">
+                            <a ng-class="{ active: tab.isSet(1) }" class="button button-block button-small button-positive" ng-click="tab.setTab(1)">Sign In</a>
+                            <a ng-class="{ active: tab.isSet(2) }" class="button button-block button-small button-positive" ng-click="tab.setTab(2)">Sign Up</a>
+                        </div>
+                        <button class="button  button-block button-small button-positive" ng-click="loginFacebook()">
+                            <span class="ion-social-facebook" style="font-size: 145%">   </span>Log with Facebook!
+                        </button>
                     </section>
                 </div>
-                                <div class="col-25"></div>
+
             </div>
         </ion-content>
-
-
     </body>
 </html>

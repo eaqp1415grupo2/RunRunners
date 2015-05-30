@@ -5,7 +5,7 @@ module.exports = function (app) {
     var User = require('../models/user.js');
     var Groups = require('../models/group.js');
     var Races = require('../models/race.js');
-    var Secret = require ('../config/secret.js');
+    var Secret = require('../config/secret.js');
 
     findAllUsers = function (req, res) {
         console.log("GET - /users");
@@ -18,11 +18,12 @@ module.exports = function (app) {
 
 
     //GET - Return a User with specified Name
-    findByUsername = function (req, res) {
-        console.log("GET - /user/:Username");
+    findByID = function (req, res) {
+        console.log("GET - /user/:id");
         //  var name = req.params.Name;
-        var id = jwt.decode(req.params.id,Secret);
-        User.findOne({_id:id.iss}, function (err, user) {
+        console.log(req);
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             }
@@ -60,42 +61,49 @@ module.exports = function (app) {
     addUser = function (req, res) {
         console.log('POST - /user');
         console.log(req.body);
+        User.findOne({Username: req.body.Username}, function (err, user) {
+            if (!user) {
+                var user = new User({
+                    Username: req.body.Username,
+                    Password: req.body.Password,
+                    Name: req.body.Name,
+                    Surname: req.body.Surname,
+                    Email: req.body.Email,
+                    Birthdate: req.body.Birthdate,
+                    Gender: req.body.Gender,
+                    Location: req.body.Location,
+                    Level: req.body.Level,
+                    Role: 'registered',
+                    Type: 'local'
 
-        var user = new User({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Name: req.body.Name,
-            Surname: req.body.Surname,
-            Email: req.body.Email,
-            Birthdate: req.body.Birthdate,
-            Gender: req.body.Gender,
-            Location: req.body.Location,
-            Level: req.body.Level
+                });
 
-        });
+                user.save(function (err) {
+                    if (!err) {
+                        var expires = moment().add(2, 'days').valueOf();
+                        var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+                        res.send(200, token);
+                    } else {
+                        console.log(err);
+                        if (err.name == 'ValidationError') {
 
-        user.save(function (err) {
-            if (!err) {
-                var expires = moment().add(2, 'days').valueOf();
-                var token = jwt.encode({iss: user._id, exp: expires}, Secret);
-                res.send(200, token);
+                            res.send(400, 'Validation error');
+                        } else {
+                            res.send(500, 'Server error');
+                        }
+                        console.log('Internal error: %s', err.message);
+                    }
+                });
+                res.send(user);
             } else {
-                console.log(err);
-                if (err.name == 'ValidationError') {
-
-                    res.send(400, 'Validation error');
-                } else {
-                    res.send(500, 'Server error');
-                }
-                console.log('Internal error: %s', err.message);
+                res.send(400, 'Tere is a User with this Username');
             }
         });
-        res.send(user);
     };
 
-    authenticate = function(req, res) {
+    authenticate = function (req, res) {
         console.log(req.body);
-        User.findOne({"Username": req.body.Username}, function(err, user) {
+        User.findOne({"Username": req.body.Username}, function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
@@ -202,13 +210,15 @@ module.exports = function (app) {
         });
     };
 
-    findRaces = function(req,res){
+    findRaces = function (req, res) {
 
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({_id: id.iss}, function(err, user){
-            if(!user){res.send(404,'User Not Found');}
-            else{
-                if(err) res.send(500, 'Mongo Error');
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not Found');
+            }
+            else {
+                if (err) res.send(500, 'Mongo Error');
                 else {
                     var races = user.Races;
                     console.log(races);
@@ -218,13 +228,15 @@ module.exports = function (app) {
         });
     };
 
-    findGroups = function(req,res){
+    findGroups = function (req, res) {
 
         var id = jwt.decode(req.params.id, Secret);
-        User.findOne({_id: id.iss}, function(err, user){
-            if(!user){res.send(404,'User Not Found');}
-            else{
-                if(err) res.send(500, 'Mongo Error');
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not Found');
+            }
+            else {
+                if (err) res.send(500, 'Mongo Error');
                 else {
                     var groups = user.Groups;
                     console.log(groups);
@@ -236,7 +248,7 @@ module.exports = function (app) {
 
     //Link routes and functions
     app.get('/user', findAllUsers);
-    app.get('/user/:id', findByUsername);
+    app.get('/user/:id', findByID);
     app.post('/user', addUser);
     app.post('/user/auth', authenticate);
     app.put('/user/:id', updateUser);

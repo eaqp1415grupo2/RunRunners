@@ -30,7 +30,9 @@ var userSchema = new Schema({
     },
     Level: {type: String, enum: ['Beginner', 'Medium', 'High']},
     Groups: [GroupSchema],
-    Races: [RaceSchema]
+    Races: [RaceSchema],
+    Role: {type: String, enum:['admin', 'registered']},
+    Type: {type: String, enum: ['local','facebook']}
 
 }, {versionKey: false});
 

@@ -99,7 +99,9 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
         Password: req.user.id,
         Name: req.user.name.givenName,
         Surname: req.user.name.familyName,
-        Gender: req.user.gender
+        Gender: req.user.gender,
+        Role: 'registered',
+        Type: 'facebook'
     });
 
     User.findOne({"Username": newUser.Username}, function (err, user) {

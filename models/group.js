@@ -32,7 +32,7 @@ var groupSchema = new Schema({
         Lng: {type: Number},
         Ltd: {type: Number}
     },
-    Admin_Group: {type: String},
+    Admin: {type: String},
     Users: [User],
     Races: [Race],
     Messages: [Message]

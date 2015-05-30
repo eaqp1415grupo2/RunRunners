@@ -41,12 +41,13 @@ module.exports = function (app) {
     };
 
     createGroup = function (req, res) {
+        var id = jwt.decode(req.body._id,Secret);
         Group.findOne({'Name': req.body.Name}, function (err, grupo) {
             console.log(grupo);
             if (grupo == null) {
-                User.findOne({Username: req.body.Admin_Group}, function (err, user) {
+                User.findOne({_id: id.iss}, function (err, user) {
                     if (user == null) {
-                        res.send(404, "There is no User with this name");
+                        res.send(404, 'User Not Found');
                     }
                     else {
                         var group = new Group({
@@ -54,7 +55,7 @@ module.exports = function (app) {
                             Info: req.body.Info,
                             Level: req.body.Level,
                             Location: req.body.Location,
-                            Admin_Group: user.Username,
+                            Admin: user.Username,
                             Users: [{_id: user._id, Username: user.Username}]
                         });
                         console.log(group);
@@ -73,7 +74,7 @@ module.exports = function (app) {
                 });
             }
             else {
-                res.send(500, "There is already a group with this name");
+                res.send(400, "There is already a group with this name");
             }
         });
     };

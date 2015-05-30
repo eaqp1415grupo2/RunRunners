@@ -246,6 +246,30 @@ module.exports = function (app) {
         });
     };
 
+    userStats = function(req, res){
+        var id = jwt.decode(req.body._id,Secret);
+      User.findOne({_id: id.iss}, function(err,user){
+         if(!user){
+             res.send(404, 'User Not Found');
+         } else{
+             if(err){
+                 res.send(500,'Mongo Error');
+             }
+             else {
+                 var Stats = {
+                     Time: {type: Number},
+                     Distance: {type: Number}
+                 };
+                 for (i = 0; i < user.Races.length; i++) {
+                     Stats.Time = Stats.Time + user.Races[i].Data.Time;
+                     Stats.Distance = Stats.Distance + user.Races[i].Data.Distance;
+                 }
+                 res.send(200, Stats);
+             }
+         }
+      });
+    };
+
     //Link routes and functions
     app.get('/user', findAllUsers);
     app.get('/user/:id', findByID);
@@ -256,6 +280,7 @@ module.exports = function (app) {
     app.get('/user/:id/races', findRaces);
     app.get('/user/:id/groups', findGroups);
     app.get('/user/username/:Username', findUsername);
+    app.get('/user/stats/:id', userStats);
 
 
 };

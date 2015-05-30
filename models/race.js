@@ -36,6 +36,7 @@ var raceSchema = new Schema({
     Distance: {type: Number},
     Type: {type: String},
     Tags: [Tags],
+    Admin: {type: String, ref: 'User.Username'},
     Users: [Users],
     Messages: [Message],
     Tour: [Tour]

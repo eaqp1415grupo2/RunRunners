@@ -92,26 +92,34 @@ module.exports = function (app) {
 
 //POST - Insert a new Race in the DB
     createRace = function (req, res) {
-        var race = new Race({
-            Name: req.body.Name,
-            Level: req.body.Level,
-            LocationIni: req.body.LocationIni,
-            Distance: req.body.Distance,
-            Date: req.body.Date,
-            Type: req.body.Type,
-            Tags: req.body.Tags,
-            Tour: req.body.Tour
-        });
-        race.save(function (err) {
-            if (!err) {
-                console.log('Created');
-            } else {
-                res.send(500, "Mongo Error");
-                console.log('ERROR: ' + err);
+        var id = jwt.decode(req.body._id,Secret);
+        User.find({_id:id.iss}, function(err, user){
+            if(!user){
+                res.send(404,'User not found');
+            }else {
+                var race = new Race({
+                    Name: req.body.Name,
+                    Level: req.body.Level,
+                    LocationIni: req.body.LocationIni,
+                    Distance: req.body.Distance,
+                    Date: req.body.Date,
+                    Type: req.body.Type,
+                    Tags: req.body.Tags,
+                    Tour: req.body.Tour,
+                    Admin: user.Username
+                });
+                race.save(function (err) {
+                    if (!err) {
+                        console.log('Created');
+                    } else {
+                        res.send(500, "Mongo Error");
+                        console.log('ERROR: ' + err);
+                    }
+                });
+
+                res.send(200, race);
             }
         });
-
-        res.send(200, race);
     };
 
 //PUT - Update a register already exists
@@ -178,19 +186,16 @@ module.exports = function (app) {
 
     addUser = function (req, res) {
         var id = jwt.decode(req.body._id,Secret);
-        console.log('id: '+id);
         Race.findOne({_id: req.params.id}, function (error, race) {
             if (!race) {
                 res.send(404, 'Race not found');
             } else {
 			console.log('id: '+id+' race :'+race);
                 Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
-                    User.findOne({_id: id}, function (err, user) {
-                         console.log('user to put: '+user);
+                    User.findOne({_id: id.iss}, function (err, user) {
                         //if (!err && users == null && user != null) {
                         if (!err && users == null) {
                             var racepush = ({_id: user._id, Username: user.Username});
-                            console.log('RP: '+racepush);
                             race.Users.push(racepush);
                             race.save(function (err) {
                                 if (!err) {

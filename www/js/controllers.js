@@ -1,9 +1,10 @@
 'use strict';
 var MapApp = angular.module('MapApp', ['ionic']);
-var token=window.localStorage.token;
-console.log('token '+token);
+var token={};
+var object={};
 
 var URL='https://localhost:3030/';
+//var URL='https://192.168.1.136:3030/';
 var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
@@ -11,6 +12,7 @@ var groupid='555db5a80a9995be10000009';
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
+		.state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/login.html', controller: 'loginCtrl'} }  })
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
@@ -21,7 +23,14 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
-	$urlRouterProvider.otherwise('/map/home');
+	console.log(window.localStorage.token);
+	if(window.localStorage.token === undefined || window.localStorage.token == null){
+		console.log("hello");
+		$urlRouterProvider.otherwise('/map/login');
+	} else {
+        token = window.localStorage.token;
+		$urlRouterProvider.otherwise('/map/home');
+	}
 }]);
 
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
@@ -43,7 +52,7 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 
 	$scope.updateUser = {};
 
-	$http.get('https://localhost:3030/user/' + window.localStorage.token)
+	$http.get('https://localhost:3030/user/' + token)
 		.success(function (data) {
 			$scope.users = data;
 			console.log(data);
@@ -53,7 +62,7 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 		});
 
 	$scope.getUser = function () {
-		$http.get('https://localhost:3030/user/' + window.localStorage.token)
+		$http.get('https://localhost:3030/user/' + token)
 			.success(function (data) {
 				$scope.users = data;
 				console.log(data);
@@ -87,8 +96,6 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 
 	$scope.closeModalUpdate = function () {
 		$scope.modal.hide();
-
-
 	};
 
 
@@ -127,12 +134,73 @@ MapApp.controller('MainCtrl', ['$scope', function($scope) {
 
 }]);
 
+MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, $scope,$location){
+
+	var loginRunRunners = this;
+	loginRunRunners.users = [];
+
+	this.addUser = function(){
+		loginRunRunners.users.push(this.user);
+		var urlsignin = URL+"user";
+		$http({
+			method: 'POST',
+			url: urlsignin,
+			data: this.user,
+			headers: {'Content-Type': 'application/json'}
+		}).success(function(data) {
+			console.log("data: "+data);
+			token = data;
+			window.localStorage.token=data;
+			$location.url('/map/home');
+		}).error(function(data) {
+			window.alert("ERROR - POST");
+		});
+		this.user = {};
+	};
+
+	this.loginUser = function(){
+		console.log(this.user);
+		var urlauth = URL+"user/auth";
+		$http({
+			method: 'POST',
+			url: urlauth,
+			data: this.user,
+			headers: {'Content-Type': 'application/json'}
+		}).success(function(data) {
+			console.log("data: "+data);
+			token = data;
+			window.localStorage.token=data;
+			$location.url('/map/home');
+		}).error(function(data) {
+			window.alert("ERROR - AUTH");
+		});
+		this.user = {};
+	};
+
+	$scope.loginFacebook = function(){
+		console.log('facebook');
+		window.location.href='/auth/facebook';
+	};
+}]);
+
+MapApp.controller('tabCtrl', function(){
+	this.tab = 1;
+
+	this.setTab = function(setTab){
+		this.tab = setTab;
+	};
+	this.isSet = function(isSet){
+		return this.tab === isSet;
+	};
+});
+
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
 MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	alert("Vas a salir");
-	window.localStorage.token = {};
+	token = null;
+	window.localStorage.token = null;
 	window.location.href = '/';
 }]);
 
@@ -485,7 +553,7 @@ MapApp.directive("appMap", function ($window) {
 				// Replace our Info Window's content and position
 				infowindow.setContent(contentString);
 				infowindow.setPosition(pin.position);
-				infowindow.open(map)
+				infowindow.open(map);
 				google.maps.event.addListener(infowindow, 'closeclick', function() {
 					//console.log("map: info windows close listener triggered ");
 					infowindow.close();

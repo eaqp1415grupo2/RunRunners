@@ -223,57 +223,6 @@ module.exports = function (app) {
         });
     };
 
-    addMessage = function (req, res) {
-        Race.findOne({_id: req.params.id}, function (err, race) {
-            if (!race) {
-                res.send(404, 'Race Not Found');
-            } else {
-                var id = jwt.decode(req.body._id,Secret);
-                User.findOne({_id: id.iss}, {Username: 1}, function (err, user) {
-                    console.log(user);
-                    var message = ({UserID: user._id, Username: user.Username, Text: req.body.Text});
-                    console.log(message);
-                    race.Messages.push(message);
-                    race.save(function (err) {
-                        if (err) res.send(500, "Mongo Error");
-                        else res.send(200, race);
-                    });
-                });
-            }
-        });
-    };
-
-    addAnswer = function (req, res) {
-        Race.findOne({_id: req.params.id}, function (err, race) {
-            if (!race) {
-                res.send(404, 'Race Not Found');
-            } else {
-                Race.findOne({_id: req.params.id, 'Messages._id' :req.params.message}, function (err, messages) {
-                    if (!messages) {
-                        res.send(404, 'Message Not Found');
-                    } else {
-                        var position;
-                        for(var i in messages.Messages){
-                            if(messages.Messages[i]._id.equals(req.params.message)){
-                                position = i;
-                                break;
-                            }
-                        }
-                        var id = req.body._id;
-                        User.findOne({_id: id.iss}, {Username: 1}, function (err, user) {
-                            var answer = ({UserID: user._id, Username: user.Username, Answer: req.body.Answer});
-                            messages.Messages[position].Answers.push(answer);
-                            messages.save(function (err) {
-                                if (err) res.send(500, "Mongo Error");
-                                else res.send(200, messages);
-                            });
-                        });
-                    }
-                });
-            }
-        });
-    };
-
     deleteUser = function (req, res) {
         var id = jwt.decode(req.body._id,Secret);
         Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, race) {
@@ -328,8 +277,6 @@ module.exports = function (app) {
     app.delete('/race/:id', deleteRace);
     app.put('/race/:id/user', addUser);
     app.delete('/race/:id/user', deleteUser);
-    app.put('/race/:id/message', addMessage);
-    app.put('/race/:id/message/:message',addAnswer);
 
 }
 ;

@@ -71,7 +71,7 @@ app.get('/ionic', function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    res.sendfile('./www/login.html');});
+    res.sendfile('./www/index.html');});
 
 app.get('/backoffice', function(req, res) {
     res.sendfile('./web/backoffice/backoffice.html');});

@@ -1,57 +1,33 @@
 <ion-view title="Races Map">
-<ion-content class="has-header padding">
+    <ion-content class="has-header padding">
+        <!-- map directive-->
+        <app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;" center="basel" zoom="15" markers="whoiswhere">
+        </app-map>
 
-<!-- map directive-->
-<app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;"
-    center="basel"
-    zoom="15"
-    markers="whoiswhere"
-	> 
-</app-map>
-
-
-<div class="row">
-   <div class="col">
-   
-  <div class="item item-input-inset">
-    <label class="item-input-wrapper" >
-      <input type="text" placeholder="Races" ng-model="searchText">
-    </label>
-    <button class="button button-small">
-      Create New Race
-    </button>
-</div>
-    <div class="list card">
-<ion-item data-ng-repeat="r in races | filter:searchText" href="#/map/race/{{r._id}}">
-     <a class="item item-thumbnail-left">
-          <img ng-src="/img/race.jpg">
-          <h2>{{ r.Name }}</h2>
-          <h4>{{ r.Distance }}km - Level: {{r.Level}}</h4>
-          <h4>Starts at: {{ r.Date }}</h4>
-          <h4>Start place: {{ r.LocationIni }}</h4>
-          
-          
-        </a>
- 
-   
-  </div> 
-
-   </div>
-   
-   
-   <div class="col">
-   <center>Others...
-   <p>
-   Not avaiable yet :(
-	</p>
-   
-   </center>
-   
-   </div>
-
-
-</div>
-
-
-</ion-content>
+        <div class="row">
+            <div class="col">
+                <div class="item item-input-inset">
+                    <label class="item-input-wrapper" >
+                        <input type="text" placeholder="Races" ng-model="searchText">
+                    </label>
+                    <button class="button button-small">Create New Race</button>
+                </div>
+                <div class="list card">
+                    <ion-item ng-repeat="r in races | filter:searchText">
+                        <a class="item item-thumbnail-left">
+                              <img ng-src="/img/race.jpg">
+                              <h2>{{ r.Name }}</h2>
+                              <h4>{{ r.Distance }}km - Level: {{r.Level}}</h4>
+                              <h4>Starts at: {{ r.Date }}</h4>
+                              <h4>Start place: {{ r.LocationIni }}</h4>
+                        </a>
+                </div>
+            </div>
+            <div class="col">
+                <center>Others...
+                <p>Not avaiable yet :(</p>
+                </center>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

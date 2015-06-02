@@ -12,7 +12,7 @@ var groupid='555db5a80a9995be10000009';
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
-		.state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/login.html', controller: 'loginCtrl'} }  })
+		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
@@ -20,14 +20,16 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  });
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
+        .state('menu.crono', {url: '/crono', views: {'menuContent': {templateUrl: '/templates/crono.html', controller: 'cronoCtrl'}}});
 
 	// if none of the above states are matched, use this as the fallback
 	console.log(window.localStorage.token);
-	if(window.localStorage.token === undefined || window.localStorage.token == null){
-		console.log("hello");
-		$urlRouterProvider.otherwise('/map/login');
+    console.log(window.location.search);
+	if((window.localStorage.token === undefined || window.localStorage.token == 'null') && window.location.search== ""){
+		$urlRouterProvider.otherwise('/login');
 	} else {
+        window.localStorage.token = window.location.search.substring(1);
         token = window.localStorage.token;
 		$urlRouterProvider.otherwise('/map/home');
 	}
@@ -180,6 +182,7 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 	$scope.loginFacebook = function(){
 		console.log('facebook');
 		window.location.href='/auth/facebook';
+
 	};
 }]);
 
@@ -202,6 +205,13 @@ MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	token = null;
 	window.localStorage.token = null;
 	window.location.href = '/';
+}]);
+
+/**
+ * CRONO CONTROLLER - handle inapp browser
+ */
+MapApp.controller('cronoCtrl', ['$scope', function($scope) {
+
 }]);
 
 /**

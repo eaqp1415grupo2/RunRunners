@@ -3,8 +3,8 @@ var MapApp = angular.module('MapApp', ['ionic']);
 var token=window.localStorage.token;
 console.log('token '+token);
 
-//var URL='https://localhost:3030/';
-var URL='https://147.83.7.203:3030/';
+var URL='https://localhost:3030/';
+//var URL='https://147.83.7.203:3030/';
 
 /**
  * Routing table including associated controllers.
@@ -43,9 +43,25 @@ MapApp.controller('MainCtrl', function($scope, $http) {
 
 });
 
-MapApp.controller('StatsCtrl', function($scope, $http) {
+
+MapApp.controller('statsCtrl',function($scope, $http) {
+
+
+
+	$scope.getraces = function () {
+		$http.get(URL + 'user/' + window.localStorage.token +'/races')
+			.success(function (data) {
+				$scope.users = data;
+				console.log(data);
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
 
 });
+
 
 MapApp.controller('ProfileCtrl', ['$scope', function($scope) {
 

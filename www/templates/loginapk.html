@@ -1,15 +1,10 @@
-<ion-header-bar>
-    <nav id="navbarid" class="bar bar-header bar-stable bar-dark" role="navigation">
-        <h1 class="title">Wellcome to RunRunners APK</h1>
-    </nav>
-</ion-header-bar>
 <ion-content>
     <div class="row rowsign">
 
-        <div class="col col-50 col-offset-25" ng-controller="loginCtrl as userCtrl">
-            <section class="tab" ng-controller="tabCtrl as tab">
+        <div class="col col-50 col-offset-25" data-ng-controller="loginCtrl as userCtrl">
+            <section class="tab" data-ng-controller="tabCtrl as tab">
                 <div align="center">
-                    <a><img align= "c" src="./img/runrunners.png"></a>
+                    <a><img align= "c" src="../img/runrunners.png"></a>
                 </div>
 
                 <br>
@@ -21,6 +16,7 @@
                                    title="Username" ng-model="userCtrl.user.Username" type="text" required/>
                             <input ng-minlength=8 class="form-control" placeholder="Password"
                                    title="Password" ng-model="userCtrl.user.Password" type="password"/>
+                            <br>
                             <input type="submit" class="button button-small button-energized"  value="Sign In"/>
                         </fieldset>
                     </form>
@@ -40,6 +36,7 @@
                                    title="Password" ng-model="userCtrl.user.Password" type="password" required/>
                             <input ng-minlength=4 class="form-control" placeholder="Email"
                                    title="Email" ng-model="userCtrl.user.Email" type="email" required/>
+                            <br>
                             <input type="submit" class="button button-small button-energized" value="Create user"/>
                         </fieldset>
                     </form>

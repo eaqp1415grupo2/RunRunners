@@ -66,10 +66,6 @@ var secureServer = https.createServer(sslOptions,app).listen('3030', function(){
 app.use(express.static('www'));
 //de momento redirige a wall, a la espera de login
 
-app.get('/ionic', function(req, res) {
-    res.sendfile('./www/index.html');
-});
-
 app.get('/', function(req, res) {
     res.sendfile('./www/index.html');});
 
@@ -107,12 +103,9 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
     User.findOne({"Username": newUser.Username}, function (err, user) {
         if (!user) {
             newUser.save(function (err) {
-                if (!err) {
-
-                } else {
+                if (err) {
                     console.log(err);
                     if (err.name == 'ValidationError') {
-
                         res.send(400, 'Validation error');
                     } else {
                         res.send(500, 'Server error');
@@ -122,15 +115,15 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
             });
         }
         if (!err) {
-            res.redirect('/ionic');
+            var expires = moment().add(2, 'days').valueOf();
+            var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+            res.redirect('/?'+token);
         } else {
             console.log('Internal error: %s', err.message);
             res.send(500, 'Server error');
         }
     });
 });
-
-
 
 //Conexi?n DB Mongo
 routes = require('./routes/race')(app);

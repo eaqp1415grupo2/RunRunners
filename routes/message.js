@@ -22,7 +22,6 @@ module.exports = function (app) {
         });
     };
 
-
     //GET - Return message in the DB by ID_message
     findMessageByID = function (req, res) {
         Message.findOne({_id: req.params.id}, function (err, msg) {
@@ -50,7 +49,6 @@ module.exports = function (app) {
         });
     };
 
-
     createMessage = function (req, res) {
         var id = req.body.ParentID;
         var race = true;
@@ -60,8 +58,6 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User not Found');
             } else {
-                console.log("User: " + user);
-                console.log("ParentID: " + id);
                 Race.findOne({_id: id, 'Users._id': userid.iss}, function (err, result) {
                     console.log("Result: " + result);
                     if (!result) {
@@ -81,7 +77,7 @@ module.exports = function (app) {
 
                 } else {
                     var message = new Message({
-                        UserID: userid,
+                        UserID: userid.iss,
                         Username: user.Username,
                         Text: req.body.Text,
                         ParentID: id
@@ -159,10 +155,11 @@ module.exports = function (app) {
                                     res.send(404, 'Bad ParentID');
                                 }
                                 else {
-
                                     if (!race) {
+                                        console.log(message.UserID, id.iss);
+                                        console.log(group.Admin, user.Username);
                                         if (message.UserID != id.iss && group.Admin != user.Username) {
-                                            console.log(group.Admin, user.Username);
+
                                             res.send(400, 'Bad User');
                                         } else {
                                             message.remove(function (err) {
@@ -202,20 +199,39 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        if (message.UserID != id.iss) {
-                            res.send(400, 'Bad User');
-                        } else {
-                            message.Answers.pull(answer);
-                            message.save(function (err) {
-                                if (err) res.send(500, 'Mongo Error');
-                                else res.send(200, 'Message REmoved');
+                        Race.findOne({_id: message.ParentID}, function (err, race) {
+                            Group.findOne({_id: message.ParentID}, function (err, group) {
+                                if (!race) {
+                                    if (message.UserID != id.iss && user.Username != group.Admin) {
+                                        res.send(400, 'Bad User');
+                                    } else {
+                                        message.Answers.pull(answer);
+                                        message.save(function (err) {
+                                            if (err) res.send(500, 'Mongo Error');
+                                            else res.send(200, 'Message REmoved');
+                                        });
+                                    }
+                                } else if (!group) {
+                                    if (message.UserID != id.iss && user.Username != race.Admin) {
+                                        res.send(400, 'Bad User');
+                                    } else {
+                                        message.Answers.pull(answer);
+                                        message.save(function (err) {
+                                            if (err) res.send(500, 'Mongo Error');
+                                            else res.send(200, 'Message REmoved');
+                                        });
+                                    }
+                                } else {
+                                    res.send(404, 'ParentID Not Found');
+                                }
                             });
-                        }
+                        });
                     }
                 });
             }
         });
     };
+
     app.get('/message', findAllMessage);
     app.get('/message/:id', findMessageByID);
     app.get('/message/parent/:id', findMessagesByParentID);

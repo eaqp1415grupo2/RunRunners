@@ -220,15 +220,29 @@ module.exports = function (app) {
                 res.send(404, 'Group Not Found');
             } else {
                 Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (error, users) {
-                    console.log(users);
                     if (users == null) {
                         res.send(404, 'There is no user with in this group');
                     } else {
                         if (req.body.delete == null) {
-                            group.Users.pull(id.iss);
-                            group.save(function (err) {
-                                if (err) res.send(500, "Error: " + err);
-                                else res.send(200);
+                            User.findOne({_id:id.iss}, function (err, user) {
+                                console.log("USER: " + user);
+                                console.log(group.Users[1].Username);
+                                if (group.Admin === user.Username) {
+                                    group.Admin = group.Users[1].Username;
+                                }
+                                    group.Users.pull(id.iss);
+                                    group.save(function (err) {
+                                        if (err) res.send(500, "Error: " + err);
+                                    });
+                                    user.Groups.pull(group._id);
+                                    user.save(function (error) {
+                                        if (error) res.send(500, 'Mongo Error');
+                                        else {
+                                            console.log(user);
+                                            res.send(200);
+                                        }
+                                    });
+
                             });
                         } else {
                             User.findOne({_id: id.iss}, function (err, user) {
@@ -236,7 +250,6 @@ module.exports = function (app) {
                                     res.send(404, 'Not Allowed');
                                 } else {
                                     var position = false;
-
                                     for (i = 0; i < group.Users.length; i++) {
                                         console.log(req.body.delete, group.Users[i]._id);
                                         if (group.Users[i]._id.equals(req.body.delete)) {
@@ -261,7 +274,6 @@ module.exports = function (app) {
                                         res.send(404, 'User not found');
                                     }
                                 }
-
                             });
                         }
                     }

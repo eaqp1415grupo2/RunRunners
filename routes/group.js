@@ -224,25 +224,22 @@ module.exports = function (app) {
                         res.send(404, 'There is no user with in this group');
                     } else {
                         if (req.body.delete == null) {
-                            User.findOne({_id:id.iss}, function (err, user) {
-                                console.log("USER: " + user);
-                                console.log(group.Users[1].Username);
+                            User.findOne({_id: id.iss}, function (err, user) {
                                 if (group.Admin === user.Username) {
                                     group.Admin = group.Users[1].Username;
                                 }
-                                    group.Users.pull(id.iss);
-                                    group.save(function (err) {
-                                        if (err) res.send(500, "Error: " + err);
-                                    });
-                                    user.Groups.pull(group._id);
-                                    user.save(function (error) {
-                                        if (error) res.send(500, 'Mongo Error');
-                                        else {
-                                            console.log(user);
-                                            res.send(200);
-                                        }
-                                    });
-
+                                group.Users.pull(id.iss);
+                                group.save(function (err) {
+                                    if (err) res.send(500, "Error: " + err);
+                                });
+                                user.Groups.pull(group._id);
+                                user.save(function (error) {
+                                    if (error) res.send(500, 'Mongo Error');
+                                    else {
+                                        console.log(group);
+                                        res.send(200);
+                                    }
+                                });
                             });
                         } else {
                             User.findOne({_id: id.iss}, function (err, user) {
@@ -262,12 +259,14 @@ module.exports = function (app) {
                                             group.Users.pull(req.body.delete);
                                             group.save(function (err) {
                                                 if (err) res.send(500, "Error: " + err);
-
                                             });
                                             deleteuser.Groups.pull(group._id);
                                             deleteuser.save(function (err) {
                                                 if (err) res.send(500, 'Mongo Error');
-                                                else res.send(200)
+                                                else {
+                                                    console.log(group);
+                                                    res.send(200);
+                                                }
                                             });
                                         });
                                     } else {

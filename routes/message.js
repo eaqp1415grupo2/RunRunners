@@ -208,7 +208,7 @@ module.exports = function (app) {
                                         message.Answers.pull(answer);
                                         message.save(function (err) {
                                             if (err) res.send(500, 'Mongo Error');
-                                            else res.send(200, 'Message REmoved');
+                                            else res.send(200, 'Answer Removed');
                                         });
                                     }
                                 } else if (!group) {
@@ -218,7 +218,7 @@ module.exports = function (app) {
                                         message.Answers.pull(answer);
                                         message.save(function (err) {
                                             if (err) res.send(500, 'Mongo Error');
-                                            else res.send(200, 'Message REmoved');
+                                            else res.send(200, 'Answer Removed');
                                         });
                                     }
                                 } else {

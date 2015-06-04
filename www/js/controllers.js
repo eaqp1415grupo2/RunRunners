@@ -15,10 +15,9 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		//.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
-		.state('menu.group', {url: "/group:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
         .state('menu.crono', {url: '/crono', views: {'menuContent': {templateUrl: '/templates/crono.html', controller: 'cronoCtrl'}}});
@@ -169,7 +168,7 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 			data: this.user,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
-			console.log("data: "+data);
+			console.log("token: "+data);
 			token = data;
 			window.localStorage.token=data;
 			$location.url('/map/home');
@@ -204,7 +203,9 @@ MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	alert("Vas a salir");
 	token = null;
 	window.localStorage.token = null;
+   console.log('token?'+window.localStorage.token);
 	window.location.href = '/';
+
 }]);
 
 /**
@@ -267,27 +268,18 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
-    $scope.groupmessages = [];
-    // console.log($stateParams);
+function GroupCtrl($scope, $http, $stateParams ,$ionicLoading, GroupMessageService, $log) {
+    $scope.messages = [];
+    console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
- 	 console.log($scope.groupId);
- 	/*
-	$http.get(URL+'js/testData/messages.json').success(function(data) {
-		$scope.groupmessages = data;
+
+	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+		$scope.messages = data;
+		console.log(data);
 	})
 	.error(function(data) {
-		console.log(' Error: ' + data);
-	});*/
-
-    $scope.loadGroupMessages = function() {
-		GroupMessageService.loadGroupMessages()
-		     .success(function(result) {
-				$scope.messages=result;
-      console.log("XX"+$scope.groups);
-                      $ionicLoading.hide();
-      });
-    }	          		
+		console.log('Error: ' + data);
+	});	         		
 }
 
 
@@ -296,16 +288,18 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.othergroups = [];
     
         	//Obtener Grupos propios
-	$http.get(URL+'groups').success(function(data) {
+	$http.get(URL+'groups/user/'+token).success(function(data) {
 		$scope.owngroups = data;
+		console.log('own G:'+$scope.owngroups);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
     
             	//Obtener Otros Grupos
-	$http.get(URL+'groups').success(function(data) {
+	$http.get(URL+'groups/no/'+token).success(function(data) {
 		$scope.othergroups = data;
+			console.log('other G:'+data);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
@@ -337,19 +331,17 @@ function GroupMessageService($http, $log,$stateParams) {
 }
 
 
-function RaceCtrl($scope, $stateParams ,$ionicLoading, RaceMessageService, $log) {
-    $scope.message = [];
-              console.log($stateParams);
+function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService, $log) {
+    $scope.messages = [];
+    console.log($stateParams);
     $scope.raceId=$stateParams.raceId;
 
-    $scope.loadRaceMessages = function() {
-		RaceMessageService.loadRacesMessages()
-		     .success(function(result) {
-				$scope.messages=result;
-      console.log("YY"+$scope.races);
-                      $ionicLoading.hide();
-      });
-    } 	          		
+	$http.get(URL+'message/parent/'+$stateParams.raceId).success(function(data) {
+		$scope.messages = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});	          		
 }
 
 
@@ -358,20 +350,24 @@ function RacesCtrl($scope, $http ,$ionicLoading, $log) {
     $scope.otherraces = []; 
     
     	//Obtener carreras propias
-	$http.get(URL+'race').success(function(data) {
+	$http.get(URL+'race/user/'+token).success(function(data) {
 		$scope.ownraces = data;
+		console.log('own Races:'+$scope.ownraces);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
 	
-	    	//Obtener otras carreras
-	$http.get(URL+'race').success(function(data) {
+	  //Obtener otras carreras
+	$http.get(URL+'race/no/'+token).success(function(data) {
 		$scope.otherraces = data;
+		console.log('other Races:'+$scope.otherraces);
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
+	
+	
     /*$scope.infiniteLoad = false;
     
     $scope.loadRaces = function() {
@@ -390,9 +386,9 @@ function RacesService($http, $log) {
         return ($http.get(URL+'race'));
     }
 }
-//return ($http.get(URL+'message/parent/'+$stateParams.raceId));
+
 function RaceMessageService($http, $log,$stateParams) {
-	console.log("aaaaaaaaaaaaaaaaaaaaaaaa");
+	console.log("RaceMessageService");
         this.loadRaceMessages = function() {     
         return ($http.get(URL+'js/testData/messages.json'));
             }

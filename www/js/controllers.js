@@ -23,7 +23,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
-	console.log(window.localStorage.token);
+	console.log('token: '+window.localStorage.token);
 	if(window.localStorage.token === undefined || window.localStorage.token == null){
 		console.log("hello");
 		$urlRouterProvider.otherwise('/map/login');
@@ -37,7 +37,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
-MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
+//MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
 MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 

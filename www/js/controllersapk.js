@@ -1,7 +1,6 @@
 'use strict';
-var MapApp = angular.module('MapApp', ['ionic']);
+var MapAppApk = angular.module('MapAppApk', ['ionic']);
 var token={};
-var object={};
 
 var URL='https://localhost:3030/';
 //var URL='https://192.168.1.136:3030/';
@@ -9,7 +8,7 @@ var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
  */
-MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+MapAppApk.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
         .state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/loginapk.html', controller: 'loginCtrl'} }  })
@@ -23,31 +22,25 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
         .state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  });
 
     // if none of the above states are matched, use this as the fallback
-    console.log(window.localStorage.token);
-    if(window.localStorage.token === undefined){
-        console.log("hello");
-        $urlRouterProvider.otherwise('/map/login');
-    } else {
-        $urlRouterProvider.otherwise('/map/home');
-    }
+    $urlRouterProvider.otherwise('/map/login');
 }]);
 
-MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
-MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
+MapAppApk.service("GroupsService",["$http", "$log", GroupsService ]);
+MapAppApk.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
-MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
-MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);
+MapAppApk.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
+MapAppApk.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);
 
 
-MapApp.service("RacesService",["$http", "$log", RacesService ]);
-MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
+MapAppApk.service("RacesService",["$http", "$log", RacesService ]);
+MapAppApk.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
 
-MapApp.controller("RacesCtrl",["$scope", "$http","$ionicLoading", "RacesService", "$log", RacesCtrl]);
-MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);
+MapAppApk.controller("RacesCtrl",["$scope", "$http","$ionicLoading", "RacesService", "$log", RacesCtrl]);
+MapAppApk.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);
 /**
  * HEADER - handle menu toggle
  */
-MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) {
+MapAppApk.controller('profilectrl',function($scope, $http, $ionicModal, $location) {
 
     $scope.updateUser = {};
 
@@ -129,11 +122,11 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 /**
  * MAIN CONTROLLER - handle inapp browser
  */
-MapApp.controller('MainCtrl', ['$scope', function($scope) {
+MapAppApk.controller('MainCtrl', ['$scope', function($scope) {
 
 }]);
 
-MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, $scope,$location){
+MapAppApk.controller('loginCtrl',['$http', '$scope', '$location', function ($http, $scope,$location){
 
     var loginRunRunners = this;
     loginRunRunners.users = [];
@@ -182,7 +175,7 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
     };
 }]);
 
-MapApp.controller('tabCtrl', function(){
+MapAppApk.controller('tabCtrl', function(){
     this.tab = 1;
 
     this.setTab = function(setTab){
@@ -196,7 +189,7 @@ MapApp.controller('tabCtrl', function(){
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
-MapApp.controller('logOutCtrl', ['$scope', function($scope) {
+MapAppApk.controller('logOutCtrl', ['$scope', function($scope) {
     alert("Vas a salir");
     token={};
     window.localStorage.token = {};
@@ -206,7 +199,7 @@ MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 /**
  * A google map / GPS controller.
  */
-MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
+MapAppApk.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
     function($scope,$http, $ionicPlatform, $location) {
 
         $scope.races = {};
@@ -552,7 +545,7 @@ MapApp.directive("appMap", function ($window) {
                 // Replace our Info Window's content and position
                 infowindow.setContent(contentString);
                 infowindow.setPosition(pin.position);
-                infowindow.open(map)
+                infowindow.open(map);
                 google.maps.event.addListener(infowindow, 'closeclick', function() {
                     //console.log("map: info windows close listener triggered ");
                     infowindow.close();

@@ -12,21 +12,21 @@ var groupid='555db5a80a9995be10000009';
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
-		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
+		.state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/login.html', controller: 'loginCtrl'} }  })
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
-        .state('menu.crono', {url: '/crono', views: {'menuContent': {templateUrl: '/templates/crono.html', controller: 'cronoCtrl'}}});
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
+		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
 	console.log(window.localStorage.token);
-    console.log(window.location.search);
-	if((window.localStorage.token === undefined || window.localStorage.token == 'null') && window.location.search== ""){
-		$urlRouterProvider.otherwise('/login');
+	if(window.localStorage.token === undefined || window.localStorage.token == null){
+		console.log("hello");
+		$urlRouterProvider.otherwise('/map/login');
 	} else {
         window.localStorage.token = window.location.search.substring(1);
         token = window.localStorage.token;
@@ -49,6 +49,23 @@ MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMes
 /**
  * HEADER - handle menu toggle
  */
+MapApp.controller('statsCtrl',function($scope, $http) {
+
+
+
+	$scope.getraces = function () {
+		$http.get(URL+'user/' + window.localStorage.token +'/races')
+			.success(function (data) {
+				$scope.users = data;
+				console.log(data);
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
+
+});
 MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) {
 
 	$scope.updateUser = {};
@@ -181,7 +198,6 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 	$scope.loginFacebook = function(){
 		console.log('facebook');
 		window.location.href='/auth/facebook';
-
 	};
 }]);
 
@@ -268,14 +284,14 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $http, $stateParams ,$ionicLoading, GroupMessageService, $log) {
-    $scope.messages = [];
-    console.log($stateParams);
+function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
+    $scope.groupmessages = [];
+    // console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
-
-	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
-		$scope.messages = data;
-		console.log(data);
+ 	 console.log($scope.groupId);
+ 	/*
+	$http.get(URL+'js/testData/messages.json').success(function(data) {
+		$scope.groupmessages = data;
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
@@ -609,7 +625,3 @@ MapApp.directive("appMap", function ($window) {
 			} // end of link:
 		}; // end of return
 });
-
-
-
-

@@ -56,7 +56,10 @@ module.exports = function (app) {
                             Level: req.body.Level,
                             Location: req.body.Location,
                             Admin: user.Username,
-                            Users: [{_id: user._id, Username: user.Username}]
+                            Users: [{
+                                _id: user._id,
+                                Username: user.Username
+                            }]
                         });
                         console.log(group);
                         group.save(function (error) {
@@ -99,7 +102,10 @@ module.exports = function (app) {
                                     console.log('ERROR: ' + err);
                                 }
                             });
-                            var userpush = ({_id: group._id, Group: group.Name});
+                            var userpush = ({
+                                _id: group._id,
+                                Group: group.Name
+                            });
                             user.Groups.push(userpush);
                             user.save(function (err) {
                                 if (!err) {

@@ -93,7 +93,7 @@ module.exports = function (app) {
 //POST - Insert a new Race in the DB
     createRace = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
-        User.find({_id: id.iss}, function (err, user) {
+        User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
                 res.send(404, 'User not found');
             } else {
@@ -106,7 +106,11 @@ module.exports = function (app) {
                     Type: req.body.Type,
                     Tags: req.body.Tags,
                     Tour: req.body.Tour,
-                    Admin: user.Username
+                    Admin: user.Username,
+                    Users: [{
+                        _id: user._id,
+                        Username: user.Username
+                    }]
                 });
                 race.save(function (err) {
                     if (!err) {
@@ -116,7 +120,19 @@ module.exports = function (app) {
                         console.log('ERROR: ' + err);
                     }
                 });
-
+                var userpush = ({
+                    _id: race._id,
+                    Race: race.Name,
+                    State: 'Pending'
+                });
+                user.Races.push(userpush);
+                user.save(function (err) {
+                    if (!err) {
+                        res.send(200, race);
+                    } else {
+                        res.send(500, err);
+                    }
+                });
                 res.send(200, race);
             }
         });
@@ -235,11 +251,12 @@ module.exports = function (app) {
                 res.send(404, 'User Not Found')
             } else {
                 if (!req.body.delete) {
+                    console.log("delete = null");
                     User.findOne({_id: id.iss}, function (err, user) {
                         if (race.Admin === user.Username) {
                             race.Admin = race.Users[1].Username;
                         }
-                        race.Users.pull(id);
+                        race.Users.pull(id.iss);
                         race.save(function (err) {
                             if (err) res.send(500, 'Mongo Error');
                             else console.log('Race Removed');
@@ -248,7 +265,7 @@ module.exports = function (app) {
                         user.save(function (error) {
                             if (error) res.send(500, 'Mongo Error');
                             else {
-                                console.log(group);
+                                console.log(race);
                                 res.send(200);
                             }
                         });
@@ -260,8 +277,8 @@ module.exports = function (app) {
                         } else {
                             var position = false;
                             for (i = 0; i < race.Users.length; i++) {
-                                console.log(req.body.delete, group.Users[i]._id);
-                                if (group.Users[i]._id.equals(req.body.delete)) {
+                                console.log(req.body.delete, race.Users[i]._id);
+                                if (race.Users[i]._id.equals(req.body.delete)) {
                                     position = true;
                                     break;
                                 }
@@ -276,7 +293,7 @@ module.exports = function (app) {
                                     deleteuser.save(function (err) {
                                         if (err) res.send(500, 'Mongo Error');
                                         else {
-                                            console.log(group);
+                                            console.log(race);
                                             res.send(200);
                                         }
                                     });

@@ -366,18 +366,23 @@ function RacesCtrl($scope, $http ,$ionicLoading, $log) {
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
-	
-	
-    /*$scope.infiniteLoad = false;
-    
-    $scope.loadRaces = function() {
-		RacesService.loadRaces()
-		     .success(function(result) {
-				$scope.races=result;
-      console.log($scope.races);
-                      $ionicLoading.hide();
-      });
-    }*/
+
+	$scope.addUser = function (race) {
+		$http({
+			method: 'PUT',
+			url: URL+'race/'+race+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#map/race/'+race;
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
 }
 
 //Unused

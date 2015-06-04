@@ -220,10 +220,10 @@ module.exports = function (app) {
                 res.send(404, 'Group Not Found');
             } else {
                 Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (error, users) {
-                    if (users == null) {
+                    if (!users) {
                         res.send(404, 'There is no user with in this group');
                     } else {
-                        if (req.body.delete == null) {
+                        if (!req.body.delete) {
                             User.findOne({_id: id.iss}, function (err, user) {
                                 if (group.Admin === user.Username) {
                                     group.Admin = group.Users[1].Username;

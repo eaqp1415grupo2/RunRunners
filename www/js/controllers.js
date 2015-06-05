@@ -9,10 +9,10 @@ var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
  */
-MapApp.config(['$stateProvider', '$urlRouterProvider', '$window', function($stateProvider, $urlRouterProvider, $window) {
+MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
-		.state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/login.html', controller: 'loginCtrl'} }  })
+		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
@@ -23,14 +23,13 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', '$window', function($stat
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
-	console.log($window.localStorage.token);
-    console.log($window.location.search);
-	if(($window.localStorage.token === undefined || $window.localStorage.token == 'null') && $window.location.search== ""){
+	console.log(window.localStorage.token);
+    console.log(window.location.search);
+	if((window.localStorage.token === undefined || window.localStorage.token == 'null') && window.location.search== ""){
 		$urlRouterProvider.otherwise('/login');
 	} else {
-        $window.localStorage.token = $window.location.search.substring(1);
-        token = $window.localStorage.token;
-		$window.location.href='/';
+        window.localStorage.token = window.location.search.substring(1);
+        token = window.localStorage.token;
 		$urlRouterProvider.otherwise('/map/home');
 	}
 }]);
@@ -216,11 +215,11 @@ MapApp.controller('tabCtrl', function(){
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
-MapApp.controller('logOutCtrl', ['$scope', '$window', function($scope, $window) {
+MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	alert("Vas a salir");
 	token = null;
-	$window.localStorage.token = null;
-	$window.location.href = '/';
+	window.localStorage.token = null;
+	window.location.href = '/';
 }]);
 
 /**

@@ -9,7 +9,7 @@ var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
  */
-MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+MapApp.config(['$stateProvider', '$urlRouterProvider', '$window', function($stateProvider, $urlRouterProvider, $window) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
 		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
@@ -23,13 +23,14 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
         .state('menu.crono', {url: '/crono', views: {'menuContent': {templateUrl: '/templates/crono.html', controller: 'cronoCtrl'}}});
 
 	// if none of the above states are matched, use this as the fallback
-	console.log(window.localStorage.token);
-    console.log(window.location.search);
-	if((window.localStorage.token === undefined || window.localStorage.token == 'null') && window.location.search== ""){
+	console.log($window.localStorage.token);
+    console.log($window.location.search);
+	if(($window.localStorage.token === undefined || $window.localStorage.token == 'null') && $window.location.search== ""){
 		$urlRouterProvider.otherwise('/login');
 	} else {
-        window.localStorage.token = window.location.search.substring(1);
-        token = window.localStorage.token;
+        $window.localStorage.token = $window.location.search.substring(1);
+        token = $window.localStorage.token;
+		$window.location.href='/';
 		$urlRouterProvider.otherwise('/map/home');
 	}
 }]);
@@ -199,12 +200,12 @@ MapApp.controller('tabCtrl', function(){
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
-MapApp.controller('logOutCtrl', ['$scope', function($scope) {
+MapApp.controller('logOutCtrl', ['$scope', '$window', function($scope, $window) {
 	alert("Vas a salir");
 	token = null;
-	window.localStorage.token = null;
-   console.log('token?'+window.localStorage.token);
-	window.location.href = '/';
+	$window.localStorage.token = null;
+   console.log('token?'+$window.localStorage.token);
+	$window.location.href = '/';
 
 }]);
 

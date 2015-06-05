@@ -12,15 +12,15 @@ var groupid='555db5a80a9995be10000009';
 MapApp.config(['$stateProvider', '$urlRouterProvider', '$window', function($stateProvider, $urlRouterProvider, $window) {
 	$stateProvider
 		.state('menu', {url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
-		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
+		.state('menu.login', {url: '/login', views: {'menuContent': {templateUrl: '/templates/login.html', controller: 'loginCtrl'} }  })
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
-		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
-        .state('menu.crono', {url: '/crono', views: {'menuContent': {templateUrl: '/templates/crono.html', controller: 'cronoCtrl'}}});
+		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
+		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
 	console.log($window.localStorage.token);
@@ -38,7 +38,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', '$window', function($stat
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
-MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
+//MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
 MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 
@@ -50,6 +50,23 @@ MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMes
 /**
  * HEADER - handle menu toggle
  */
+MapApp.controller('statsCtrl',function($scope, $http) {
+
+
+
+	$scope.getraces = function () {
+		$http.get(URL+'user/' + window.localStorage.token +'/races')
+			.success(function (data) {
+				$scope.users = data;
+				console.log(data);
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
+
+});
 MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) {
 
 	$scope.updateUser = {};
@@ -182,7 +199,6 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 	$scope.loginFacebook = function(){
 		console.log('facebook');
 		window.location.href='/auth/facebook';
-
 	};
 }]);
 
@@ -204,9 +220,7 @@ MapApp.controller('logOutCtrl', ['$scope', '$window', function($scope, $window) 
 	alert("Vas a salir");
 	token = null;
 	$window.localStorage.token = null;
-   console.log('token?'+$window.localStorage.token);
 	$window.location.href = '/';
-
 }]);
 
 /**
@@ -269,20 +283,19 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $http, $stateParams ,$ionicLoading, GroupMessageService, $log) {
-    $scope.messages = [];
-    console.log($stateParams);
+function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
+    $scope.groupmessages = [];
+    // console.log($stateParams);
     $scope.groupId=$stateParams.groupId;
-
-	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
-		$scope.messages = data;
-		console.log(data);
+ 	 console.log($scope.groupId);
+ 	
+	$http.get(URL+'js/testData/messages.json').success(function(data) {
+		$scope.groupmessages = data;
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});	         		
 }
-
 
 function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.owngroups = []; 
@@ -305,17 +318,38 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
-    /*$scope.infiniteLoad = false;
-    $scope.loadGroups = function() {
-		GroupsService.loadGroups()
-		     .success(function(result) {
-				$scope.groups=result;
-      console.log($scope.groups);
-                      $ionicLoading.hide();
-      });
-    }*/
+	$scope.addUser = function (group) {
+		$http({
+			method: 'POST',
+			url: URL+'groups/'+group+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#map/groups';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+	
+	$scope.deleteUser = function (group) {
+		$http({
+			method: 'DELETE',
+			url: URL+'groups/'+group+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#map/groups';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
 }
-
 
 //Unused
 function GroupsService($http, $log) {
@@ -342,11 +376,44 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
-	});	          		
+	});
+	
+	$scope.addMessage = function (race) {
+		$http({
+			method: 'POST',
+			url: URL+'/message',
+			data: {_id:token },
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#map/races';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+	
+	$scope.deleteMessage = function (race) {
+		$http({
+			method: 'DELETE',
+			url: URL+'race/'+race+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#map/races/';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+		          		
 }
 
 
-function RacesCtrl($scope, $http ,$ionicLoading, $log) {
+function RacesCtrl($scope, $http, $ionicLoading, $log) {
     $scope.ownraces = []; 
     $scope.otherraces = []; 
     
@@ -367,18 +434,39 @@ function RacesCtrl($scope, $http ,$ionicLoading, $log) {
 	.error(function(data) {
 		console.log('Error: ' + data);
 	});
+
+	$scope.addUser = function (race) {
+		$http({
+			method: 'PUT',
+			url: URL+'race/'+race+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {			
+				window.location.href = '#map/races/'+$stateParams.raceId;
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
 	
-	
-    /*$scope.infiniteLoad = false;
-    
-    $scope.loadRaces = function() {
-		RacesService.loadRaces()
-		     .success(function(result) {
-				$scope.races=result;
-      console.log($scope.races);
-                      $ionicLoading.hide();
-      });
-    }*/
+	$scope.deleteUser = function (race) {
+		$http({
+			method: 'DELETE',
+			url: URL+'race/'+race+'/user',
+			data: {_id:token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {			
+				window.location.href = '#map/races/';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
 }
 
 //Unused
@@ -394,45 +482,6 @@ function RaceMessageService($http, $log,$stateParams) {
         return ($http.get(URL+'js/testData/messages.json'));
             }
 }
-/*
-function GroupsCtrl($scope, $sce, $ionicLoading, GroupsService, $log) {
-    $scope.groups = [];
-    $scope.infiniteLoad = false;
-    
-    $scope.viewBlog = function(url) {        
-        window.open(url, "_blank", "location=no");        
-    }
-    $scope.loadGroups = function() {
-        $scope.infiniteLoad = false; 
-        console.log($scope.groups.length);   
-        if ($scope.groups.length) { 
-            $scope.groups = [];
-            $scope.moreGroups();
-        }        
-        $scope.$broadcast("scroll.refreshComplete");
-        $scope.infiniteLoad = true; 
-        $scope.moreGroups();
-    }
-    $scope.moreGroups = function() {    
-        $ionicLoading.show({ template: "Loading Groups..."});
-        GroupsService.loadGroups()
-            .success(function(result) {
-                $scope.groups = $scope.groups.concat(result.groups);
-                $scope.$broadcast("scroll.infiniteScrollComplete");   
-                $ionicLoading.hide();
-            });
-    }
-    $scope.toTrusted = function(text) {
-        return ($sce.trustAsHtml(text));
-    }
-}
-
-function GroupsService($http, $log) {
-    this.loadGroups = function() {
-        return ($http.get('https://localhost:3030/groups'));
-    }
-}
-*/
 
 // formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
 MapApp.filter('lat', function () {
@@ -461,7 +510,6 @@ MapApp.filter('lon', function () {
         return deg + "°" + min + "'" + sec + '"' + ew;
     }
 });
-
 
 /**
  * Handle Google Maps API V3+
@@ -605,7 +653,3 @@ MapApp.directive("appMap", function ($window) {
 			} // end of link:
 		}; // end of return
 });
-
-
-
-

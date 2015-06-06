@@ -104,8 +104,8 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 
 		$http.put('user/' + window.localStorage.token, $scope.updateUser)//+ cookie o token)
 			.success(function (data) {
+				$location.url('/map/home');
 				$scope.modal.hide();
-				$location.url("/ionic#/map/profile");
 			})
 			.error(function (data) {
 				console.log('Error: ' + data);
@@ -229,55 +229,6 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 
 }]);
 
-/**
- * A google map / GPS controller.
- */
-MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
-	function($scope,$http, $ionicPlatform, $location) {
-
-	 $scope.races = {};
-	// init gps array
-    $scope.whoiswhere = [];
-    $scope.basel = { lat: 47.55633987116614, lon: 7.576619513223015 };
-
-    // check login code
-	$ionicPlatform.ready(function() {	navigator.geolocation.getCurrentPosition(function(position) {
-		    $scope.position=position;
-	        var c = position.coords;
-	        $scope.gotoLocation(c.latitude, c.longitude);
-		    $scope.$apply();
-		    },function(e) { console.log("Error retrieving position " + e.code + " " + e.message) });
-	    $scope.gotoLocation = function (lat, lon) {
-	        if ($scope.lat != lat || $scope.lon != lon) {
-	            $scope.basel = { lat: lat, lon: lon };
-	            if (!$scope.$$phase) $scope.$apply("basel");
-			}
-		};
-	//Obtener carreras
-	$http.get(URL+'race').success(function(data) {
-		$scope.races = data;
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
-
-
-
-
-
-		// some points of interest to show on the map
-		// to be user as markers, objects should have "lat", "lon", and "name" properties
-		$scope.whoiswhere = [
-			{ "name": "My Marker", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
-		];
-	});
-
-}
-
-
-
-
-]);
 
 /**
  * Group CONTROLLERS 
@@ -510,6 +461,61 @@ MapApp.filter('lon', function () {
     }
 });
 
+
+/**
+ * A google map / GPS controller.
+ */
+MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
+	function($scope,$http, $ionicPlatform) {
+
+		$scope.races = {};
+		// init gps array
+		$scope.whoiswhere = [];
+		$scope.basel = { lat: 41.3868765, lon: 2.1700207 };
+
+		// check login code
+		$ionicPlatform.ready(function() {	navigator.geolocation.getCurrentPosition(function(position) {
+			$scope.position=position;
+			var c = position.coords;
+			$scope.gotoLocation(c.latitude, c.longitude);
+			$scope.$apply();
+		},function(e) { console.log("Error retrieving position " + e.code + " " + e.message) });
+			$scope.gotoLocation = function (lat, lon) {
+				if ($scope.lat != lat || $scope.lon != lon)
+				{
+
+					$scope.basel = {lat: lat, lon: lon };
+					$scope.whoiswhere = [
+						{ "name": "Dins", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
+					];
+					if (!$scope.$$phase) $scope.$apply("basel");
+				}
+			};
+
+			/*//Obtener carreras
+			$http.get(URL+'race').success(function(data) {
+				$scope.races = data;
+			})
+				.error(function(data) {
+					console.log('Error: ' + data);
+				});
+
+*/
+
+
+
+			// some points of interest to show on the map
+			// to be user as markers, objects should have "lat", "lon", and "name" properties
+			$scope.whoiswhere = [
+				{ "name": "My Marker", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
+			];
+		});
+
+	}
+
+
+]);
+
 /**
  * Handle Google Maps API V3+
  */
@@ -603,7 +609,8 @@ MapApp.directive("appMap", function ($window) {
 			// Info window trigger function 
 			function onItemClick(pin, label, datum, url) { 
 				// Create content  
-				var contentString = "Name: " + label + "<br />Time: " + datum;
+				var contentString = "Name: " + label;
+				//+ "<br />" +"Time: " + datum;
 				// Replace our Info Window's content and position
 				infowindow.setContent(contentString);
 				infowindow.setPosition(pin.position);

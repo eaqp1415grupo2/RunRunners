@@ -1,13 +1,4 @@
-        <!--Setup library-->
-        <link rel="stylesheet" href="lib/ionic/css/ionic.css">
-        <script src="lib/ionic/js/ionic.bundle.js"></script>
-        <script src="cordova.js"></script>
 
-        <!--Setup app-->
-        <link rel="stylesheet" href="css/index.css">
-        <script src="index.js"></script>
-        
-        
 <body data-ng-controller="GroupsCtrl">
 
 
@@ -46,7 +37,7 @@
      {{ g.Info}}
     </p>
     <p>
-      <a href="#" class="subdued">Administrador: {{g.Admin_Group}}</a>
+      <a href="#" class="subdued">Administrador: {{g.Admin}}</a>
     </p>
   </div>
 
@@ -64,7 +55,7 @@
       <i class="icon ion-android-walk"></i>
       {{g.Races.length}} Group Races
     </a>
-    <a class="tab-item" href="#" style="color: red;">
+    <a class="tab-item" ng-click="deleteUser(g._id)" style="color: red;">
       <i class="icon ion-minus-circled"></i>
       Dejar el Grupo
     </a>
@@ -92,7 +83,7 @@
      {{ g.Info}}
     </p>
     <p>
-      <a href="#" class="subdued">Administrador: {{g.Admin_Group}}</a>
+      <a href="#" class="subdued">Administrador: {{g.Admin}}</a>
     </p>
   </div>
 
@@ -112,7 +103,7 @@
       <i class="icon ion-android-walk"></i>
       {{g.Races.length}} Group Races
     </a>
-    <a class="tab-item " href="#" style="color: green;">
+    <a class="tab-item " ng-click="addUser(g._id)" style="color: green;">
       <i class="icon ion-plus-circled"></i>
       Entrar en el grupo
     </a>

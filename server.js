@@ -69,12 +69,6 @@ app.use(express.static('www'));
 app.get('/', function(req, res) {
     res.sendfile('./www/index.html');});
 
-app.get('/backoffice', function(req, res) {
-    res.sendfile('./web/backoffice/backoffice.html');});
-
-app.get('/backoffice2', function(req, res) {
-    res.sendfile('./web/backoffice/index.html');});
-
 app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
         // The request will be redirected to Facebook for authentication, so this
         // function will not be called.

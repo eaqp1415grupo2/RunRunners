@@ -68,7 +68,7 @@
       <i class="icon ion-chatbox"></i>
       Messages {{r.Messages.length}}
     </a> 
-    <a class="tab-item" href="#" style="color: red;">
+    <a class="tab-item" ng-click="deleteUser(r._id)" style="color: red;">
       <i class="icon ion-minus-circled"></i>
       Abandonar Carrera
     </a>
@@ -97,13 +97,13 @@
 	</div>
 	<div class="row">	
 			<div class="col">
-    			     <span class="item" href="#">
+    			     <span class="item" href="">
       <i class="icon ion-android-pin"></i>
        Lugar de salida: {{r.LocationIni}}
     </span>
 			</div>
 			<div class="col">
-    			     <a class="item" href="#">
+    			     <a class="item" href="">
       <i class="icon ion-android-alarm-clock"></i>
       Fecha: {{r.Date}}
     </a>
@@ -111,16 +111,16 @@
 		</div>
 	
  <div class="item tabs  tabs-icon-left">
-     <a class="tab-item" href="#">
+     <a class="tab-item" href="">
       <i class="icon ion-android-contacts"></i>
       {{r.Users.length}} Members
     </a>
 
-    <a class="tab-item" href="#">
+    <a class="tab-item" href="">
       <i class="icon ion-chatbox"></i>
       Messages {{r.Messages.length}}
     </a> 
-    <a class="tab-item" href="#" style="color: green;">
+    <a class="tab-item" ng-click="addUser(r._id)" style="color: green;">
       <i class="icon ion-plus-circled"></i>
       Apuntarse a carrera
     </a>

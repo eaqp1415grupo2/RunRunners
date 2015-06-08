@@ -251,7 +251,6 @@ module.exports = function (app) {
                 res.send(404, 'User Not Found')
             } else {
                 if (!req.body.delete) {
-                    console.log("delete = null");
                     User.findOne({_id: id.iss}, function (err, user) {
                         if (race.Admin === user.Username) {
                             race.Admin = race.Users[1].Username;
@@ -340,5 +339,4 @@ module.exports = function (app) {
     app.put('/race/:id/user', addUser);
     app.delete('/race/:id/user', deleteUser);
 
-}
-;
+};

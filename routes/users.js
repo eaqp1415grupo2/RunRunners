@@ -3,8 +3,8 @@ module.exports = function (app) {
     var jwt = require('jwt-simple');
     var moment = require('moment');
     var User = require('../models/user.js');
-    var Groups = require('../models/group.js');
-    var Races = require('../models/race.js');
+    var Group = require('../models/group.js');
+    var Race = require('../models/race.js');
     var Secret = require('../config/secret.js');
 
     findAllUsers = function (req, res) {
@@ -246,28 +246,61 @@ module.exports = function (app) {
         });
     };
 
-    userStats = function(req, res){
-        var id = jwt.decode(req.body._id,Secret);
-      User.findOne({_id: id.iss}, function(err,user){
-         if(!user){
-             res.send(404, 'User Not Found');
-         } else{
-             if(err){
-                 res.send(500,'Mongo Error');
-             }
-             else {
-                 var Stats = {
-                     Time: {type: Number},
-                     Distance: {type: Number}
-                 };
-                 for (i = 0; i < user.Races.length; i++) {
-                     Stats.Time = Stats.Time + user.Races[i].Data.Time;
-                     Stats.Distance = Stats.Distance + user.Races[i].Data.Distance;
-                 }
-                 res.send(200, Stats);
-             }
-         }
-      });
+    userStats = function (req, res) {
+        var id = jwt.decode(req.body._id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not Found');
+            } else {
+                if (err) {
+                    res.send(500, 'Mongo Error');
+                }
+                else {
+                    var Stats = {
+                        Time: {type: Number},
+                        Distance: {type: Number}
+                    };
+                    for (i = 0; i < user.Races.length; i++) {
+                        Stats.Time = Stats.Time + user.Races[i].Data.Time;
+                        Stats.Distance = Stats.Distance + user.Races[i].Data.Distance;
+                    }
+                    res.send(200, Stats);
+                }
+            }
+        });
+    };
+
+    findRacePending = function (req, res) {
+        var id = jwt.decode(req.params.id, Secret);
+        var races = [];
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not found');
+            }
+            else {
+                var result = 0;
+                for(j = 0; j<user.Races.length; j++){
+                    if (user.Races[j].State === 'Pending') {
+                        result++;
+                    }
+                }
+              for(i = 0; i<user.Races.length; i++){
+                  if (user.Races[i].State === 'Pending') {
+                      Race.find({_id: user.Races[i]._id}, function (err, race) {
+                          if (err) res.send(500, 'Mongo Error');
+                          else {
+                                races.push(race);
+                              if(result == races.length){
+                                  res.send(races);
+                              }
+                          }
+                      });
+                  }
+              }
+            }
+
+        });
+
     };
 
     //Link routes and functions
@@ -281,6 +314,7 @@ module.exports = function (app) {
     app.get('/user/:id/groups', findGroups);
     app.get('/user/username/:Username', findUsername);
     app.get('/user/stats/:id', userStats);
+    app.get('/user/pending/:id', findRacePending);
 
 
 };

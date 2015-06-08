@@ -154,11 +154,10 @@ MapApp.controller('MainCtrl', ['$scope', function($scope) {
 
 MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, $scope,$location){
 
-	var loginRunRunners = this;
-	loginRunRunners.users = [];
+	$scope.users = [];
 
 	this.addUser = function(){
-		loginRunRunners.users.push(this.user);
+		$scope.users.push(this.user);
 		var urlsignin = URL+"user";
 		$http({
 			method: 'POST',

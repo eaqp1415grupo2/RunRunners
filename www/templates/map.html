@@ -13,7 +13,7 @@
                     <button class="button button-small">Create New Race</button>
                 </div>
                 <div class="list card">
-                    <ion-item ng-repeat="r in races | filter:searchText">
+                    <ion-item ng-repeat= "r in races | filter:searchText">
                         <a class="item item-thumbnail-left">
                               <img ng-src="/img/race.jpg">
                               <h2>{{ r.Name }}</h2>
@@ -24,9 +24,8 @@
                 </div>
             </div>
             <div class="col">
-                <center>Others...
+                <p>Others...</p>
                 <p>Not avaiable yet :(</p>
-                </center>
             </div>
         </div>
     </ion-content>

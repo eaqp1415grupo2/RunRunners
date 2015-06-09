@@ -22,87 +22,79 @@ angular.module('starter', ['ionic', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-      .state('menu', {
-        url: "/map",
-        abstract: true,
-        templateUrl: "/templates/menu.html"
-      })
       .state('login', {
         url: '/login',
         templateUrl: '/templates/login.html',
         controller: 'loginCtrl'
       })
-      .state('menu.home', {
-        url: '/home',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/map.html',
-            controller: 'GpsCtrl'
-          }
-        }
+      .state('menu', {
+          url: "/map",
+          abstract: true,
+          templateUrl: "/templates/menu.html"
       })
       .state('menu.groups', {
-        url: '/groups',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/groups.html',
-            controller: 'GroupsCtrl'
+          url: '/groups',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/groups.html'
+              }
           }
-        }
       })
       .state('menu.group', {
-        url: "/group/:groupId",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/group.html",
-            controller: 'GroupCtrl'
+          url: "/group/:groupId",
+          views: {
+              'menuContent': {
+                  templateUrl: "templates/group.html"
+              }
           }
-        }
       })
       .state('menu.races', {
-        url: '/races',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/races.html',
-            controller: 'RacesCtrl'
+          url: '/races',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/races.html'
+              }
           }
-        }
       })
       .state('menu.race', {
-        url: "/race/:groupId",
-        views: {
-          'menuContent': {
-            templateUrl: "templates/race.html",
-            controller: 'RaceCtrl'
+          url: "/race/:groupId",
+          views: {
+              'menuContent': {
+                  templateUrl: "templates/race.html"
+              }
           }
-        }
       })
       .state('menu.profile', {
-        url: '/profile',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/profile3.html',
-            controller: 'profilectrl'
+          url: '/profile',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/profile3.html'
+              }
           }
-        }
       })
       .state('menu.logout', {
-        url: '/logout',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/logout.html',
-            controller: 'logOutCtrl'
+          url: '/logout',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/logout.html'
+              }
           }
-        }
+      })
+      .state('menu.crono', {
+          url: '/crono',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/crono.html'
+              }
+          }
       })
       .state('menu.stats', {
-        url: '/stats',
-        views: {
-          'menuContent': {
-            templateUrl: '/templates/stats.html',
-            controller: 'statsCtrl'
+          url: '/stats',
+          views: {
+              'menuContent': {
+                  templateUrl: '/templates/stats.html'
+              }
           }
-        }
       });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

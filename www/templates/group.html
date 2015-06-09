@@ -1,34 +1,28 @@
-<ion-view>
-<ion-content ng-controller="GroupCtrl">
-	<div class="list card">
-		<div class="card" data-ng-repeat="m in messages track by $index">
-  			<div class="item item-divider">
-    			<h4>{{m.Username}} dice:</h4>
-  			</div>
-  			<div class="item item-text-wrap">
-   			{{m.Text}}
-  			</div>
-  			<div ng-repeat="a in m.Answers">
-  				<div class="item item-divider">
-    				 <h4><span class="ion-ios-redo"></span>  {{a.Username}} responde:</h4>
-  				</div>
-  				<div class="item item-text-wrap">
-   				{{a.Answer}}
-  				</div>
-  			</div>
+<ion-view title="Group">
+	<ion-content>
+		<div class="list card">
+			<div class="card" data-ng-repeat="m in messages track by $index">
+				<div class="item item-divider">
+					<h4>{{m.Username}} dice:</h4>
+				</div>
+				<div class="item item-text-wrap">
+					{{m.Text}}
+				</div>
+				<div ng-repeat="a in m.Answers">
+					<div class="item item-divider">
+						<h4><span class="ion-ios-redo"></span>  {{a.Username}} responde:</h4>
+					</div>
+					<div class="item item-text-wrap">
+						{{a.Answer}}
+					</div>
+				</div>
+			</div>
+			<div class="list">
+				<label class="item item-input item-text-wrap">
+					<input type="text" placeholder="Responder">
+				</label>
+				<button class="button button-block button-calm">Responder</button>
+			</div>
 		</div>
-
-<div class="list">
-  <label class="item item-input item-text-wrap">
-    <input type="text" placeholder="Responder">
-  </label>
-<button class="button button-block button-calm">
-  Responder
-</button>
-</div>
-	
-	
-	</div>
-
-</ion-content>
+	</ion-content>
 </ion-view>

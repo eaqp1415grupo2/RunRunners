@@ -18,14 +18,14 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
 		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
-		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profilectrl'} }  })
+		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profileCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
 
 	// if none of the above states are matched, use this as the fallback
 	console.log(window.localStorage.token);
     console.log(window.location.search);
-	if((window.localStorage.token === undefined || window.localStorage.token == 'null') && window.location.search== ""){
+	if((window.localStorage.token === undefined || window.localStorage.token == 'null' || window.localStorage.token == "") && window.location.search== ""){
 		$urlRouterProvider.otherwise('/login');
 	} else {
         window.localStorage.token = window.location.search.substring(1);
@@ -66,11 +66,12 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 
 
 });
-MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) {
+
+MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) {
 
 	$scope.updateUser = {};
 
-	$http.get('https://localhost:3030/user/' + token)
+	$http.get('https://localhost:3030/user/' + window.localStorage.token)
 		.success(function (data) {
 			$scope.users = data;
 			console.log(data);
@@ -80,7 +81,7 @@ MapApp.controller('profilectrl',function($scope, $http, $ionicModal, $location) 
 		});
 
 	$scope.getUser = function () {
-		$http.get('https://localhost:3030/user/' + token)
+		$http.get('https://localhost:3030/user/' + window.localStorage.token)
 			.success(function (data) {
 				$scope.users = data;
 				console.log(data);
@@ -152,11 +153,10 @@ MapApp.controller('MainCtrl', ['$scope', function($scope) {
 
 }]);
 
-MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, $scope,$location){
-
+MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', function ($http, $scope,$location, $window){
 	$scope.users = [];
 
-	this.addUser = function(){
+	$scope.addUser = function(){
 		$scope.users.push(this.user);
 		var urlsignin = URL+"user";
 		$http({
@@ -166,16 +166,15 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
 			console.log("data: "+data);
-			token = data;
-			window.localStorage.token=data;
+			$window.localStorage.token=data;
 			$location.url('/map/home');
 		}).error(function(data) {
-			window.alert("ERROR - POST");
+			$window.alert("ERROR - POST");
 		});
 		this.user = {};
 	};
 
-	this.loginUser = function(){
+	$scope.loginUser = function(){
 		console.log(this.user);
 		var urlauth = URL+"user/auth";
 		$http({
@@ -185,18 +184,17 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', function ($http, 
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
 			console.log("token: "+data);
-			token = data;
-			window.localStorage.token=data;
+			$window.localStorage.token=data;
 			$location.url('/map/home');
 		}).error(function(data) {
-			window.alert("ERROR - AUTH");
+			$window.alert("ERROR - AUTH");
 		});
 		this.user = {};
 	};
 
 	$scope.loginFacebook = function(){
 		console.log('facebook');
-		window.location.href='/auth/facebook';
+		$window.location.href='/auth/facebook';
 	};
 }]);
 
@@ -251,7 +249,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
     $scope.othergroups = [];
     
         	//Obtener Grupos propios
-	$http.get(URL+'groups/user/'+token).success(function(data) {
+	$http.get(URL+'groups/user/'+window.localStorage.token).success(function(data) {
 		$scope.owngroups = data;
 		console.log('own G:'+$scope.owngroups);
 	})
@@ -260,7 +258,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 	});
     
             	//Obtener Otros Grupos
-	$http.get(URL+'groups/no/'+token).success(function(data) {
+	$http.get(URL+'groups/no/'+window.localStorage.token).success(function(data) {
 		$scope.othergroups = data;
 			console.log('other G:'+data);
 	})
@@ -271,7 +269,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 		$http({
 			method: 'POST',
 			url: URL+'groups/'+group+'/user',
-			data: {_id:token},
+			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				window.location.href = '#map/groups';
@@ -287,7 +285,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 		$http({
 			method: 'DELETE',
 			url: URL+'groups/'+group+'/user',
-			data: {_id:token},
+			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				window.location.href = '#map/groups';
@@ -331,7 +329,7 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 		$http({
 			method: 'POST',
 			url: URL+'/message',
-			data: {_id:token },
+			data: {_id:window.localStorage.token },
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				window.location.href = '#map/races';
@@ -347,7 +345,7 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 		$http({
 			method: 'DELETE',
 			url: URL+'race/'+race+'/user',
-			data: {_id:token},
+			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				window.location.href = '#map/races/';
@@ -367,7 +365,7 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
     $scope.otherraces = []; 
     
     	//Obtener carreras propias
-	$http.get(URL+'race/user/'+token).success(function(data) {
+	$http.get(URL+'race/user/'+window.localStorage.token).success(function(data) {
 		$scope.ownraces = data;
 		console.log('own Races:'+$scope.ownraces);
 	})
@@ -376,7 +374,7 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 	});
 	
 	  //Obtener otras carreras
-	$http.get(URL+'race/no/'+token).success(function(data) {
+	$http.get(URL+'race/no/'+window.localStorage.token).success(function(data) {
 		$scope.otherraces = data;
 		console.log('other Races:'+$scope.otherraces);
 	})
@@ -388,7 +386,7 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 		$http({
 			method: 'PUT',
 			url: URL+'race/'+race+'/user',
-			data: {_id:token},
+			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
 				window.location.href = '#map/races/'+$stateParams.raceId;
@@ -404,7 +402,7 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 		$http({
 			method: 'DELETE',
 			url: URL+'race/'+race+'/user',
-			data: {_id:token},
+			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
 				window.location.href = '#map/races/';

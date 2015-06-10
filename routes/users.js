@@ -181,43 +181,64 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
-            var races = user.Races;
-            var groups = user.Groups;
-            for (var i = 0; i < races.length; i++) {
-                Race.findOne(races[i]._id, function (err, race) {
-                    race.Users.pull(id.iss);
-                    race.save(function (err) {
-                        if (!err) {
-                            console.log('User Removed');
-                        } else {
-                            console.log('ERROR: ' + err);
-                            res.send(500, "Mongo Error");
+            if(!req.body.delete) {
+                var races = user.Races;
+                var groups = user.Groups;
+                for (var i = 0; i < races.length; i++) {
+                    Race.findOne(races[i]._id, function (err, race) {
+                        if (race.Admin === user.Username) {
+                            if(!race.Users[1]){
+                                race.remove(function(err){
+                                    if(err) res.send(500,'Mongo Error');
+                                });
+                            }else {
+                                race.Admin = race.Users[1].Username;
+                            }
                         }
+                        race.Users.pull(id.iss);
+                        race.save(function (err) {
+                            if (!err) {
+                                console.log('User Removed');
+                            } else {
+                                console.log('ERROR: ' + err);
+                                res.send(500, "Mongo Error");
+                            }
+                        });
                     });
-                });
-            }
-            for (var j = 0; j < races.length; j++) {
-                Group.findOne(groups[j]._id, function (err, group) {
-                    group.Users.pull(id.iss);
-                    group.save(function (err) {
-                        if (!err) {
-                            console.log('User Removed');
-                        } else {
-                            console.log('ERROR: ' + err);
-                            res.send(500, "Mongo Error");
-                        }
-                    });
-                });
-            }
-            user.remove(function (err) {
-                if (!err) {
-                    console.log('Removed user');
-                    res.send(200);
-                } else {
-                    console.log('Internal error(%d): %s', res.statusCode, err.message);
-                    res.send(500, 'Server Error');
                 }
-            })
+                for (var j = 0; j < groups.length; j++) {
+                    Group.findOne(groups[j]._id, function (err, group) {
+                        if (group.Admin === user.Username) {
+                            if (!group.Users[1]) {
+                                group.remove(function (err) {
+                                    if (err) res.send(500, 'Mongo Error');
+                                });
+                            } else {
+                                group.Admin = group.Users[1].Username;
+                            }
+                        }
+                        group.Users.pull(id.iss);
+                        group.save(function (err) {
+                            if (!err) {
+                                console.log('User Removed');
+                            } else {
+                                console.log('ERROR: ' + err);
+                                res.send(500, "Mongo Error");
+                            }
+                        });
+                    });
+                }
+                user.remove(function (err) {
+                    if (!err) {
+                        console.log('Removed user');
+                        res.send(200);
+                    } else {
+                        console.log('Internal error(%d): %s', res.statusCode, err.message);
+                        res.send(500, 'Server Error');
+                    }
+                });
+            }
+
         });
     };
 

@@ -177,7 +177,7 @@ module.exports = function (app) {
                 User.findOne({_id: id.iss}, function (err, user) {
                     if (!user) {
                         res.send(404, 'User Not Found');
-                    } else if (user.Username != group.Admin) {
+                    } else if (user.Username != group.Admin && user.Role != 'admin') {
                         res.send(400, 'Not Allowed');
                     } else {
                         var users = group.Users;
@@ -219,6 +219,40 @@ module.exports = function (app) {
         });
     };
 
+    removeUserGroup = function(group, user, res){
+        if (group.Admin === user.Username) {
+            if(!group.Users[1]){
+                user.Groups.pull(group._id);
+                user.save(function (error) {
+                    if (error) res.send(500, 'Mongo Error');
+                    else {
+                        console.log(group);
+                    }
+                });
+                group.remove(function(err){
+                   if(err) res.send(500,'Mongo Error');
+                    else res.send(200,'Group Removed');
+                });
+
+            }else {
+                group.Admin = group.Users[1].Username;
+            }
+        }
+        group.Users.pull(user._id);
+        group.save(function (err) {
+            if (err) res.send(500, "Error: " + err);
+        });
+        user.Groups.pull(group._id);
+        user.save(function (error) {
+            if (error) res.send(500, 'Mongo Error');
+            else {
+                console.log(group);
+                res.send(200);
+            }
+        });
+
+    };
+
     deleteUser = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
         Group.findOne({_id: req.params.id}, function (err, group) {
@@ -227,29 +261,15 @@ module.exports = function (app) {
             } else {
                 Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (error, users) {
                     if (!users) {
-                        res.send(404, 'There is no user with in this group');
+                        res.send(404, 'This User is not inside this group');
                     } else {
                         if (!req.body.delete) {
                             User.findOne({_id: id.iss}, function (err, user) {
-                                if (group.Admin === user.Username) {
-                                    group.Admin = group.Users[1].Username;
-                                }
-                                group.Users.pull(id.iss);
-                                group.save(function (err) {
-                                    if (err) res.send(500, "Error: " + err);
-                                });
-                                user.Groups.pull(group._id);
-                                user.save(function (error) {
-                                    if (error) res.send(500, 'Mongo Error');
-                                    else {
-                                        console.log(group);
-                                        res.send(200);
-                                    }
-                                });
+                                removeUserGroup(group, user, res);
                             });
                         } else {
                             User.findOne({_id: id.iss}, function (err, user) {
-                                if (user.Username != group.Admin) {
+                                if (user.Username != group.Admin && user.Role !='admin') {
                                     res.send(404, 'Not Allowed');
                                 } else {
                                     var position = false;
@@ -257,25 +277,13 @@ module.exports = function (app) {
                                         console.log(req.body.delete, group.Users[i]._id);
                                         if (group.Users[i]._id.equals(req.body.delete)) {
                                             position = true;
+                                            User.findOne({_id: req.body.delete}, function (err, deleteuser) {
+                                                removeUserGroup(group, deleteuser, res);
+                                            });
                                             break;
                                         }
                                     }
-                                    if (position) {
-                                        User.findOne({_id: req.body.delete}, function (err, deleteuser) {
-                                            group.Users.pull(req.body.delete);
-                                            group.save(function (err) {
-                                                if (err) res.send(500, "Error: " + err);
-                                            });
-                                            deleteuser.Groups.pull(group._id);
-                                            deleteuser.save(function (err) {
-                                                if (err) res.send(500, 'Mongo Error');
-                                                else {
-                                                    console.log(group);
-                                                    res.send(200);
-                                                }
-                                            });
-                                        });
-                                    } else {
+                                    if (!position) {
                                         res.send(404, 'User not found');
                                     }
                                 }
@@ -286,6 +294,7 @@ module.exports = function (app) {
             }
         });
     };
+
 
     findNoUserGroup = function (req, res) {
         var id = jwt.decode(req.params.id, Secret);

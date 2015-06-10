@@ -2,6 +2,7 @@ module.exports = function (app) {
 
     var jwt = require('jwt-simple');
     var moment = require('moment');
+    var crypto = require('crypto');
     var User = require('../models/user.js');
     var Group = require('../models/group.js');
     var Race = require('../models/race.js');
@@ -56,6 +57,10 @@ module.exports = function (app) {
         });
     };
 
+    function encrypt(user, pass) {
+        var hmac = crypto.createHmac('sha1', user).update(pass).digest('hex')
+        return hmac
+    }
 
     //POST - Insert a new User in the DB
     addUser = function (req, res) {
@@ -63,9 +68,10 @@ module.exports = function (app) {
         console.log(req.body);
         User.findOne({Username: req.body.Username}, function (err, user) {
             if (!user) {
+                var Password = encrypt(req.body.Username, req.body.Password);
                 var user = new User({
                     Username: req.body.Username,
-                    Password: req.body.Password,
+                    Password: Password,
                     Name: req.body.Name,
                     Surname: req.body.Surname,
                     Email: req.body.Email,
@@ -109,7 +115,8 @@ module.exports = function (app) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             } else if (user) {
 
-                if (user.Password != req.body.Password) {
+                var Password = encrypt(user.Username, req.body.Password);
+                if (user.Password != Password) {
                     res.send(404, 'Password error');
                 } else {
                     var expires = moment().add(2, 'days').valueOf();

@@ -102,13 +102,13 @@ module.exports = function (app) {
     };
 
     authenticate = function (req, res) {
-        console.log(req.body);
+
         User.findOne({"Username": req.body.Username}, function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             } else if (user) {
-                console.log(user);
+
                 if (user.Password != req.body.Password) {
                     res.send(404, 'Password error');
                 } else {
@@ -118,6 +118,17 @@ module.exports = function (app) {
                 }
             }
         });
+    };
+
+    validateToken = function(req, res){
+        var date = Date.now();
+        var id = jwt.decode(req.params.id, Secret);
+        console.log(id.exp, date);
+        if(id.exp >= date){
+            res.send(200,'OK');
+        }else{
+            res.send(400,'Token Expired');
+        }
     };
 
     //PUT - Update a register User already exists
@@ -279,28 +290,56 @@ module.exports = function (app) {
             }
             else {
                 var result = 0;
-                for(j = 0; j<user.Races.length; j++){
+                for (j = 0; j < user.Races.length; j++) {
                     if (user.Races[j].State === 'Pending') {
                         result++;
                     }
                 }
-              for(i = 0; i<user.Races.length; i++){
-                  if (user.Races[i].State === 'Pending') {
-                      Race.find({_id: user.Races[i]._id}, function (err, race) {
-                          if (err) res.send(500, 'Mongo Error');
-                          else {
+                for (i = 0; i < user.Races.length; i++) {
+                    if (user.Races[i].State === 'Pending') {
+                        Race.find({_id: user.Races[i]._id}, function (err, race) {
+                            if (err) res.send(500, 'Mongo Error');
+                            else {
                                 races.push(race);
-                              if(result == races.length){
-                                  res.send(races);
-                              }
-                          }
-                      });
-                  }
-              }
+                                if (result == races.length) {
+                                    res.send(races);
+                                }
+                            }
+                        });
+                    }
+                }
             }
 
         });
 
+    };
+
+    raceDone = function (req, res) {
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not Found');
+            } else {
+                var race = false;
+                for (i = 0; i < user.Races.length; i++) {
+                    console.log(req.body.raceId, user.Races[i]._id);
+                    if (user.Races[i]._id.equals(req.body.raceId)) {
+                        race = true;
+                        user.Races[i].Data.Time = req.body.Time;
+                        user.Races[i].State = 'Done';
+                        user.Races[i].Data.Distance = req.body.Distance;
+                        user.save(function (err) {
+                            if (err) res.send(500, 'Mongo Error');
+                            else res.send(200, user.Races[i]);
+                        });
+                        break;
+                    }
+                }
+                if (!race) {
+                    res.send(400, 'No Race');
+                }
+            }
+        });
     };
 
     //Link routes and functions
@@ -315,6 +354,8 @@ module.exports = function (app) {
     app.get('/user/username/:Username', findUsername);
     app.get('/user/stats/:id', userStats);
     app.get('/user/pending/:id', findRacePending);
+    app.put('/user/race/:id', raceDone);
+    app.get('/user/validate/:id', validateToken);
 
 
 };

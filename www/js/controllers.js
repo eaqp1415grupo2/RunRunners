@@ -430,6 +430,112 @@ function RaceMessageService($http, $log,$stateParams) {
             }
 }
 
+/**
+ * A google map / GPS controller.
+ */
+MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
+	function($scope,$http, $ionicPlatform) {
+		$scope.races = {};
+		var races;
+		// init gps array
+		$scope.whoiswhere = [];
+		$scope.basel = {lat: 41.3868765, lon: 2.1700207};
+		// geo-coding
+		$scope.search = "";
+				navigator.geolocation.watchPosition(function (position) {
+					//$scope.position=position;
+					var c = position.coords;
+					$scope.gotoLocation(c.latitude, c.longitude);
+					$scope.$apply();
+				}, function (e) {
+					console.log("Error retrieving position " + e.code + " " + e.message)
+				});
+
+
+				$scope.gotoLocation = function (lat, lon) {
+					if ($scope.lat != lat || $scope.lon != lon) {
+						$scope.basel = {lat: lat, lon: lon};
+						// to be user as markers, objects should have "lat", "lon", and "name" properties
+						$scope.whoiswhere = [ //marker
+							{
+								"name": "You are here!",
+								"lat": $scope.basel.lat,
+								"lon": $scope.basel.lon
+
+							}
+						];
+						if (!$scope.$$phase) $scope.$apply("basel");
+					}
+				};
+
+
+
+		$http.get(URL + 'race', $scope).success(function (data) {
+			races = data;
+			angular.forEach(races, function (race) {
+				$scope.objects = race;
+				$scope.Name = race.Name;
+				$scope.Distance = race.Distance;
+				$scope.Level = race.Level;
+				$scope.Date = race.Date;
+				$scope.LocationIniLng = race.LocationIni.Lng;
+				$scope.LocationIniLtd = race.LocationIni.Ltd;
+				goto(race);
+				console.log($scope.LocationIniLng);
+				console.log($scope.LocationIniLtd);
+
+			});
+		});
+
+		function goto(race) {
+			navigator.geolocation.getCurrentPosition(function (position) {
+				//	for (var i = 0; i < 2; i++) {
+				var lat = race.LocationIni.Lng;
+				var lon = race.LocationIni.Ltd;
+				var name = race.Name;
+				gotolocation2(lat, lon, name);
+				$scope.$apply();
+				//}
+			}, function (e) {
+				console.log("Error retrieving position " + e.code + " " + e.message)
+			});
+		function gotolocation2(lat, lon, name) {
+			//alert (lat);
+			//alert(lon);
+			//alert(name);
+			if ($scope.lat != lat || $scope.lon != lon) {
+				$scope.basel = {
+
+					lat: lat,
+					lon: lon,
+					name: name
+				};
+				// to be user as markers, objects should have "lat", "lon", and "name" properties
+				$scope.whoiswhere = [ //marker
+					{
+						"name": $scope.basel.name,
+						"lat": $scope.basel.lat,
+						"lon": $scope.basel.lon
+					}
+				];
+				if (!$scope.$$phase) $scope.$apply("basel");
+			}
+		}
+	}
+
+				//Obtener carreras html
+				$http.get(URL + 'race').success(function (data) {
+					$scope.races = data;
+					console.log(data);
+				})
+					.error(function (data) {
+						console.log('Error: ' + data);
+					});
+
+	}
+]);
+
+/********************************************************************************
 // formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
 MapApp.filter('lat', function () {
     return function (input, decimals) {
@@ -458,60 +564,7 @@ MapApp.filter('lon', function () {
     }
 });
 
-
-/**
- * A google map / GPS controller.
- */
-MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
-	function($scope,$http, $ionicPlatform) {
-
-		$scope.races = {};
-		// init gps array
-		$scope.whoiswhere = [];
-		$scope.basel = { lat: 41.3868765, lon: 2.1700207 };
-
-		// check login code
-		$ionicPlatform.ready(function() {	navigator.geolocation.getCurrentPosition(function(position) {
-			$scope.position=position;
-			var c = position.coords;
-			$scope.gotoLocation(c.latitude, c.longitude);
-			$scope.$apply();
-		},function(e) { console.log("Error retrieving position " + e.code + " " + e.message) });
-			$scope.gotoLocation = function (lat, lon) {
-				if ($scope.lat != lat || $scope.lon != lon)
-				{
-
-					$scope.basel = {lat: lat, lon: lon };
-					$scope.whoiswhere = [
-						{ "name": "Dins", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
-					];
-					if (!$scope.$$phase) $scope.$apply("basel");
-				}
-			};
-
-			/*//Obtener carreras
-			$http.get(URL+'race').success(function(data) {
-				$scope.races = data;
-			})
-				.error(function(data) {
-					console.log('Error: ' + data);
-				});
-
-*/
-
-
-
-			// some points of interest to show on the map
-			// to be user as markers, objects should have "lat", "lon", and "name" properties
-			$scope.whoiswhere = [
-				{ "name": "My Marker", "lat": $scope.basel.lat, "lon": $scope.basel.lon }
-			];
-		});
-
-	}
-
-
-]);
+****************************************************************************/
 
 /**
  * Handle Google Maps API V3+
@@ -540,8 +593,8 @@ MapApp.directive("appMap", function ($window) {
             var currentMarkers;
    	        var callbackName = 'InitMapCb';
 
-				//Obtener la posicion y centrar
-            navigator.geolocation.getCurrentPosition(function(pos) {
+			//Obtener la posicion y centrar
+          navigator.geolocation.getCurrentPosition(function(pos) {
               map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
             }, function(error) {
               alert('Unable to get location: ' + error.message);
@@ -567,21 +620,22 @@ MapApp.directive("appMap", function ($window) {
 				console.log("map: start loading js gmaps");
 				var script = $window.document.createElement('script');
 				script.type = 'text/javascript';
-				script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&callback=InitMapCb';
+				script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBhqvXyPtM34PhEzbv90sLahqSwQa1cH1A&sensor=true&callback=InitMapCb';
+				//clave google para luego: AIzaSyBhqvXyPtM34PhEzbv90sLahqSwQa1cH1A
 				$window.document.body.appendChild(script);
 				}
 
 			function createMap() {
 				console.log("map: create map start");
 				var mapOptions = {
-					zoom: 15,
+					zoom: 13,
 					center: new google.maps.LatLng(47.55, 7.59),
 					mapTypeId: google.maps.MapTypeId.ROADMAP,
 					panControl: true,
 					zoomControl: true,
 					mapTypeControl: true,
 					scaleControl: false,
-					streetViewControl: false,
+					streetViewControl: true,
 					navigationControl: true,
 					disableDefaultUI: true,
 					overviewMapControl: true
@@ -604,9 +658,13 @@ MapApp.directive("appMap", function ($window) {
 				});
 
 			// Info window trigger function 
-			function onItemClick(pin, label, datum, url) { 
-				// Create content  
-				var contentString = "Name: " + label;
+			function onItemClick(pin, label, datum, url, member) {
+				// Create content
+				var contentString = label + "<br />" + "lat: " + pin.position.A + "<br />" + "lon: " + pin.position.F ;
+				console.log(datum);
+				console.log(url);
+				console.log(pin);
+				// "Name: " + label;
 				//+ "<br />" +"Time: " + datum;
 				// Replace our Info Window's content and position
 				infowindow.setContent(contentString);
@@ -624,21 +682,29 @@ MapApp.directive("appMap", function ($window) {
 					var href="https://maps.apple.com/?q="+member.lat+","+member.lon;
 					map.setCenter(location);
 					onItemClick(marker, member.name, member.date, href);
+					//console.log(member);
 					};
 				}
 
 			// update map markers to match scope marker collection
 			function updateMarkers() {
 				if (map && scope.markers) {
-					// create new markers
-					//console.log("map: make markers ");
+					//create new markers
+					console.log("map: make markers ");
 					currentMarkers = [];
 					var markers = scope.markers;
 					if (angular.isString(markers)) markers = scope.$eval(scope.markers);
 					for (var i = 0; i < markers.length; i++) {
 						var m = markers[i];
 						var loc = new google.maps.LatLng(m.lat, m.lon);
-						var mm = new google.maps.Marker({ position: loc, map: map, title: m.name });
+						var mm = new google.maps.Marker({
+							position: loc,
+							map: map,
+							title: m.name,
+							//animation: google.maps.Animation.DROP,
+							//animation: google.maps.Animation.BOUNCE,
+							icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
+						});
 						//console.log("map: make marker for " + m.name);
 						google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));
 						currentMarkers.push(mm);

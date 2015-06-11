@@ -1,8 +1,13 @@
 <ion-view title="Races Map">
     <ion-content class="has-header padding">
-        <!-- map directive-->
-        <app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;" center="basel" zoom="15" markers="whoiswhere">
+    
+        <div id="map_canvas" >
+        <app-map style="height:475px;margin:12px;box-shadow:0 5px 25px black;"
+                 id="map-canvas"
+                 center="basel"
+                 markers="whoiswhere">
         </app-map>
+            </div>
 
         <div class="row">
             <div class="col">

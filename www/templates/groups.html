@@ -3,14 +3,14 @@
     <ion-header-bar class="bar-assertive item-input-inset">
         <h1 class="title">Groups</h1>
     </ion-header-bar>
-    <ion-content>
+    <ion-content ng-init="loadGroups()">
         <div class="list">
             <div class="item item-input-inset">
                 <label class="item-input-wrapper" >
                   <input type="text" placeholder="Group Search" ng-model="searchText">
                 </label>
                 <button class="button button-small">
-                  Create New Race
+                  Create New Group
                 </button>
             </div>
             <div class="item item-divider">

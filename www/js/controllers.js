@@ -287,6 +287,7 @@ function MessagesCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, 
 				$scope.loadMessage();
 			})
 			.error(function (data) {
+				$window.alert(data);
 				console.log('Error:' + data);
 			});
 	};
@@ -298,23 +299,28 @@ function GroupsCtrl($scope,$http, $ionicLoading, $log, GroupMessageService) {
     $scope.owngroups = []; 
     $scope.othergroups = [];
     
-        	//Obtener Grupos propios
-	$http.get(URL+'groups/user/'+window.localStorage.token).success(function(data) {
-		$scope.owngroups = data;
-		console.log('own G:'+$scope.owngroups);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+    $scope.loadGroups=function () {
+      
+      //Obtener Grupos propios
+		$http.get(URL+'groups/user/'+window.localStorage.token).success(function(data) {
+			$scope.owngroups = data;
+			console.log('own G:'+$scope.owngroups);
+			})
+			.error(function(data) {
+			console.log('Error: ' + data);
+			});
     
-            	//Obtener Otros Grupos
-	$http.get(URL+'groups/no/'+window.localStorage.token).success(function(data) {
-		$scope.othergroups = data;
+      //Obtener Otros Grupos
+		$http.get(URL+'groups/no/'+window.localStorage.token).success(function(data) {
+			$scope.othergroups = data;
 			console.log('other G:'+data);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+			})
+			.error(function(data) {
+			console.log('Error: ' + data);
+			});
+	
+	};
+	
 	$scope.addUser = function (group) {
 		$http({
 			method: 'POST',
@@ -322,7 +328,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, $log, GroupMessageService) {
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#map/groups';
+				$scope.loadGroups();
 				console.log(data);
 				
 			})
@@ -331,6 +337,8 @@ function GroupsCtrl($scope,$http, $ionicLoading, $log, GroupMessageService) {
 			});
 	};
 	
+	
+	
 	$scope.deleteUser = function (group) {
 		$http({
 			method: 'DELETE',
@@ -338,7 +346,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, $log, GroupMessageService) {
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#map/groups';
+				$scope.loadGroups();
 				console.log(data);
 				
 			})
@@ -373,7 +381,7 @@ function GroupMessageService($http, $log,$stateParams) {
     }
 }
 
-
+//unused
 function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, $log) {
     $scope.messages = [];
     console.log($stateParams);
@@ -425,23 +433,27 @@ function RacesCtrl($scope, $http, $stateParams, $ionicLoading, $log) {
     $scope.ownraces = []; 
     $scope.otherraces = []; 
     
+    $scope.loadRaces=function () {
+    	
     	//Obtener carreras propias
-	$http.get(URL+'race/user/'+window.localStorage.token).success(function(data) {
-		$scope.ownraces = data;
-		console.log('own Races:'+$scope.ownraces);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+		$http.get(URL+'race/user/'+window.localStorage.token).success(function(data) {
+			$scope.ownraces = data;
+			console.log('own Races:'+$scope.ownraces);
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
 	
 	  //Obtener otras carreras
-	$http.get(URL+'race/no/'+window.localStorage.token).success(function(data) {
-		$scope.otherraces = data;
-		console.log('other Races:'+$scope.otherraces);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+		$http.get(URL+'race/no/'+window.localStorage.token).success(function(data) {
+			$scope.otherraces = data;
+			console.log('other Races:'+$scope.otherraces);
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+		
+	};
 
 	$scope.addUser = function (race) {
 		$http({
@@ -450,7 +462,7 @@ function RacesCtrl($scope, $http, $stateParams, $ionicLoading, $log) {
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
-				window.location.href = '#/map/races/'+$stateParams.raceId;
+				$scope.loadRaces();
 				console.log(data);
 				
 			})
@@ -466,7 +478,7 @@ function RacesCtrl($scope, $http, $stateParams, $ionicLoading, $log) {
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
-				window.location.href = '#/map/races/';
+				$scope.loadRaces();
 				console.log(data);
 				
 			})

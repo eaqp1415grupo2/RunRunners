@@ -28,9 +28,10 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 	if((window.localStorage.token === undefined || window.localStorage.token == 'null' || window.localStorage.token == "") && window.location.search== ""){
 		$urlRouterProvider.otherwise('/login');
 	} else {
-        window.localStorage.token = window.location.search.substring(1);
-        token = window.localStorage.token;
-		$urlRouterProvider.otherwise('/map/home');
+        if(window.location.search != ""){
+			window.localStorage.token = window.location.search.substring(1);
+		}
+        $urlRouterProvider.otherwise('/map/home');
 	}
 }]);
 

@@ -1,7 +1,7 @@
 {
-  "name": "runrunners_ionic",
+  "name": "RunRunners",
   "version": "1.0.0",
-  "description": "RunRunners_Ionic: An Ionic project",
+  "description": "RunRunners: An Ionic project",
   "dependencies": {
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",

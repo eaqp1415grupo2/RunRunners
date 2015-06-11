@@ -1,57 +1,42 @@
 angular.module('starter.controllers', [])
 
-.controller('loginCtrl', function ($http, $scope,$location){
-      $scope.users = [];
+.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+  
+  // With the new view caching in Ionic, Controllers are only called
+  // when they are recreated or on app start, instead of every page change.
+  // To listen for when this page is active (for example, to refresh data),
+  // listen for the $ionicView.enter event:
+  //$scope.$on('$ionicView.enter', function(e) {
+  //});
+  
+  // Form data for the login modal
+  $scope.loginData = {};
 
-      this.addUser = function(){
-        $scope.users.push(this.user);
-        var urlsignin = URL+"user";
-        $http({
-          method: 'POST',
-          url: urlsignin,
-          data: this.user,
-          headers: {'Content-Type': 'application/json'}
-        }).success(function(data) {
-          console.log("data: "+data);
-          window.localStorage.token=data;
-          $location.url('/map/home');
-        }).error(function(data) {
-          window.alert("ERROR - POST");
-        });
-        this.user = {};
-      };
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/login.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
 
-      this.loginUser = function(){
-        console.log(this.user);
-        var urlauth = URL+"user/auth";
-        $http({
-          method: 'POST',
-          url: urlauth,
-          data: this.user,
-          headers: {'Content-Type': 'application/json'}
-        }).success(function(data) {
-          console.log("token: "+data);
-          window.localStorage.token=data;
-          $location.url('/map/home');
-        }).error(function(data) {
-          window.alert("ERROR - AUTH");
-        });
-        this.user = {};
-      };
-
-      $scope.loginFacebook = function(){
-        console.log('facebook');
-        window.location.href='/auth/facebook';
-      };
-})
-
-.controller('tabCtrl', function(){
-  this.tab = 1;
-
-  this.setTab = function(setTab){
-    this.tab = setTab;
+  // Triggered in the login modal to close it
+  $scope.closeLogin = function() {
+    $scope.modal.hide();
   };
-  this.isSet = function(isSet){
-    return this.tab === isSet;
+
+  // Open the login modal
+  $scope.login = function() {
+    $scope.modal.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.doLogin = function() {
+    console.log('Doing login', $scope.loginData);
+
+    // Simulate a login delay. Remove this and replace with your login
+    // code if using a login system
+    $timeout(function() {
+      $scope.closeLogin();
+    }, 1000);
   };
 });

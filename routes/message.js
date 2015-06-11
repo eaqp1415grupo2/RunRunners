@@ -158,7 +158,7 @@ module.exports = function (app) {
                                     if (!race) {
                                         console.log(message.UserID, id.iss);
                                         console.log(group.Admin, user.Username);
-                                        if (message.UserID != id.iss && group.Admin != user.Username) {
+                                        if (message.UserID != id.iss && group.Admin != user.Username && user.Role != 'admin') {
 
                                             res.send(400, 'Bad User');
                                         } else {
@@ -168,7 +168,7 @@ module.exports = function (app) {
                                             });
                                         }
                                     } else {
-                                        if (message.UserID != id.iss && race.Admin != user.Username) {
+                                        if (message.UserID != id.iss && race.Admin != user.Username && user.Role != 'admin') {
                                             res.send(400, 'Bad User');
                                         }
 
@@ -202,7 +202,7 @@ module.exports = function (app) {
                         Race.findOne({_id: message.ParentID}, function (err, race) {
                             Group.findOne({_id: message.ParentID}, function (err, group) {
                                 if (!race) {
-                                    if (message.UserID != id.iss && user.Username != group.Admin) {
+                                    if (message.UserID != id.iss && user.Username != group.Admin && user.Role != 'admin') {
                                         res.send(400, 'Bad User');
                                     } else {
                                         message.Answers.pull(answer);
@@ -212,7 +212,7 @@ module.exports = function (app) {
                                         });
                                     }
                                 } else if (!group) {
-                                    if (message.UserID != id.iss && user.Username != race.Admin) {
+                                    if (message.UserID != id.iss && user.Username != race.Admin && user.Role != 'admin') {
                                         res.send(400, 'Bad User');
                                     } else {
                                         message.Answers.pull(answer);

@@ -169,31 +169,45 @@ module.exports = function (app) {
 
 //DELETE - Delete a Race with specified ID
     deleteRace = function (req, res) {
-        Race.findOne({_id: req.params.id}, function (err, race) {
-            if (!race) {
-                res.send(404, 'Race not found');
-            } else {
-                var users = race.Users;
-                for (var i = 0; i < users.length; i++) {
-                    User.findOne(users[i]._id, function (err, user) {
-                        user.Races.pull(race._id);
-                        user.save(function (err) {
-                            if (!err) {
-                                console.log('User   Removed');
-                            } else {
-                                console.log('ERROR: ' + err);
-                                res.send(500, "Mongo Error");
-                            }
-                        });
-                    });
-                }
-                race.remove(function (err) {
-                    if (!err) {
-                        console.log('Removed');
-                        res.send(200, 'OK');
+        var id = jwt.decode(req.body._id, Secret);
+
+        User.findOne({_id: id.iss}, function (err, usuario) {
+            if (!usuario) {
+                res.send(404, 'User Not Found');
+            }
+            else {
+                Race.findOne({_id: req.params.id}, function (err, race) {
+                    if (!race) {
+                        res.send(404, 'Race not found');
                     } else {
-                        console.log('ERROR: ' + err);
-                        res.send(500, "Mongo Error");
+                        if (race.Admin != usuario.Username && usuario.Role != 'admin') {
+                            res.send(400, 'Bad User');
+                        } else {
+                            var users = race.Users;
+                            for (var i = 0; i < users.length; i++) {
+                                User.findOne(users[i]._id, function (err, user) {
+                                    user.Races.pull(race._id);
+                                    user.save(function (err) {
+                                        if (!err) {
+                                            console.log('User   Removed');
+                                        } else {
+                                            console.log('ERROR: ' + err);
+                                            res.send(500, "Mongo Error");
+                                        }
+                                    });
+                                });
+                            }
+                            race.remove(function (err) {
+                                if (!err) {
+                                    console.log('Removed');
+                                    res.send(200, 'OK');
+                                } else {
+                                    console.log('ERROR: ' + err);
+                                    res.send(500, "Mongo Error");
+                                }
+                            });
+                        }
+
                     }
                 });
             }
@@ -244,6 +258,41 @@ module.exports = function (app) {
         });
     };
 
+    removeUserRace = function (race, user, res) {
+
+        if (race.Admin === user.Username) {
+            if (!race.Users[1]) {
+                user.Races.pull(race._id);
+                user.save(function (error) {
+                    if (error) res.send(500, 'Mongo Error');
+                    else {
+                        console.log(race);
+                    }
+                });
+                race.remove(function (err) {
+                    if (err) res.send(500, 'Mongo Error');
+                    else res.send(200, 'Race Removed');
+                });
+
+            } else {
+                race.Admin = race.Users[1].Username;
+            }
+        }
+        race.Users.pull(user._id);
+        race.save(function (err) {
+            if (err) res.send(500, "Error: " + err);
+        });
+        user.Races.pull(race._id);
+        user.save(function (error) {
+            if (error) res.send(500, 'Mongo Error');
+            else {
+                console.log(race);
+                res.send(200);
+            }
+        });
+
+    };
+
     deleteUser = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
         Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, race) {
@@ -252,26 +301,11 @@ module.exports = function (app) {
             } else {
                 if (!req.body.delete) {
                     User.findOne({_id: id.iss}, function (err, user) {
-                        if (race.Admin === user.Username) {
-                            race.Admin = race.Users[1].Username;
-                        }
-                        race.Users.pull(id.iss);
-                        race.save(function (err) {
-                            if (err) res.send(500, 'Mongo Error');
-                            else console.log('Race Removed');
-                        });
-                        user.Races.pull(race._id);
-                        user.save(function (error) {
-                            if (error) res.send(500, 'Mongo Error');
-                            else {
-                                console.log(race);
-                                res.send(200);
-                            }
-                        });
+                        removeUserRace(race, user, res);
                     });
                 } else {
                     User.findOne({_id: id.iss}, function (err, user) {
-                        if (user.Username != race.Admin) {
+                        if (user.Username != race.Admin && user.Role != 'admin') {
                             res.send(404, 'Not Allowed');
                         } else {
                             var position = false;
@@ -279,26 +313,14 @@ module.exports = function (app) {
                                 console.log(req.body.delete, race.Users[i]._id);
                                 if (race.Users[i]._id.equals(req.body.delete)) {
                                     position = true;
+                                    User.findOne({_id: req.body.delete}, function (err, deleteuser) {
+                                        removeUserRace(race, deleteuser, res);
+                                    });
                                     break;
                                 }
                             }
-                            if (position) {
-                                User.findOne({_id: req.body.delete}, function (err, deleteuser) {
-                                    race.Users.pull(req.body.delete);
-                                    race.save(function (err) {
-                                        if (err) res.send(500, "Error: " + err);
-                                    });
-                                    deleteuser.Races.pull(race._id);
-                                    deleteuser.save(function (err) {
-                                        if (err) res.send(500, 'Mongo Error');
-                                        else {
-                                            console.log(race);
-                                            res.send(200);
-                                        }
-                                    });
-                                });
-                            } else {
-                                res.send(404, 'User not found');
+                            if (!position) {
+                                res.send(404, 'User Not Found');
                             }
                         }
                     });
@@ -336,7 +358,8 @@ module.exports = function (app) {
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);
-    app.put('/race/:id/user', addUser);
+    app.post('/race/:id/user', addUser);
     app.delete('/race/:id/user', deleteUser);
 
-};
+}
+;

@@ -2,6 +2,7 @@ module.exports = function (app) {
 
     var jwt = require('jwt-simple');
     var moment = require('moment');
+    var crypto = require('crypto');
     var User = require('../models/user.js');
     var Group = require('../models/group.js');
     var Race = require('../models/race.js');
@@ -56,6 +57,10 @@ module.exports = function (app) {
         });
     };
 
+    function encrypt(user, pass) {
+        var hmac = crypto.createHmac('sha1', user).update(pass).digest('hex')
+        return hmac
+    }
 
     //POST - Insert a new User in the DB
     addUser = function (req, res) {
@@ -63,9 +68,10 @@ module.exports = function (app) {
         console.log(req.body);
         User.findOne({Username: req.body.Username}, function (err, user) {
             if (!user) {
+                var Password = encrypt(req.body.Username, req.body.Password);
                 var user = new User({
                     Username: req.body.Username,
-                    Password: req.body.Password,
+                    Password: Password,
                     Name: req.body.Name,
                     Surname: req.body.Surname,
                     Email: req.body.Email,
@@ -102,14 +108,15 @@ module.exports = function (app) {
     };
 
     authenticate = function (req, res) {
-        console.log(req.body);
+
         User.findOne({"Username": req.body.Username}, function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
             } else if (user) {
-                console.log(user);
-                if (user.Password != req.body.Password) {
+
+                var Password = encrypt(user.Username, req.body.Password);
+                if (user.Password != Password) {
                     res.send(404, 'Password error');
                 } else {
                     var expires = moment().add(2, 'days').valueOf();
@@ -118,6 +125,17 @@ module.exports = function (app) {
                 }
             }
         });
+    };
+
+    validateToken = function(req, res){
+        var date = Date.now();
+        var id = jwt.decode(req.params.id, Secret);
+        console.log(id.exp, date);
+        if(id.exp >= date){
+            res.send(200,'OK');
+        }else{
+            res.send(400,'Token Expired');
+        }
     };
 
     //PUT - Update a register User already exists
@@ -170,43 +188,64 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'Not Found');
             }
-            var races = user.Races;
-            var groups = user.Groups;
-            for (var i = 0; i < races.length; i++) {
-                Race.findOne(races[i]._id, function (err, race) {
-                    race.Users.pull(id.iss);
-                    race.save(function (err) {
-                        if (!err) {
-                            console.log('User Removed');
-                        } else {
-                            console.log('ERROR: ' + err);
-                            res.send(500, "Mongo Error");
+            if(!req.body.delete) {
+                var races = user.Races;
+                var groups = user.Groups;
+                for (var i = 0; i < races.length; i++) {
+                    Race.findOne(races[i]._id, function (err, race) {
+                        if (race.Admin === user.Username) {
+                            if(!race.Users[1]){
+                                race.remove(function(err){
+                                    if(err) res.send(500,'Mongo Error');
+                                });
+                            }else {
+                                race.Admin = race.Users[1].Username;
+                            }
                         }
+                        race.Users.pull(id.iss);
+                        race.save(function (err) {
+                            if (!err) {
+                                console.log('User Removed');
+                            } else {
+                                console.log('ERROR: ' + err);
+                                res.send(500, "Mongo Error");
+                            }
+                        });
                     });
-                });
-            }
-            for (var j = 0; j < races.length; j++) {
-                Group.findOne(groups[j]._id, function (err, group) {
-                    group.Users.pull(id.iss);
-                    group.save(function (err) {
-                        if (!err) {
-                            console.log('User Removed');
-                        } else {
-                            console.log('ERROR: ' + err);
-                            res.send(500, "Mongo Error");
-                        }
-                    });
-                });
-            }
-            user.remove(function (err) {
-                if (!err) {
-                    console.log('Removed user');
-                    res.send(200);
-                } else {
-                    console.log('Internal error(%d): %s', res.statusCode, err.message);
-                    res.send(500, 'Server Error');
                 }
-            })
+                for (var j = 0; j < groups.length; j++) {
+                    Group.findOne(groups[j]._id, function (err, group) {
+                        if (group.Admin === user.Username) {
+                            if (!group.Users[1]) {
+                                group.remove(function (err) {
+                                    if (err) res.send(500, 'Mongo Error');
+                                });
+                            } else {
+                                group.Admin = group.Users[1].Username;
+                            }
+                        }
+                        group.Users.pull(id.iss);
+                        group.save(function (err) {
+                            if (!err) {
+                                console.log('User Removed');
+                            } else {
+                                console.log('ERROR: ' + err);
+                                res.send(500, "Mongo Error");
+                            }
+                        });
+                    });
+                }
+                user.remove(function (err) {
+                    if (!err) {
+                        console.log('Removed user');
+                        res.send(200);
+                    } else {
+                        console.log('Internal error(%d): %s', res.statusCode, err.message);
+                        res.send(500, 'Server Error');
+                    }
+                });
+            }
+
         });
     };
 
@@ -279,28 +318,56 @@ module.exports = function (app) {
             }
             else {
                 var result = 0;
-                for(j = 0; j<user.Races.length; j++){
+                for (j = 0; j < user.Races.length; j++) {
                     if (user.Races[j].State === 'Pending') {
                         result++;
                     }
                 }
-              for(i = 0; i<user.Races.length; i++){
-                  if (user.Races[i].State === 'Pending') {
-                      Race.find({_id: user.Races[i]._id}, function (err, race) {
-                          if (err) res.send(500, 'Mongo Error');
-                          else {
+                for (i = 0; i < user.Races.length; i++) {
+                    if (user.Races[i].State === 'Pending') {
+                        Race.find({_id: user.Races[i]._id}, function (err, race) {
+                            if (err) res.send(500, 'Mongo Error');
+                            else {
                                 races.push(race);
-                              if(result == races.length){
-                                  res.send(races);
-                              }
-                          }
-                      });
-                  }
-              }
+                                if (result == races.length) {
+                                    res.send(races);
+                                }
+                            }
+                        });
+                    }
+                }
             }
 
         });
 
+    };
+
+    raceDone = function (req, res) {
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) {
+                res.send(404, 'User Not Found');
+            } else {
+                var race = false;
+                for (i = 0; i < user.Races.length; i++) {
+                    console.log(req.body.raceId, user.Races[i]._id);
+                    if (user.Races[i]._id.equals(req.body.raceId)) {
+                        race = true;
+                        user.Races[i].Data.Time = req.body.Time;
+                        user.Races[i].State = 'Done';
+                        user.Races[i].Data.Distance = req.body.Distance;
+                        user.save(function (err) {
+                            if (err) res.send(500, 'Mongo Error');
+                            else res.send(200, user.Races[i]);
+                        });
+                        break;
+                    }
+                }
+                if (!race) {
+                    res.send(400, 'No Race');
+                }
+            }
+        });
     };
 
     //Link routes and functions
@@ -315,6 +382,8 @@ module.exports = function (app) {
     app.get('/user/username/:Username', findUsername);
     app.get('/user/stats/:id', userStats);
     app.get('/user/pending/:id', findRacePending);
+    app.put('/user/race/:id', raceDone);
+    app.get('/user/validate/:id', validateToken);
 
 
 };

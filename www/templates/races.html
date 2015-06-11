@@ -2,7 +2,7 @@
     <ion-header-bar class="bar-assertive item-input-inset">
         <h1 class="title">Races</h1>
     </ion-header-bar>
-    <ion-content>
+    <ion-content ng-init="loadRaces()">
         <div class="list">
         <div class="item item-input-inset">
             <label class="item-input-wrapper" >
@@ -46,7 +46,7 @@
                 </div>
 
          <div class="item tabs  tabs-icon-left">
-             <a class="tab-item" href="#">
+             <a class="tab-item" href="#/map/users/race/{{r._id}}">
               <i class="icon ion-android-contacts"></i>
               {{r.Users.length}} Members
             </a>

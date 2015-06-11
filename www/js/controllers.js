@@ -33,6 +33,8 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		$urlRouterProvider.otherwise('/map/home');
 	}
 }]);
+
+MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 /*
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
@@ -230,19 +232,23 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams, $http, $ionicLoading, $log) {
+function GroupCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, GroupMessageService) {
     $scope.messages = [];
     console.log('sP: '+$stateParams.groupId);
     $scope.postMessage=[];
 
-	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
-		$scope.messages = data;
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+
+	$scope.loadMessage = function () {
+		$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+			$scope.messages = data;
+			})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
 	
-	$scope.addMessage = function (race) {
+	};
+	
+	$scope.addMessage = function () {
 		$http({
 			method: 'POST',
 			url: URL+'message',
@@ -253,26 +259,26 @@ function GroupCtrl($scope, $stateParams, $http, $ionicLoading, $log) {
 					},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				//window.location.href = '#/map/races';
-				$scope.apply();
 				console.log(data);
 				
+				$scope.loadMessage();
+				$scope.postMessage.text="";
 			})
 			.error(function (data) {
 				console.log('Error:' + data);
 			});
 	};
 	
-	$scope.deleteMessage = function (race) {
+	$scope.deleteMessage = function (id) {
 		$http({
 			method: 'DELETE',
-			url: URL+'race/'+race+'/user',
-			data: {_id:window.localStorage.token},
+			url: URL+'message/'+id,
+			data: {UserID:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#/map/races/';
+				//window.location.href = '#/map/races/';
 				console.log(data);
-				
+				$scope.loadMessage();
 			})
 			.error(function (data) {
 				console.log('Error:' + data);
@@ -282,7 +288,7 @@ function GroupCtrl($scope, $stateParams, $http, $ionicLoading, $log) {
 	         		
 }
 
-function GroupsCtrl($scope,$http, $ionicLoading, $log) {
+function GroupsCtrl($scope,$http, $ionicLoading, $log, GroupMessageService) {
     $scope.owngroups = []; 
     $scope.othergroups = [];
     
@@ -343,12 +349,23 @@ function GroupsService($http, $log) {
     }
 }
 
+	$scope.load = function (race) {
+		$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+		$scope.messages = data;
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
+	};
+*/
 function GroupMessageService($http, $log,$stateParams) {
         this.loadGroupMessages = function() {     
-        return ($http.get(URL+'js/testData/messages.json'));
+        $http.get(URL+'message/parent/'+$stateParams.groupId).success(function (data) {
+		   $scope.messages=data;     	
+        	});
         //return ($http.get(URL+'message/parent/'+$stateParams.groupId));
     }
-}*/
+}
 
 
 function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, $log) {

@@ -1,9 +1,19 @@
 <ion-view title="Group">
-	<ion-content>
+	<ion-content ng-init="loadMessage()">
 		<div class="list card">
-			<div class="card" data-ng-repeat="m in messages track by $index">
+			<div class="card" ng-repeat="m in messages track by $index">
 				<div class="item item-divider">
-					<h4>{{m.Username}} dice:</h4>
+					<div class="row">
+					<div class="col">
+										<h4>{{m.Username}} dice:</h4>
+					</div>
+					<div class="col">
+								
+					</div>
+					<div class="col-10">
+			        <a class="tab-item" ng-click="deleteMessage(m._id)" style="color: red;"><i class="icon ion-minus-circled"></i></a>
+					</div>
+</div>
 				</div>
 				<div class="item item-text-wrap">
 					{{m.Text}}

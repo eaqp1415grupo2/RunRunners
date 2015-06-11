@@ -295,10 +295,11 @@ module.exports = function (app) {
 
     deleteUser = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
-        Race.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, race) {
+        Race.findOne({_id: req.params.id}, function (err, race) {
             if (!race) {
-                res.send(404, 'User Not Found')
+                res.send(404, 'Race  Not Found')
             } else {
+                console.log(req.body.delete);
                 if (!req.body.delete) {
                     User.findOne({_id: id.iss}, function (err, user) {
                         removeUserRace(race, user, res);

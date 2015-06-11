@@ -19,9 +19,9 @@
 			</div>
 			<div class="list">
 				<label class="item item-input item-text-wrap">
-					<input type="text" placeholder="Responder">
+					<input type="text" placeholder="Responder" required ng-model="postMessage.text">
 				</label>
-				<button class="button button-block button-calm">Responder</button>
+				<button class="button button-block button-calm" ng-click="addMessage()">Responder</button>
 			</div>
 		</div>
 	</ion-content>

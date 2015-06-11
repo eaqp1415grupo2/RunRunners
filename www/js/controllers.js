@@ -17,7 +17,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
 		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:groupId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profileCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
@@ -33,18 +33,18 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		$urlRouterProvider.otherwise('/map/home');
 	}
 }]);
-
+/*
 MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
 
-//MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
+MapApp.controller("GroupsCtrl",["$scope", "$stateParams","$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
 MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 
 MapApp.service("RacesService",["$http", "$log", RacesService ]);
 MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
 
-MapApp.controller("RacesCtrl",["$scope", "$http","$ionicLoading", "RacesService", "$log", RacesCtrl]);
+MapApp.controller("RacesCtrl",["$scope", "$http","$stateParams","$ionicLoading", "RacesService", "$log", RacesCtrl]);
 MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
 /**
  * HEADER - handle menu toggle
@@ -71,7 +71,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 
 	$scope.updateUser = {};
 
-	$http.get('https://localhost:3030/user/' + window.localStorage.token)
+	$http.get(URL+'user/' + window.localStorage.token)
 		.success(function (data) {
 			$scope.users = data;
 			console.log(data);
@@ -81,7 +81,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 		});
 
 	$scope.getUser = function () {
-		$http.get('https://localhost:3030/user/' + window.localStorage.token)
+		$http.get(URL+'user/' + window.localStorage.token)
 			.success(function (data) {
 				$scope.users = data;
 				console.log(data);
@@ -230,21 +230,59 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $stateParams, $http, $ionicLoading, GroupMessageService, $log) {
-    $scope.groupmessages = [];
-    // console.log($stateParams);
-    $scope.groupId=$stateParams.groupId;
- 	 console.log($scope.groupId);
- 	
-	$http.get(URL+'js/testData/messages.json').success(function(data) {
-		$scope.groupmessages = data;
+function GroupCtrl($scope, $stateParams, $http, $ionicLoading, $log) {
+    $scope.messages = [];
+    console.log('sP: '+$stateParams.groupId);
+    $scope.postMessage=[];
+
+	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+		$scope.messages = data;
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);
-	});	         		
+	});
+	
+	$scope.addMessage = function (race) {
+		$http({
+			method: 'POST',
+			url: URL+'message',
+			data: {
+					UserID:window.localStorage.token,
+					Text:$scope.postMessage.text,
+					ParentID:$stateParams.groupId
+					},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				//window.location.href = '#/map/races';
+				$scope.apply();
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+	
+	$scope.deleteMessage = function (race) {
+		$http({
+			method: 'DELETE',
+			url: URL+'race/'+race+'/user',
+			data: {_id:window.localStorage.token},
+			headers: {'Content-Type': 'application/json'}
+		}).success(function (data) {
+				window.location.href = '#/map/races/';
+				console.log(data);
+				
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+		
+	         		
 }
 
-function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
+function GroupsCtrl($scope,$http, $ionicLoading, $log) {
     $scope.owngroups = []; 
     $scope.othergroups = [];
     
@@ -298,7 +336,7 @@ function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
 	};
 }
 
-//Unused
+/*/Unused
 function GroupsService($http, $log) {
     this.loadGroups = function() {
         return ($http.get(URL+'groups'));
@@ -310,10 +348,10 @@ function GroupMessageService($http, $log,$stateParams) {
         return ($http.get(URL+'js/testData/messages.json'));
         //return ($http.get(URL+'message/parent/'+$stateParams.groupId));
     }
-}
+}*/
 
 
-function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService, $log) {
+function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, $log) {
     $scope.messages = [];
     console.log($stateParams);
     $scope.raceId=$stateParams.raceId;
@@ -332,7 +370,7 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 			data: {_id:window.localStorage.token },
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#map/races';
+				window.location.href = '#/map/races';
 				console.log(data);
 				
 			})
@@ -348,7 +386,7 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#map/races/';
+				window.location.href = '#/map/races/';
 				console.log(data);
 				
 			})
@@ -360,7 +398,7 @@ function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, RaceMessageService
 }
 
 
-function RacesCtrl($scope, $http, $ionicLoading, $log) {
+function RacesCtrl($scope, $http, $stateParams, $ionicLoading, $log) {
     $scope.ownraces = []; 
     $scope.otherraces = []; 
     
@@ -384,12 +422,12 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 
 	$scope.addUser = function (race) {
 		$http({
-			method: 'PUT',
+			method: 'POST',
 			url: URL+'race/'+race+'/user',
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
-				window.location.href = '#map/races/'+$stateParams.raceId;
+				window.location.href = '#/map/races/'+$stateParams.raceId;
 				console.log(data);
 				
 			})
@@ -405,7 +443,7 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {			
-				window.location.href = '#map/races/';
+				window.location.href = '#/map/races/';
 				console.log(data);
 				
 			})
@@ -414,20 +452,6 @@ function RacesCtrl($scope, $http, $ionicLoading, $log) {
 			});
 	};
 
-}
-
-//Unused
-function RacesService($http, $log) {
-    this.loadRaces = function() {
-        return ($http.get(URL+'race'));
-    }
-}
-
-function RaceMessageService($http, $log,$stateParams) {
-	console.log("RaceMessageService");
-        this.loadRaceMessages = function() {     
-        return ($http.get(URL+'js/testData/messages.json'));
-            }
 }
 
 /**
@@ -703,7 +727,7 @@ MapApp.directive("appMap", function ($window) {
 							title: m.name,
 							//animation: google.maps.Animation.DROP,
 							//animation: google.maps.Animation.BOUNCE,
-							icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
+							icon: 'img/marker.png'
 						});
 						//console.log("map: make marker for " + m.name);
 						google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));

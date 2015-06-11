@@ -392,7 +392,7 @@ function UsersCtrl($scope, $http, $stateParams , $window, $ionicLoading, $log) {
 
 	$scope.loadUsers=function () {
 	
-		$http.get(URL+$stateParams.parent+'/id/'+$stateParams.parentId).success(function(data) {
+		$http.get(URL+$stateParams.parent+'/'+$stateParams.parentId).success(function(data) {
 			$scope.parent = data;
 			$scope.users = data.Users;
 			console.log('Rx Info: ' + data);

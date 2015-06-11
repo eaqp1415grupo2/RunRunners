@@ -21,7 +21,7 @@ module.exports = function (app) {
     findGroupByName = function (req, res) {
         Group.findOne({"Name": req.params.name}, function (err, group) {
             if (!group) {
-                res.send(404, 'Group not found');
+                res.send(404, 'Group not found by Name');
             } else {
                 if (err) res.send("Error: " + err);
                 else res.send(group);
@@ -32,7 +32,7 @@ module.exports = function (app) {
     findGroupById = function (req, res) {
         Group.findById(req.params.id, function (err, group) {
             if (!group) {
-                res.send(404, 'Group Not Found');
+                res.send(404, 'Group Not Found by ID');
             } else {
                 if (err) res.send(500, 'Mongo Error');
                 else res.send(200, group);
@@ -313,8 +313,8 @@ module.exports = function (app) {
     };
 
     app.get('/groups', findAllGroups);
-    app.get('/groups/:name', findGroupByName);
-    app.get('/groups/id/:id', findGroupById);
+    app.get('/groups/name/:name', findGroupByName);
+    app.get('/groups/:id', findGroupById);
     app.get('/groups/no/:id', findNoUserGroup);
     app.get('/groups/user/:id', findUserGroup);
     app.post('/groups', createGroup);

@@ -370,6 +370,23 @@ module.exports = function (app) {
         });
     };
 
+    adminUser = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id:id.iss}, function(err, user){
+            if(err) res.send(500,'Mongo Error');
+            else {
+                if (!user) {
+                    res.send(404, 'User Not Found');
+                } else {
+                    if (user.Role === 'admin') res.send(200);
+                    else res.send(400,'Bad User');
+                        }
+                }
+        });
+    };
+
+
+
     //Link routes and functions
     app.get('/user', findAllUsers);
     app.get('/user/:id', findByID);
@@ -384,6 +401,7 @@ module.exports = function (app) {
     app.get('/user/pending/:id', findRacePending);
     app.put('/user/race/:id', raceDone);
     app.get('/user/validate/:id', validateToken);
+    app.get('/user/admin/:id', adminUser);
 
 
 };

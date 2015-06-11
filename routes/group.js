@@ -270,7 +270,7 @@ module.exports = function (app) {
                         } else {
                             User.findOne({_id: id.iss}, function (err, user) {
                                 if (user.Username != group.Admin && user.Role !='admin') {
-                                    res.send(404, 'Not Allowed');
+                                    res.send(405, 'Not Allowed');
                                 } else {
                                     var position = false;
                                     for (i = 0; i < group.Users.length; i++) {

@@ -15,9 +15,10 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.group', {url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
+		.state('menu.group', {url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.race', {url: "/race/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
+		.state('menu.userlist', {url: "/users/:parent/:parentId",views: {'menuContent': {templateUrl: "templates/userlist.html",controller: 'UsersCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profileCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
@@ -381,48 +382,44 @@ function GroupMessageService($http, $log,$stateParams) {
     }
 }
 
-//unused
-function RaceCtrl($scope, $http, $stateParams ,$ionicLoading, $log) {
-    $scope.messages = [];
-    console.log($stateParams);
-    $scope.raceId=$stateParams.raceId;
 
-	$http.get(URL+'message/parent/'+$stateParams.raceId).success(function(data) {
-		$scope.messages = data;
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
+function UsersCtrl($scope, $http, $stateParams , $window, $ionicLoading, $log) {
+    $scope.users = [];
+    $scope.parent = [];
+    console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);
+    $scope.parentId=$stateParams.parentId;
+    
+
+	$scope.loadUsers=function () {
 	
-	$scope.addMessage = function (race) {
-		$http({
-			method: 'POST',
-			url: URL+'/message',
-			data: {_id:window.localStorage.token },
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				window.location.href = '#/map/races';
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
+		$http.get(URL+$stateParams.parent+'/id/'+$stateParams.parentId).success(function(data) {
+			$scope.parent = data;
+			$scope.users = data.Users;
+			console.log('Rx Info: ' + data);
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+	
 	};
 	
-	$scope.deleteMessage = function (race) {
+	$scope.deleteUser = function (delID) {
 		$http({
 			method: 'DELETE',
-			url: URL+'race/'+race+'/user',
-			data: {_id:window.localStorage.token},
+			url: URL+$stateParams.parent+'/'+$stateParams.parentId+'/user',
+			data: {
+					_id:window.localStorage.token,
+					delete:delID
+					},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
-				window.location.href = '#/map/races/';
+				$scope.loadUsers();
 				console.log(data);
 				
 			})
 			.error(function (data) {
-				console.log('Error:' + data);
+				$window.alert(data+' No estas autorizado a expulsar a este usuario!');
+				console.log('Error: ' + data);
 			});
 	};
 		          		
@@ -488,6 +485,8 @@ function RacesCtrl($scope, $http, $stateParams, $ionicLoading, $log) {
 	};
 
 }
+
+
 
 /**
  * A google map / GPS controller.

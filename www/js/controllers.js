@@ -15,9 +15,9 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('login', {url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', {url: '/home', views: {'menuContent': {templateUrl: '/templates/map.html', controller: 'GpsCtrl'} }  })
 		.state('menu.groups', {url: '/groups', views: {'menuContent': {templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'} }  })
-		.state('menu.group', {url: "/group/:groupId",views: {'menuContent': {templateUrl: "templates/group.html",controller: 'GroupCtrl'}}})
+		.state('menu.group', {url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.races', {url: '/races', views: {'menuContent': {templateUrl: '/templates/races.html', controller: 'RacesCtrl'} }  })
-		.state('menu.race', {url: "/race/:raceId",views: {'menuContent': {templateUrl: "templates/race.html",controller: 'RaceCtrl'}}})
+		.state('menu.race', {url: "/race/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profileCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
@@ -232,14 +232,14 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 /**
  * Group CONTROLLERS 
  */
-function GroupCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, GroupMessageService) {
+function MessagesCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, $window) {
     $scope.messages = [];
-    console.log('sP: '+$stateParams.groupId);
+    console.log('sP: '+$stateParams.parentId);
     $scope.postMessage=[];
 
 
 	$scope.loadMessage = function () {
-		$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
+		$http.get(URL+'message/parent/'+$stateParams.parentId).success(function(data) {
 			$scope.messages = data;
 			})
 		.error(function(data) {
@@ -249,13 +249,17 @@ function GroupCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, Gro
 	};
 	
 	$scope.addMessage = function () {
+		if(($scope.postMessage.text==null)||($scope.postMessage.text=="")){
+		console.log("Mensaje vacio no se postea");
+		$window.alert("Debes escribir algo!");
+		}else{
 		$http({
 			method: 'POST',
 			url: URL+'message',
 			data: {
 					UserID:window.localStorage.token,
 					Text:$scope.postMessage.text,
-					ParentID:$stateParams.groupId
+					ParentID:$stateParams.parentId
 					},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
@@ -267,6 +271,8 @@ function GroupCtrl($scope, $state, $stateParams, $http, $ionicLoading, $log, Gro
 			.error(function (data) {
 				console.log('Error:' + data);
 			});
+	
+	}
 	};
 	
 	$scope.deleteMessage = function (id) {

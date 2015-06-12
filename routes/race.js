@@ -286,7 +286,6 @@ module.exports = function (app) {
         user.save(function (error) {
             if (error) res.send(500, 'Mongo Error');
             else {
-                console.log(race);
                 res.send(200);
             }
         });
@@ -299,7 +298,6 @@ module.exports = function (app) {
             if (!race) {
                 res.send(404, 'Race  Not Found')
             } else {
-                console.log(req.body.delete);
                 if (!req.body.delete) {
                     User.findOne({_id: id.iss}, function (err, user) {
                         removeUserRace(race, user, res);
@@ -311,7 +309,6 @@ module.exports = function (app) {
                         } else {
                             var position = false;
                             for (i = 0; i < race.Users.length; i++) {
-                                console.log(req.body.delete, race.Users[i]._id);
                                 if (race.Users[i]._id.equals(req.body.delete)) {
                                     position = true;
                                     User.findOne({_id: req.body.delete}, function (err, deleteuser) {

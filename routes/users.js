@@ -22,7 +22,6 @@ module.exports = function (app) {
     findByID = function (req, res) {
         console.log("GET - /user/:id");
         //  var name = req.params.Name;
-        console.log(req);
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -65,7 +64,6 @@ module.exports = function (app) {
     //POST - Insert a new User in the DB
     addUser = function (req, res) {
         console.log('POST - /user');
-        console.log(req.body);
         User.findOne({Username: req.body.Username}, function (err, user) {
             if (!user) {
                 var Password = encrypt(req.body.Username, req.body.Password);
@@ -128,9 +126,9 @@ module.exports = function (app) {
     };
 
     validateToken = function(req, res){
+        console.log('Validate Token');
         var date = Date.now();
         var id = jwt.decode(req.params.id, Secret);
-        console.log(id.exp, date);
         if(id.exp >= date){
             res.send(200,'OK');
         }else{
@@ -141,7 +139,6 @@ module.exports = function (app) {
     //PUT - Update a register User already exists
     updateUser = function (req, res) {
         console.log("PUT - /user/:Username");
-        console.log(req.body);
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -250,7 +247,7 @@ module.exports = function (app) {
     };
 
     findRaces = function (req, res) {
-
+        console.log('Find Races');
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -268,7 +265,7 @@ module.exports = function (app) {
     };
 
     findGroups = function (req, res) {
-
+        console.log('Find Groups');
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -278,7 +275,6 @@ module.exports = function (app) {
                 if (err) res.send(500, 'Mongo Error');
                 else {
                     var groups = user.Groups;
-                    console.log(groups);
                     res.send(200, groups);
                 }
             }
@@ -286,6 +282,7 @@ module.exports = function (app) {
     };
 
     userStats = function (req, res) {
+        console.log('User Stats');
         var id = jwt.decode(req.body._id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -310,6 +307,7 @@ module.exports = function (app) {
     };
 
     findRacePending = function (req, res) {
+        console.log('Races Pending');
         var id = jwt.decode(req.params.id, Secret);
         var races = [];
         User.findOne({_id: id.iss}, function (err, user) {
@@ -343,6 +341,7 @@ module.exports = function (app) {
     };
 
     raceDone = function (req, res) {
+        console.log('Race Done');
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) {
@@ -350,7 +349,6 @@ module.exports = function (app) {
             } else {
                 var race = false;
                 for (i = 0; i < user.Races.length; i++) {
-                    console.log(req.body.raceId, user.Races[i]._id);
                     if (user.Races[i]._id.equals(req.body.raceId)) {
                         race = true;
                         user.Races[i].Data.Time = req.body.Time;
@@ -371,6 +369,7 @@ module.exports = function (app) {
     };
 
     adminUser = function(req, res){
+        console.log('GET- Admin User');
         var id = jwt.decode(req.params.id, Secret);
         User.findOne({_id:id.iss}, function(err, user){
             if(err) res.send(500,'Mongo Error');

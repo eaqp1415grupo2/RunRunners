@@ -7,7 +7,7 @@ module.exports = function (app) {
     var jwt = require('jwt-simple');
 
     findAllGroups = function (req, res) {
-
+    console.log('Find Groups');
         Group.find(function (err, groups) {
             if (!groups) {
                 res.send(404, 'There are no groups');
@@ -43,7 +43,7 @@ module.exports = function (app) {
     createGroup = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
         Group.findOne({'Name': req.body.Name}, function (err, grupo) {
-            console.log(grupo);
+
             if (grupo == null) {
                 User.findOne({_id: id.iss}, function (err, user) {
                     if (user == null) {
@@ -61,7 +61,7 @@ module.exports = function (app) {
                                 Username: user.Username
                             }]
                         });
-                        console.log(group);
+
                         group.save(function (error) {
                             if (error) console.log("Error: " + error);
                             else console.log("Group Created");
@@ -84,14 +84,12 @@ module.exports = function (app) {
 
     addUser = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
-        console.log(id);
         Group.findOne({_id: req.params.id}, function (error, group) {
             if (!group) {
                 res.send(404, 'Group not found');
             } else {
                 Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
                     User.findOne({_id: id.iss}, function (err, user) {
-                        console.log(user);
                         if (!err && users == null && user != null) {
                             var grouppush = ({_id: user._id, Username: user.Username});
                             group.Users.push(grouppush);
@@ -126,7 +124,6 @@ module.exports = function (app) {
 
     addRace = function (req, res) {
         var id = req.body._id;
-        console.log(id);
         Group.findOne({_id: req.params.id}, function (err, group) {
             if (!group) {
                 res.send(404, "Group not found");
@@ -246,7 +243,6 @@ module.exports = function (app) {
         user.save(function (error) {
             if (error) res.send(500, 'Mongo Error');
             else {
-                console.log(group);
                 res.send(200);
             }
         });
@@ -274,7 +270,6 @@ module.exports = function (app) {
                                 } else {
                                     var position = false;
                                     for (i = 0; i < group.Users.length; i++) {
-                                        console.log(req.body.delete, group.Users[i]._id);
                                         if (group.Users[i]._id.equals(req.body.delete)) {
                                             position = true;
                                             User.findOne({_id: req.body.delete}, function (err, deleteuser) {

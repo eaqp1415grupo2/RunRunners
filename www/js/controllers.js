@@ -1,5 +1,5 @@
 'use strict';
-var MapApp = angular.module('MapApp', ['ionic']);
+var MapApp = angular.module('MapApp', ['ionic', 'races.controller','groups.controller','userlist.controller','messages.controller']);
 var token={};
 var object={};
 
@@ -36,10 +36,6 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 	}
 }]);
 
-/*
-MapApp.controller("GroupsCtrl",["$scope", "$stateParams","$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
-                  
-MapApp.controller("RacesCtrl",["$scope", "$http","$stateParams","$ionicLoading", "RacesService", "$log", RacesCtrl]);
 /**
  * HEADER - handle menu toggle
  */
@@ -216,234 +212,6 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 
 }]);
 
-
-/**
- * Group CONTROLLERS 
- */
-MapApp.controller("MessagesCtrl",["$scope", "$stateParams","$http","$ionicLoading", "$log","$window", function ($scope, $stateParams, $http, $ionicLoading, $log, $window) {
-    $scope.messages = [];
-    console.log('sP: '+$stateParams.parentId);
-    $scope.postMessage=[];
-
-
-	$scope.loadMessage = function () {
-		$http.get(URL+'message/parent/'+$stateParams.parentId).success(function(data) {
-			$scope.messages = data;
-			})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-	
-	};
-	
-	$scope.addMessage = function () {
-		if(($scope.postMessage.text==null)||($scope.postMessage.text=="")){
-		console.log("Mensaje vacio no se postea");
-		$window.alert("Debes escribir algo!");
-		}else{
-		$http({
-			method: 'POST',
-			url: URL+'message',
-			data: {
-					UserID:window.localStorage.token,
-					Text:$scope.postMessage.text,
-					ParentID:$stateParams.parentId
-					},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				console.log(data);
-				
-				$scope.loadMessage();
-				$scope.postMessage.text="";
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	
-	}
-	};
-	
-	$scope.deleteMessage = function (id) {
-		$http({
-			method: 'DELETE',
-			url: URL+'message/'+id,
-			data: {UserID:window.localStorage.token},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				//window.location.href = '#/map/races/';
-				console.log(data);
-				$scope.loadMessage();
-			})
-			.error(function (data) {
-				$window.alert(data);
-				console.log('Error:' + data);
-			});
-	};
-}]);
-
-MapApp.controller("GroupsCtrl",["$scope", "$http","$ionicLoading", "$log", function($scope,$http, $ionicLoading, $log) {
-    $scope.owngroups = []; 
-    $scope.othergroups = [];
-    
-    $scope.loadGroups=function () {
-      
-      //Obtener Grupos propios
-		$http.get(URL+'groups/user/'+window.localStorage.token).success(function(data) {
-			$scope.owngroups = data;
-			console.log('own G:'+$scope.owngroups);
-			})
-			.error(function(data) {
-			console.log('Error: ' + data);
-			});
-    
-      //Obtener Otros Grupos
-		$http.get(URL+'groups/no/'+window.localStorage.token).success(function(data) {
-			$scope.othergroups = data;
-			console.log('other G:'+data);
-			})
-			.error(function(data) {
-			console.log('Error: ' + data);
-			});
-	
-	};
-	
-	$scope.addUser = function (group) {
-		$http({
-			method: 'POST',
-			url: URL+'groups/'+group+'/user',
-			data: {_id:window.localStorage.token},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				$scope.loadGroups();
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	};
-	
-	
-	
-	$scope.deleteUser = function (group) {
-		$http({
-			method: 'DELETE',
-			url: URL+'groups/'+group+'/user',
-			data: {_id:window.localStorage.token},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				$scope.loadGroups();
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	};
-}]);
-
-MapApp.controller("UserListCtrl",["$scope", "$http", "$stateParams", "$window","$ionicLoading", "$log", function UsersCtrl($scope, $http, $stateParams , $window, $ionicLoading, $log) {
-    $scope.users = [];
-    $scope.parent = [];
-    console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);
-    $scope.parentId=$stateParams.parentId;
-    
-
-	$scope.loadUsers=function () {
-	
-		$http.get(URL+$stateParams.parent+'/'+$stateParams.parentId).success(function(data) {
-			$scope.parent = data;
-			$scope.users = data.Users;
-			console.log('Rx Info: ' + data);
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-	
-	};
-	
-	$scope.deleteUser = function (delID) {
-		$http({
-			method: 'DELETE',
-			url: URL+$stateParams.parent+'/'+$stateParams.parentId+'/user',
-			data: {
-					_id:window.localStorage.token,
-					delete:delID
-					},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {
-				$scope.loadUsers();
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				$window.alert(data+' No estas autorizado a expulsar a este usuario!');
-				console.log('Error: ' + data);
-			});
-	};
-		          		
-}]);
-
-
-MapApp.controller("RacesCtrl",["$scope", "$http","$stateParams","$ionicLoading", "$log", function($scope, $http, $stateParams, $ionicLoading, $log) {
-    $scope.ownraces = []; 
-    $scope.otherraces = []; 
-    
-    $scope.loadRaces=function () {
-    	
-    	//Obtener carreras propias
-		$http.get(URL+'race/user/'+window.localStorage.token).success(function(data) {
-			$scope.ownraces = data;
-			console.log('own Races:'+$scope.ownraces);
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-	
-	  //Obtener otras carreras
-		$http.get(URL+'race/no/'+window.localStorage.token).success(function(data) {
-			$scope.otherraces = data;
-			console.log('other Races:'+$scope.otherraces);
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-		
-	};
-
-	$scope.addUser = function (race) {
-		$http({
-			method: 'POST',
-			url: URL+'race/'+race+'/user',
-			data: {_id:window.localStorage.token},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {			
-				$scope.loadRaces();
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	};
-	
-	$scope.deleteUser = function (race) {
-		$http({
-			method: 'DELETE',
-			url: URL+'race/'+race+'/user',
-			data: {_id:window.localStorage.token},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function (data) {			
-				$scope.loadRaces();
-				console.log(data);
-				
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	};
-
-}]);
 
 
 /**
@@ -805,7 +573,7 @@ MapApp.directive("appMap", function ($window) {
 							title: m.name,
 							//animation: google.maps.Animation.DROP,
 							//animation: google.maps.Animation.BOUNCE,
-							icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
+							icon: '/img/marker.png'
 						});
 						//console.log("map: make marker for " + m.name);
 						google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));

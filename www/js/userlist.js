@@ -1,6 +1,6 @@
-angular.module('users.controller', [])
+angular.module('userlist.controller', [])
 
-.controller('usersCtrl', function ($scope, $http, $stateParams , $window, $ionicLoading, $log) {
+.controller('UserListCtrl', function ($scope, $http, $stateParams , $window, $ionicLoading, $log) {
     $scope.users = [];
     $scope.parent = [];
     console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);

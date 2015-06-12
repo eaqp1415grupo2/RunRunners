@@ -1,6 +1,6 @@
 angular.module('groups.controller', [])
 
-.controller('groupsCtrl', function ($scope,$http, $ionicLoading, $log, GroupMessageService) {
+.controller('GroupsCtrl', function ($scope,$http, $ionicLoading, $log, GroupMessageService) {
     $scope.owngroups = [];
     $scope.othergroups = [];
 

@@ -67,7 +67,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       views: {
         'menuContent': {
           templateUrl: "templates/races.html",
-          controller: 'racesCtrl'
+          controller: 'RacesCtrl'
         }
       }
     })
@@ -85,7 +85,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       views: {
         'menuContent': {
           templateUrl: "templates/groups.html",
-          controller: 'groupsCtrl'
+          controller: 'GroupsCtrl'
         }
       }
     })
@@ -103,7 +103,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       views: {
         'menuContent': {
           templateUrl: "templates/userlist.html",
-          controller: 'UsersCtrl'
+          controller: 'UserListCtrl'
         }
       }
     })

@@ -1,23 +1,22 @@
 angular.module('profile.controller', [])
 
-.controller('profileCtrl',function($scope, $http, $ionicModal, $location) {
-
+.controller('profileCtrl',function($scope, $http, $ionicModal, $location, $window) {
+    //var URL='https://10.189.25.180:3030/';
+    var URL='https://localhost:3030/';
     $scope.updateUser = {};
-
-    $http.get('https://localhost:3030/user/' + window.localStorage.token)
-        .success(function (data) {
-            $scope.users = data;
-            console.log(data);
-        })
-        .error(function (data) {
-            console.log('Error:' + data);
-        });
+    console.log($window.localStorage['token']);
+    $http.get(URL + 'user/' + $window.localStorage['token'])
+    .success(function (data) {
+        $scope.users = data;
+    })
+    .error(function (data) {
+        console.log('Error:' + data);
+    });
 
     $scope.getUser = function () {
-        $http.get('https://localhost:3030/user/' + window.localStorage.token)
+        $http.get(URL + 'user/' + $window.localStorage['token'])
             .success(function (data) {
                 $scope.users = data;
-                console.log(data);
             })
             .error(function (data) {
                 console.log('Error:' + data);
@@ -34,12 +33,12 @@ angular.module('profile.controller', [])
         $scope.modal.show();
     };
 
-    $scope.okUpdate = function (updateUser) {
+    $scope.okUpdate = function () {
 
-        $http.put('user/' + window.localStorage.token, $scope.updateUser)//+ cookie o token)
+        $http.put(URL + 'user/' + $window.localStorage['token'], $scope.updateUser)//+ cookie o token)
             .success(function (data) {
-                $location.url('/map/home');
                 $scope.modal.hide();
+                $window.location.href='#/app/profile';
             })
             .error(function (data) {
                 console.log('Error: ' + data);
@@ -67,15 +66,15 @@ angular.module('profile.controller', [])
     };
 
     $scope.okDelete = function () {
-        $http.delete('user/' + window.localStorage.token)//+ cookie o token)
+        $http.delete(URL + 'user/' + $window.localStorage['token'])//+ cookie o token)
             .success(function (data) {
                 alert("acabas de borrar el usuario, le redigiremos al inicio");
-                window.localStorage.token = {};
-                window.location.href = '/';
+                $window.localStorage['token'] = "";
+                $window.location.href = '/';
             })
             .error(function (data) {
                 console.log('Error: ' + data);
             });
-    }
+    };
 
 });

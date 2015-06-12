@@ -5,7 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
-                'stats.controller', 'maps.controller'])
+                'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
+                'groups.controller', 'races.controller'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -23,58 +24,106 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-
-
-  .state('app', {
-    url: "/app",
-    abstract: true,
-    templateUrl: "templates/menuapk.html",
-    controller: 'AppCtrl'
-  })
-  .state('app.home', {
-    url: '/home',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/map.html",
-        controller: 'GpsCtrl'
+    .state('app', {
+      url: "/app",
+      abstract: true,
+      templateUrl: "templates/menuapk.html",
+      controller: 'AppCtrl'
+    })
+    .state('app.home', {
+      url: '/home',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/map.html",
+          controller: 'GpsCtrl'
+        }
       }
-    }
-  })
-  .state('app.login', {
-    url: "/login",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/login.html",
-        controller: 'loginCtrl'
+    })
+    .state('login', {
+      url: "/login",
+      templateUrl: "templates/login.html",
+      controller: 'loginCtrl'
+    })
+    .state('app.profile', {
+      url: '/profile',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/profile3.html",
+          controller: 'profileCtrl'
+        }
       }
-    }
-  })
-  .state('app.profile', {
-    url: '/profile',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/profile3.html",
-        controller: 'profileCtrl'
+    })
+    .state('app.stats', {
+      url: '/stats',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/stats.html",
+          controller: 'statsCtrl'
+        }
       }
-    }
-  })
-  .state('app.stats', {
-    url: '/stats',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/stats.html",
-        controller: 'statsCtrl'
+    })
+    .state('app.races', {
+      url: '/races',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/races.html",
+          controller: 'racesCtrl'
+        }
       }
-    }
-  })
-  .state('app.crono', {
-    url: '/crono',
-    views: {
-      'menuContent': {
-        templateUrl: "templates/crono.html"
+    })
+    .state('app.race', {
+      url: "/race/:parentId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/messages.html",
+          controller: 'MessagesCtrl'
+        }
       }
-    }
-  });
+    })
+    .state('app.groups', {
+      url: '/groups',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/groups.html",
+          controller: 'groupsCtrl'
+        }
+      }
+    })
+    .state('app.group', {
+      url: "/group/:parentId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/messages.html",
+          controller: 'MessagesCtrl'
+        }
+      }
+    })
+    .state('app.userlist', {
+      url: "/users/:parent/:parentId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/userlist.html",
+          controller: 'UsersCtrl'
+        }
+      }
+    })
+    .state('app.crono', {
+      url: '/crono',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/crono.html"
+        }
+      }
+    })
+    .state('app.logout', {
+      url: '/logout',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/logout.html",
+          controller: 'logoutCtrl'
+        }
+      }
+    });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/login');
 });

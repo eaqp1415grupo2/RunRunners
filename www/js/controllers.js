@@ -22,37 +22,11 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.profile', {url: '/profile', views: {'menuContent': {templateUrl: '/templates/profile3.html', controller: 'profileCtrl'} }  })
 		.state('menu.logout', {url: '/logout', views: {'menuContent': {templateUrl: '/templates/logout.html', controller: 'logOutCtrl'} }  })
 		.state('menu.stats', {url: '/stats', views: {'menuContent': {templateUrl: '/templates/stats.html', controller: 'statsCtrl'} }  });
-
-	// if none of the above states are matched, use this as the fallback
-	console.log(window.localStorage.token);
-    console.log(window.location.search);
-	if((window.localStorage.token === undefined || window.localStorage.token == 'null' || window.localStorage.token == "") && window.location.search== ""){
-		$urlRouterProvider.otherwise('/login');
-	} else {
-        if(window.location.search != ""){
-			window.localStorage.token = window.location.search.substring(1);
-		}
-        $urlRouterProvider.otherwise('/map/home');
-	}
 }]);
 
 MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
-/*
-MapApp.service("GroupsService",["$http", "$log", GroupsService ]);
-MapApp.service("GroupMessageService",["$http", "$log", "$stateParams",GroupMessageService ]);
-
-MapApp.controller("GroupsCtrl",["$scope", "$stateParams","$http","$ionicLoading", "GroupsService", "$log", GroupsCtrl]);
-MapApp.controller("GroupCtrl",["$scope", "$http","$stateParams","$ionicLoading", "GroupMessageService", "$log", GroupCtrl]);                          
 
 
-MapApp.service("RacesService",["$http", "$log", RacesService ]);
-MapApp.service("RaceMessageService",["$http", "$log", "$stateParams",RaceMessageService ]);
-
-MapApp.controller("RacesCtrl",["$scope", "$http","$stateParams","$ionicLoading", "RacesService", "$log", RacesCtrl]);
-MapApp.controller("RaceCtrl",["$scope", "$stateParams","$ionicLoading", "RaceMessageService", "$log", RaceCtrl]);  
-/**
- * HEADER - handle menu toggle
- */
 MapApp.controller('statsCtrl',function($scope, $http) {
 
 
@@ -160,6 +134,13 @@ MapApp.controller('MainCtrl', ['$scope', function($scope) {
 MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', function ($http, $scope,$location, $window){
 	$scope.users = [];
 
+	if(($window.localStorage['token'] != undefined || $window.localStorage['token'] != "") && $window.location.search != ""){
+		if($window.location.search != ""){
+			$window.localStorage['token'] = $window.location.search.substring(1);
+		}
+		$window.location.href='#/app/home';
+	}
+
 	$scope.addUser = function(){
 		$scope.users.push(this.user);
 		var urlsignin = URL+"user";
@@ -216,11 +197,10 @@ MapApp.controller('tabCtrl', function(){
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
-MapApp.controller('logOutCtrl', ['$scope', function($scope) {
+MapApp.controller('logOutCtrl', ['$window', function($window) {
 	alert("Vas a salir");
-	token = null;
-	window.localStorage.token = null;
-	window.location.href = '/';
+	$window.localStorage['token'] = "";
+	$window.location.href = '/';
 }]);
 
 /**
@@ -602,7 +582,7 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 
 			alert("centrando");
 
-		}
+		};
 
 
 		$http.get(URL + 'race', $scope).success(function (data) {
@@ -677,35 +657,6 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 	}
 
 ]);
-
-/********************************************************************************
- // formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
- MapApp.filter('lat', function () {
-    return function (input, decimals) {
-        if (!decimals) decimals = 0;
-        input = input * 1;
-        var ns = input > 0 ? "N" : "S";
-        input = Math.abs(input);
-        var deg = Math.floor(input);
-        var min = Math.floor((input - deg) * 60);
-        var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-        return deg + "°" + min + "'" + sec + '"' + ns;
-    }
-});
- // formats a number as a longitude (e.g. -80.02... => "80°1'24"W")
- MapApp.filter('lon', function () {
-    return function (input, decimals) {
-        if (!decimals) decimals = 0;
-        input = input * 1;
-        var ew = input > 0 ? "E" : "W";
-        input = Math.abs(input);
-        var deg = Math.floor(input);
-        var min = Math.floor((input - deg) * 60);
-        var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-        return deg + "°" + min + "'" + sec + '"' + ew;
-    }
-});
- ****************************************************************************/
 
 /**
  * Handle Google Maps API V3+

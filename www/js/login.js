@@ -1,8 +1,16 @@
 angular.module('login.controller', [])
 
 .controller('loginCtrl', function ($http, $scope,$location, $window){
+  //var URL='https://10.189.25.180:3030/';
   var URL='https://localhost:3030/';
   $scope.users = [];
+  console.log($window.localStorage['token']);
+  if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
+    if($window.location.search != ""){
+      $window.localStorage['token'] = $window.location.search.substring(1);
+    }
+    $window.location.href='#/app/home';
+  }
 
   $scope.addUser = function(){
     $scope.users.push(this.user);
@@ -13,9 +21,8 @@ angular.module('login.controller', [])
       data: this.user,
       headers: {'Content-Type': 'application/json'}
     }).success(function(data) {
-      console.log("data: "+data);
-      $window.localStorage.token=data;
-      $location.url('/map/home');
+      $window.localStorage['token']=data;
+      $window.location.href='#/app/home';
     }).error(function(data) {
       $window.alert("ERROR - POST");
     });
@@ -23,7 +30,6 @@ angular.module('login.controller', [])
   };
 
   $scope.loginUser = function(){
-    console.log(this.user);
     var urlauth = URL+"user/auth";
     $http({
       method: 'POST',
@@ -31,9 +37,8 @@ angular.module('login.controller', [])
       data: this.user,
       headers: {'Content-Type': 'application/json'}
     }).success(function(data) {
-      console.log("token: "+data);
-      $window.localStorage.token=data;
-      $location.url('/map/home');
+      $window.localStorage['token']=data;
+      $window.location.href='#/app/home';
     }).error(function(data) {
       $window.alert("ERROR - AUTH");
     });

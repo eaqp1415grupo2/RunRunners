@@ -67,7 +67,7 @@ app.use(express.static('www'));
 //de momento redirige a wall, a la espera de login
 
 app.get('/', function(req, res) {
-    res.sendfile('./www/indexapk.html');});
+    res.sendfile('./www/index.html');});
 
 app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
         // The request will be redirected to Facebook for authentication, so this

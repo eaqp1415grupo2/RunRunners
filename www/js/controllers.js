@@ -215,10 +215,11 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 
 
 
+
 /**
  * A google map / GPS controller.
  */
-MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal) {
+MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
 
 		//$location.url('/map/home');
 	    //$ionicPlatform.ready(function() {
@@ -397,9 +398,9 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 				Level: this.Level2,
 				Inicio: this.LocationIni,
 				Final: this.LocationFin,
-				Distancia: this.Distance,
+				Distancia: this.Distance2,
 				Type: this.Type,
-				_id: token,
+				_id: window.localStorage.token,
 				Fecha: this.Fecha,
 				Hora: this.Hora
 			};
@@ -440,11 +441,11 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 											Lng: lat2,
 											Ltd: lng2
 										},
-										Distancia: datos.Distancia,
+										Distance: datos.Distancia,
 										Type: datos.Type,
-										_id: token,
-										Fecha: datos.Fecha,
-										Hora: datos.Hora
+										_id: datos._id,
+										Date: datos.Fecha,
+										Time: datos.Hora
 									};
 									console.log(datosfinales);
 									console.log("despues lng " + datosfinales.LocationIni.Lng);
@@ -455,11 +456,12 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 										.success(function (data) {
 											//datosfinales.push(data);
 											alert("acabas de crear carrera");
-										window.location.href('/map/home');
-										//$scope.modal.hide();
+											console.log(datosfinales);
+											$location.url('/map/home');
+											$scope.modal.hide();
 									}).error(function (data) {
 										console.log(datosfinales);
-										console.log('Error: ' + data);
+										console.log('Error: ' + datosfinales);
 									});
 
 
@@ -649,4 +651,5 @@ MapApp.directive("appMap", function ($window) {
 
 		} // end of link:
 	}; // end of return
+
 });

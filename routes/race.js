@@ -101,8 +101,10 @@ module.exports = function (app) {
                     Name: req.body.Name,
                     Level: req.body.Level,
                     LocationIni: req.body.LocationIni,
+                    LocationFin: req.body.LocationFin,
                     Distance: req.body.Distance,
                     Date: req.body.Date,
+                    Time: req.body.Time,
                     Type: req.body.Type,
                     Tags: req.body.Tags,
                     Tour: req.body.Tour,
@@ -137,6 +139,7 @@ module.exports = function (app) {
             }
         });
     };
+
 
 //PUT - Update a register already exists
     updateRace = function (req, res) {

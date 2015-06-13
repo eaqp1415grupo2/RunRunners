@@ -19,7 +19,12 @@ var raceSchema = new Schema({
     Name: {type: String},
     Level: {type: String, enum: ['Beginner', 'Initiated', 'Professional']},
     Date: {type: Date, format: "YYYY-MM-DD HH:mm:ss"},
+    Time: {type: String},
     LocationIni: {
+        Lng: {type: Number},
+        Ltd: {type: Number}
+    },
+    LocationFin: {
         Lng: {type: Number},
         Ltd: {type: Number}
     },

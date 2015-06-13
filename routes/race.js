@@ -3,6 +3,7 @@ module.exports = function (app) {
     var Race = require('../models/race.js');
     var User = require('../models/user.js');
     var Secret = require('../config/secret.js');
+    var Group = require('../models/group.js');
     var jwt = require('jwt-simple');
     //GET - Return all races in the DB
     findAllRaces = function (req, res) {
@@ -170,6 +171,21 @@ module.exports = function (app) {
         });
     };
 
+
+    deleteRaceGroups = function (id) {
+        Group.find({'Races._id': id}, function (err, groups) {
+            for (i = 0; i < groups.length; i++) {
+                groups[i].Races.pull(id);
+                groups[i].save(function (err) {
+                    if (err) res.send(500, 'Mongo Error');
+                    else console.log('Race Removed in group');
+
+                });
+            }
+
+        });
+    };
+
 //DELETE - Delete a Race with specified ID
     deleteRace = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
@@ -200,6 +216,7 @@ module.exports = function (app) {
                                     });
                                 });
                             }
+                            deleteRaceGroups(race._id);
                             race.remove(function (err) {
                                 if (!err) {
                                     console.log('Removed');
@@ -216,6 +233,7 @@ module.exports = function (app) {
             }
         });
     };
+
 
     addUser = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);

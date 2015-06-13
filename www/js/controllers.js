@@ -729,7 +729,7 @@ MapApp.directive("appMap", function ($window) {
 							title: m.name,
 							//animation: google.maps.Animation.DROP,
 							//animation: google.maps.Animation.BOUNCE,
-							icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
+							icon: '/img/marker.png'
 						});
 						//console.log("map: make marker for " + m.name);
 						google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));

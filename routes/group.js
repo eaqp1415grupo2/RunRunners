@@ -7,7 +7,7 @@ module.exports = function (app) {
     var jwt = require('jwt-simple');
 
     findAllGroups = function (req, res) {
-    console.log('Find Groups');
+        console.log('Find Groups');
         Group.find(function (err, groups) {
             if (!groups) {
                 res.send(404, 'There are no groups');
@@ -123,30 +123,44 @@ module.exports = function (app) {
     };
 
     addRace = function (req, res) {
-        var id = req.body._id;
-        Group.findOne({_id: req.params.id}, function (err, group) {
-            if (!group) {
-                res.send(404, "Group not found");
-            }
+        var id = jwt.decode(req.body._id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) res.send(404, 'User Not Found');
             else {
-                Group.findOne({_id: req.params.id, 'Races._id': id}, function (error, race) {
-                    if (!err && race == null) {
-                        group.Races.push({_id: id});
-                        group.save(function (err) {
-                            if (!err) {
-                                console.log('Updated');
-                            } else {
-                                res.send(500, "Cast Error, there is no race with this ID");
-                                console.log('ERROR: ' + err);
-                            }
-                            res.send(200, group);
-
-                        });
+                Group.findOne({_id: req.params.id}, function (err, group) {
+                    if (!group) {
+                        res.send(404, 'Group Not Found');
                     } else {
-                        res.send(400, "Race already in the group");
+                        Group.findOne({_id: req.params.id, 'Races._id': req.body.raceid}, function (err, groups) {
+                            if (!groups) {
+                                if (group.Admin != user.Username) {
+                                    res.send(400, 'Bad User');
+                                }
+                                else {
+                                    Race.findOne({_id: req.body.raceid}, function (err, race) {
+                                        if (!race) res.send(404, 'Race Not Found');
+                                        else {
+                                            var racepush = ({
+                                                _id: race._id,
+                                                Race: race.Name,
+                                                State: 'Pending'
+                                            });
+                                            group.Races.push(racepush);
+                                            group.save(function (err) {
+                                                if (err) res.send(500, 'Mongo Error');
+                                                else res.send(200, group);
+                                            });
+                                        }
+                                    });
+                                }
+                            } else {
+                                res.send(400, 'Race Already in');
+                            }
+                        });
                     }
                 });
             }
+
         });
     };
 
@@ -156,7 +170,6 @@ module.exports = function (app) {
             if (req.body.Info != null) group.Info = req.body.Info;
             if (req.body.Level != null) group.Level = req.body.Level;
             if (req.body.Location != null) group.Location = req.body.Location;
-            if (req.body.Admin_Group != null) group.Admin_Group = req.body.Admin_Group;
             group.save(function (error) {
                 if (error) console.log("Error: " + error);
                 else console.log("Group Updated");
@@ -208,17 +221,31 @@ module.exports = function (app) {
     };
 
     deleteRace = function (req, res) {
-        Group.findOne({_id: req.params.id}, function (err, group) {
-            group.remove({" RacesPending.Race": req.body.Race}, function (err) {
-                if (err) res.send(500, "Error: " + err);
-                else res.send(200);
-            });
+        var id = jwt.decode(req.body._id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) res.send(404, 'User Not Found');
+            else {
+                Group.findOne({_id: req.params.id, 'Races._id': req.body.raceid}, function (err, group) {
+                    if (!group)res.send(404, 'Not Found');
+                    else {
+                        if (group.Admin != user.Username) {
+                            res.send(400, 'Bad User');
+                        } else {
+                            group.Races.pull(req.body.raceid);
+                            group.save(function (err) {
+                                if (err) res.send(500, 'Mongo Error');
+                                else res.send(200);
+                            });
+                        }
+                    }
+                });
+            }
         });
     };
 
-    removeUserGroup = function(group, user, res){
+    removeUserGroup = function (group, user, res) {
         if (group.Admin === user.Username) {
-            if(!group.Users[1]){
+            if (!group.Users[1]) {
                 user.Groups.pull(group._id);
                 user.save(function (error) {
                     if (error) res.send(500, 'Mongo Error');
@@ -226,12 +253,12 @@ module.exports = function (app) {
                         console.log(group);
                     }
                 });
-                group.remove(function(err){
-                   if(err) res.send(500,'Mongo Error');
-                    else res.send(200,'Group Removed');
+                group.remove(function (err) {
+                    if (err) res.send(500, 'Mongo Error');
+                    else res.send(200, 'Group Removed');
                 });
 
-            }else {
+            } else {
                 group.Admin = group.Users[1].Username;
             }
         }
@@ -265,7 +292,7 @@ module.exports = function (app) {
                             });
                         } else {
                             User.findOne({_id: id.iss}, function (err, user) {
-                                if (user.Username != group.Admin && user.Role !='admin') {
+                                if (user.Username != group.Admin && user.Role != 'admin') {
                                     res.send(405, 'Not Allowed');
                                 } else {
                                     var position = false;
@@ -286,6 +313,23 @@ module.exports = function (app) {
                         }
                     }
                 });
+            }
+        });
+    };
+
+    findGroupRaces = function (req, res) {
+        var races = [];
+        Group.findOne({_id: req.params.id}, function (err, group) {
+            if (!group) res.send(404, 'Group Not Found');
+            else {
+                for (i = 0; i < group.Races.length; i++) {
+                    Race.findOne({_id: group.Races[i]._id}, function (err, race) {
+                        races.push(race);
+                        if (group.Races.length == races.length) {
+                            res.send(races);
+                        }
+                    });
+                }
             }
         });
     };
@@ -312,6 +356,7 @@ module.exports = function (app) {
     app.get('/groups/:id', findGroupById);
     app.get('/groups/no/:id', findNoUserGroup);
     app.get('/groups/user/:id', findUserGroup);
+    app.get('/groups/:id/race',findGroupRaces);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);

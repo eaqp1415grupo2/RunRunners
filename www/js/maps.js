@@ -2,7 +2,7 @@ angular.module('maps.controller', [])
 
 .controller('GpsCtrl', function($scope,$http, $window,$ionicPlatform, $ionicLoading, $location) {
         //var URL='https://10.189.25.180:3030/';
-        var URL='https://localhost:3030/';
+        //var URL='https://localhost:3030/';
         $scope.races = {};
         var races, poly, map, markers;
         // init gps array
@@ -282,7 +282,7 @@ angular.module('maps.controller', [])
                             title: m.name,
                             //animation: google.maps.Animation.DROP,
                             //animation: google.maps.Animation.BOUNCE,
-                            icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
+                            icon: '/img/marker.png'
                         });
                         //console.log("map: make marker for " + m.name);
                         google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));

@@ -6,10 +6,11 @@ angular.module('login.controller', [])
   $scope.users = [];
   console.log($window.localStorage['token']);
   if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
+    console.log("Entra");
     if($window.location.search != ""){
       $window.localStorage['token'] = $window.location.search.substring(1);
     }
-    $window.location.href='#/app/home';
+    $window.location.href='#/map/home';
   }
 
   $scope.addUser = function(){
@@ -22,7 +23,7 @@ angular.module('login.controller', [])
       headers: {'Content-Type': 'application/json'}
     }).success(function(data) {
       $window.localStorage['token']=data;
-      $window.location.href='#/app/home';
+      $window.location.href='#/map/home';
     }).error(function(data) {
       $window.alert("ERROR - POST");
     });
@@ -38,7 +39,7 @@ angular.module('login.controller', [])
       headers: {'Content-Type': 'application/json'}
     }).success(function(data) {
       $window.localStorage['token']=data;
-      $window.location.href='#/app/home';
+      $window.location.href='#/map/home';
     }).error(function(data) {
       $window.alert("ERROR - AUTH");
     });

@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
                 'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
-                'groups.controller', 'races.controller'])
+                'groups.controller', 'races.controller', 'userlist.controller', 'backoffice.controller'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -24,13 +24,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-    .state('app', {
-      url: "/app",
+    .state('map', {
+      url: "/map",
       abstract: true,
       templateUrl: "templates/menuapk.html",
       controller: 'AppCtrl'
     })
-    .state('app.home', {
+    .state('map.home', {
       url: '/home',
       views: {
         'menuContent': {
@@ -44,7 +44,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       templateUrl: "templates/login.html",
       controller: 'loginCtrl'
     })
-    .state('app.profile', {
+    .state('map.profile', {
       url: '/profile',
       views: {
         'menuContent': {
@@ -53,7 +53,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.stats', {
+    .state('map.stats', {
       url: '/stats',
       views: {
         'menuContent': {
@@ -62,7 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.races', {
+    .state('map.races', {
       url: '/races',
       views: {
         'menuContent': {
@@ -71,7 +71,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.race', {
+    .state('map.race', {
       url: "/race/:parentId",
       views: {
         'menuContent': {
@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.groups', {
+    .state('map.groups', {
       url: '/groups',
       views: {
         'menuContent': {
@@ -89,7 +89,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.group', {
+    .state('map.group', {
       url: "/group/:parentId",
       views: {
         'menuContent': {
@@ -98,7 +98,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.userlist', {
+    .state('map.userlist', {
       url: "/users/:parent/:parentId",
       views: {
         'menuContent': {
@@ -107,7 +107,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.crono', {
+    .state('map.crono', {
       url: '/crono',
       views: {
         'menuContent': {
@@ -115,12 +115,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('app.logout', {
+    .state('map.logout', {
       url: '/logout',
       views: {
         'menuContent': {
           templateUrl: "templates/logout.html",
           controller: 'logoutCtrl'
+        }
+      }
+    })
+    .state('map.backoffice', {
+      url: '/backoffice',
+      views: {
+        'menuContent': {
+          templateUrl: "templates/backoffice.html",
+          controller: 'backofficeCtrl'
         }
       }
     });

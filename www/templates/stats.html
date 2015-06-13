@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-4" align="center" >
             <br>
-            <h3>Lastest Races</h3>
+            <h3>Graph Race</h3>
             <br>
 
 
@@ -38,6 +38,8 @@
                             <img ng-src="/img/race.jpg">
                             <h2>{{ done.Name }}</h2>
                             <h4>{{ done.Distance }}km - Level: {{done.Level}}</h4>
+                            <h4>{{done.Type}}</h4>
+                            <button class="button button-small button-energized" ng-click="grafica(done)"> Stadistics</button>
                         </a>
                 </div>
             </div>
@@ -53,7 +55,8 @@
                                 <img ng-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSNkuzfE2hrhBo2srKUKjgLfe24wECjbsz4bbsvY5jxTrZWHYOegA">
                                 <h2>{{ pending.Name }}</h2>
                                 <h4>{{ pending.Distance }}km - Level: {{pending.Level}}</h4>
-                                <button ng-click="grafica(pending)"> Stadistics</button>
+                                <h4>{{pending.Type}}</h4>
+
                             </a>
                     </div>
                     <!--<ul ng-repeat="user in users">-->

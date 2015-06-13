@@ -340,6 +340,24 @@ module.exports = function (app) {
 
     };
 
+    findRacesDone = function(req, res){
+        var id = jwt.decode(req.params.id, Secret);
+        User.findOne({_id:id.iss}, function(err, user){
+            if(!user){
+                res.send(404,'User Not Found');
+            }else{
+                var races = [];
+                for(i = 0;i<user.Races.length;i++){
+                    if(user.Races[i].State == 'Done'){
+                        races.push(user.Races[i]);
+                    }
+                }
+                res.send(races);
+            }
+        })
+    };
+
+
     raceDone = function (req, res) {
         console.log('Race Done');
         var id = jwt.decode(req.params.id, Secret);
@@ -401,6 +419,7 @@ module.exports = function (app) {
     app.put('/user/race/:id', raceDone);
     app.get('/user/validate/:id', validateToken);
     app.get('/user/admin/:id', adminUser);
+    app.get('/user/done/:id',findRacesDone);
 
 
 };

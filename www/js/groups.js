@@ -86,7 +86,7 @@ angular.module('groups.controller', [])
     $scope.openNewGroupModal = function () {
         $scope.modal.show();
     };
-
+/*
 	$scope.postNewGroup = function () {
 		console.log("answer: "+$scope.newgroup);
 		if(($scope.newgroup.Name==null)||($scope.newgroup.Name=="")){
@@ -119,8 +119,54 @@ angular.module('groups.controller', [])
 			});
 	
 	}
+	};*/
+	
+	$scope.postNewGroup = function () {
+		var LocationString=$scope.newgroup.Location;
+		var lat =0;
+		var lng=0;
+				
+		console.log("New: "+$scope.newgroup);
+		if(($scope.newgroup.Name==null)||($scope.newgroup.Name=="")){
+		//console.log("Mensaje vacio no se postea");
+		$window.alert("Debes escribir el nombre del grupo!");
+		}else{
+		   var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({"address": $scope.newgroup.Location }, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
+				$scope.Loc = results[0].geometry.location,
+					lat = $scope.Loc.lat(),
+					lng = $scope.Loc.lng();
+					console.log("Location translated "+lat+","+lng);
+	
+			   $http({
+			     method: 'POST',
+			     url: URL+'groups',
+			     data: {
+					_id:window.localStorage.token,
+					Info:$scope.newgroup.Info,
+					Name:$scope.newgroup.Name,
+					Level:$scope.newgroup.Level,
+					Location: {
+								Lng: lng,
+								Ltd: lat
+							  	}
+					},
+					headers: {'Content-Type': 'application/json'}
+				}).success(function (data) {
+					console.log(data);
+					$scope.loadGroups();
+					$scope.newgroup.Info="";
+					$scope.newgroup.Name="";
+					$scope.newgroup.Level="";
+					$scope.newgroup.Location="";
+					$scope.modal.hide();
+				}).error(function (data) {
+					console.log('Error:' + data);});
+		   }			
+		})
+	  }
 	};
-
 
     $scope.closeModal = function () {
         $scope.modal.hide();

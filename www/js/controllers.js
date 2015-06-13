@@ -218,65 +218,41 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
 /**
  * A google map / GPS controller.
  */
-MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
-	function($scope,$http, $route, $window,$ionicPlatform, $ionicLoading, $location) {
+MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal) {
 
-			//$location.url('/map/home');
-	//	$ionicPlatform.ready(function() {
+		//$location.url('/map/home');
+	    //$ionicPlatform.ready(function() {
 		//$scope.$on({reload: true});
 		//$state($state.current, {}, {reload: true});
 		$scope.races = {};
 		var races, poly, map, markers;
-		// init gps array
+	    var geocoder;
 		$scope.whoiswhere = [];
-		$scope.basel = {lat: 41.3868765, lon: 2.1700207};
-		// geo-coding
-		$scope.search = "";
-		var infowindow;
-		var currentMarkers;
-		var callbackName = 'InitMapCb';
-		/* $scope.$on( "$ionicView.enter", function( scopes, states ) {
-			google.maps.event.trigger( map, 'resize' );
-		});*/
-		//$ionicPlatform.ready(function()  {
-			//$ionicLoading.ready(function() {
-		var directionsDisplay;
-		var directionsService = new google.maps.DirectionsService();
-		var inticor, start, end ;
+	 	$scope.basel = {lat: 41.3868765, lon: 2.1700207};
 
 		function initialize() {
+		//	geocoder = new google.maps.Geocoder();
+
 			var mapOptions = {
-				zoom: 13,
+				streetViewControl:true,
 				center: new google.maps.LatLng(47.55, 7.59),
-				mapTypeId: google.maps.MapTypeId.ROADMAP,
-				panControl: true,
-				zoomControl: true,
-				mapTypeControl: true,
-				scaleControl: false,
-				refresh: true,
-				streetViewControl: true,
-				navigationControl: true,
-				disableDefaultUI: true,
-				overviewMapControl: true,
-				addressControlOptions: {
-					position: google.maps.ControlPosition.BOTTOM_CENTER
-				}
-
+				zoom: 18,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-
 
 		/*	directionsDisplay = new google.maps.DirectionsRenderer();
 			var inticor= new google.maps.LatLng("Your Lat Long here");
-			map = new google.maps.Map(document.getElementById('map-canvas'),
-				mapOptions);
+			;
 			directionsDisplay.setMap(map);
 			calcRoute();
 			*/
+			var map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
 			// Add a listener for the click event
-			google.maps.event.addListener(map, 'click', addLatLng);
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
+
 		// Add a listener for the click event+
 /*
 		function calcRoute() {
@@ -298,7 +274,10 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 			});
 		}
 		*/
-
+		$scope.info = function (){
+			alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
+		}
+/***********************************************************************************/
 		navigator.geolocation.getCurrentPosition(function (position) {
 			//$scope.position=position;
 			var c = position.coords;
@@ -316,24 +295,18 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 						"name": "You are here!",
 						"lat": $scope.basel.lat,
 						"lon": $scope.basel.lon
-
 					}
 				];
-
 				if (!$scope.$$phase) $scope.$apply("basel");
-
 			}
 		};
 
 		$scope.centerOnMe = function() {
-
 			alert("centrando");
-
 		}
 
 
 		$http.get(URL + 'race', $scope).success(function (data) {
-
 				races = data;
 				angular.forEach(races, function (race) {
 					$scope.objects = race;
@@ -347,8 +320,6 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 				//	localizarte(position);
 					console.log($scope.LocationIniLng);
 					console.log($scope.LocationIniLtd);
-
-
 				});
 			});
 
@@ -381,6 +352,7 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 						$scope.whoiswhere = [ //marker
 							{
 								"name": $scope.basel.name,
+								"level": $scope.basel.level,
 								"lat": $scope.basel.lat,
 								"lon": $scope.basel.lon
 
@@ -400,40 +372,134 @@ MapApp.controller('GpsCtrl', ['$scope','$http','$ionicPlatform', '$location',
 					console.log('Error: ' + data);
 				});
 		//});
+		/***********************************************************************************/
 
+		$ionicModal.fromTemplateUrl('create.html', {
+			scope: $scope,
+			animation: 'slide-in-up'
+		}).then(function (modal) {
+			$scope.modal = modal;
+		});
+
+		$scope.openModalRace = function () {
+			$scope.modal.show();
+		};
+
+
+	$scope.okRace = function () {
+			alert("creando carrera");
+			var lat =0;
+			var lng=0;
+			var datos;
+			var i;
+			datos  = {
+				Name: this.Name2,
+				Level: this.Level2,
+				Inicio: this.LocationIni,
+				Final: this.LocationFin,
+				Distancia: this.Distance,
+				Type: this.Type,
+				_id: token,
+				Fecha: this.Fecha,
+				Hora: this.Hora
+			};
+            codeAddress(datos);
+			//console.log(datos);
+			function codeAddress(datos) {
+				var geocoder = new google.maps.Geocoder();
+
+				var inicio = datos.Inicio;
+				var final = datos.Final;
+				//var locations = new Array("inicio", "final");
+				alert(inicio);
+				alert(final);
+				//for(var i = 0; i < locations.length; i++) {
+					geocoder.geocode({"address": inicio }, function (results, status) {
+						if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
+							var location = results[0].geometry.location,
+								lat = location.lat(),
+								lng = location.lng();
+							geocoder.geocode({"address": final}, function (results, status) {
+								if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
+
+									var location2 = results[0].geometry.location,
+										lat2 = location2.lat(),
+										lng2 = location2.lng();
+
+									alert("inicio " + location);
+									alert("final" + location2);
+
+									var datosfinales = {
+										Name: datos.Name,
+										Level: datos.Level,
+										LocationIni: {
+											Lng: lat,
+											Ltd: lng
+										},
+										LocationFin: {
+											Lng: lat2,
+											Ltd: lng2
+										},
+										Distancia: datos.Distancia,
+										Type: datos.Type,
+										_id: token,
+										Fecha: datos.Fecha,
+										Hora: datos.Hora
+									};
+									console.log(datosfinales);
+									console.log("despues lng " + datosfinales.LocationIni.Lng);
+									console.log("despues ltd " + datosfinales.LocationIni.Ltd);
+
+									//cuando tenemos ya bien los datos hacemos el post
+									$http.post('race/', datosfinales)
+										.success(function (data) {
+											//datosfinales.push(data);
+											alert("acabas de crear carrera");
+										window.location.href('/map/home');
+										//$scope.modal.hide();
+									}).error(function (data) {
+										console.log(datosfinales);
+										console.log('Error: ' + data);
+									});
+
+
+								}
+							});
+						}
+					});
+
+			}
+
+		};
+
+});
+
+// formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
+MapApp.filter('lat', function () {
+	return function (input, decimals) {
+		if (!decimals) decimals = 0;
+		input = input * 1;
+		var ns = input > 0 ? "N" : "S";
+		input = Math.abs(input);
+		var deg = Math.floor(input);
+		var min = Math.floor((input - deg) * 60);
+		var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
+		return deg + "°" + min + "'" + sec + '"' + ns;
 	}
-
-]);
-
-/********************************************************************************
- // formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
- MapApp.filter('lat', function () {
-    return function (input, decimals) {
-        if (!decimals) decimals = 0;
-        input = input * 1;
-        var ns = input > 0 ? "N" : "S";
-        input = Math.abs(input);
-        var deg = Math.floor(input);
-        var min = Math.floor((input - deg) * 60);
-        var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-        return deg + "°" + min + "'" + sec + '"' + ns;
-    }
 });
- // formats a number as a longitude (e.g. -80.02... => "80°1'24"W")
- MapApp.filter('lon', function () {
-    return function (input, decimals) {
-        if (!decimals) decimals = 0;
-        input = input * 1;
-        var ew = input > 0 ? "E" : "W";
-        input = Math.abs(input);
-        var deg = Math.floor(input);
-        var min = Math.floor((input - deg) * 60);
-        var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-        return deg + "°" + min + "'" + sec + '"' + ew;
-    }
+// formats a number as a longitude (e.g. -80.02... => "80°1'24"W")
+MapApp.filter('lon', function () {
+	return function (input, decimals) {
+		if (!decimals) decimals = 0;
+		input = input * 1;
+		var ew = input > 0 ? "E" : "W";
+		input = Math.abs(input);
+		var deg = Math.floor(input);
+		var min = Math.floor((input - deg) * 60);
+		var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
+		return deg + "°" + min + "'" + sec + '"' + ew;
+	}
 });
- ****************************************************************************/
-
 /**
  * Handle Google Maps API V3+
  */
@@ -488,7 +554,8 @@ MapApp.directive("appMap", function ($window) {
 				console.log("map: start loading js gmaps");
 				var script = $window.document.createElement('script');
 				script.type = 'text/javascript';
-				script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBhqvXyPtM34PhEzbv90sLahqSwQa1cH1A&sensor=true&callback=InitMapCb';
+				script.src = 'https://maps.googleapis.com/maps/api/js?v=3';
+				// https://maps.googleapis.com/maps/api/js?v=3
 				//clave google para luego: AIzaSyBhqvXyPtM34PhEzbv90sLahqSwQa1cH1A
 				$window.document.body.appendChild(script);
 			}
@@ -496,20 +563,10 @@ MapApp.directive("appMap", function ($window) {
 			function createMap() {
 				console.log("map: create map start");
 				var mapOptions = {
-					zoom: 17,
+					streetViewControl:true,
 					center: new google.maps.LatLng(47.55, 7.59),
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					panControl: true,
-					zoomControl: true,
-					mapTypeControl: true,
-					scaleControl: false,
-					streetViewControl: true,
-					navigationControl: true,
-					disableDefaultUI: true,
-					overviewMapControl: true,
-					addressControlOptions: {
-						position: google.maps.ControlPosition.BOTTOM_CENTER
-					}
+					zoom: 18,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
 				};
 				if (!(map instanceof google.maps.Map)) {
 					console.log("map: create map now as not already available ");
@@ -541,7 +598,7 @@ MapApp.directive("appMap", function ($window) {
 				infowindow.setContent(contentString);
 				infowindow.setPosition(pin.position);
 				infowindow.open(map);
-				google.maps.event.addListener(infowindow, 'closeclick', function() {
+				google.maps.event.addListener(infowindow, 'closeclick', function() { //cierras marker
 					//console.log("map: info windows close listener triggered ");
 					infowindow.close();
 				});
@@ -574,7 +631,7 @@ MapApp.directive("appMap", function ($window) {
 							title: m.name,
 							//animation: google.maps.Animation.DROP,
 							//animation: google.maps.Animation.BOUNCE,
-							icon: '/img/marker.png'
+							icon: 'http://putopoetayonqui.files.wordpress.com/2010/03/icono-running-mini-36x361.png'
 						});
 						//console.log("map: make marker for " + m.name);
 						google.maps.event.addListener(mm, 'click', markerCb(mm, m, loc));

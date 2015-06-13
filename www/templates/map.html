@@ -1,37 +1,155 @@
-<ion-view view-title="Races Map">
+<ion-view title="Races Map">
     <ion-content class="has-header padding">
-    
-        <div id="map_canvas" >
-        <app-map style="height:475px;margin:12px;box-shadow:0 5px 25px black;"
-                 id="map-canvas"
-                 center="basel"
-                 markers="whoiswhere">
-        </app-map>
-            </div>
+        <div id="map_canvas">
+            <app-map style="height:475px;margin:12px;box-shadow:0 5px 25px black;"
+                     id="map-canvas"
+                     center="basel"
+                     markers="whoiswhere">
+            </app-map>
+        </div>
+        <style>
+            .controls {
+                margin-top: 16px;
+                border: 1px solid transparent;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                height: 32px;
+                outline: none;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
 
+            #pac-input {
+                background-color: #fff;
+                font-family: Roboto;
+                font-size: 15px;
+                font-weight: 300;
+                margin-left: 12px;
+                padding: 0 11px 0 13px;
+                text-overflow: ellipsis;
+                width: 400px;
+            }
+
+            #pac-input:focus {
+                border-color: #4d90fe;
+            }
+
+            .pac-container {
+                font-family: Roboto;
+            }
+
+            #type-selector {
+                color: #fff;
+                background-color: #4d90fe;
+                padding: 5px 11px 0px 11px;
+            }
+
+            #type-selector label {
+                font-family: Roboto;
+                font-size: 13px;
+                font-weight: 300;
+            }
+
+        </style>
+        <script id="create.html" type="text/ng-template">
+            <ion-modal-view>
+                <ion-header-bar class="bar-calm">
+                    <h1 class="title">New RACE</h1>
+                    <div class="buttons">
+                        <button class="button button-clear" ng-click="modal.hide()">Cancel</button>
+                    </div>
+                </ion-header-bar>
+                <ion-content class="padding"> <br>
+                    <form name="raceForm">
+                        <div class="list">
+                            <label class="item item-input">
+                                <span class="input-label">Name</span>
+                                <input type="text" placeholder="Nombre de tu carrera" ng-minlength="1" ng-maxlength="100" name="Name" required ng-model="Name2">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Level</span>
+                                <!--input type="text" placeholder="Beginner/Medium/High" ng-minlength="1" ng-maxlength="100" name="Level" required ng-model="Level2"-->
+                                <select ng-model="Level2" ng-init="Level2='Beginner'">
+                                    <option required selected value="Beginner">Beginner</option>
+                                    <option required value="Medium">Medium</option>
+                                    <option required value="High">High</option>
+                                </select>
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Inicio</span>
+                                <input type="text" placeholder="Punto de origen de tu carrera"  ng-minlength="1" ng-maxlength="100" name="LocationIni" required ng-model="LocationIni">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Final</span>
+                                <input type="text" placeholder="Punto de Final de tu carrera" googleplace ng-minlength="1" ng-maxlength="100" name="LocationFin" required ng-model="LocationFin">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Distancia</span>
+                                <input type="text" placeholder="Aproximadamente que piensas correr.." ng-minlength="1" ng-maxlength="100" name="Distance" required ng-model="Distance">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Type</span>
+                                <input type="text" placeholder="Entrenamiento, prueba.." ng-minlength="1" ng-maxlength="100" name="Type" required ng-model="Type">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Date</span>
+                                <input type="Date" placeholder="fecha." ng-minlength="1" ng-maxlength="100" name="Fecha" required ng-model="Fecha">
+                            </label>
+                            <label class="item item-input">
+                                <span class="input-label">Hora</span>
+                                <input type="time" placeholder="hora..." ng-minlength="1" ng-maxlength="100" name="Hora" required ng-model="Hora">
+                            </label>
+                        </div>
+                        <div class="padding">
+                            <button class="button button-block button-balanced" ng-disabled="raceForm.$invalid" ng-click="okRace()" >Create Race</button>
+                        </div>
+                    </form>
+                </ion-content>
+            </ion-modal-view>
+        </script>
         <div class="row">
-            <div class="col">
+            <div class="col"><br>
                 <div class="item item-input-inset">
                     <label class="item-input-wrapper" >
-                        <input type="text" placeholder="Races" ng-model="searchText">
+                        <i class="icon ion-search placeholder-icon"></i>
+                        <input type="text" placeholder="Race name..." ng-model="searchText">
                     </label>
-                    <button class="button button-small">Create New Race</button>
+
+                    <button class="button icon-left ion-speedometer" ng-click="openModalRace()">Create New Race</button>
                 </div>
                 <div class="list card">
+                    <div class="bar bar-header bar-calm">
+                        <h1 class="title">List of races</h1>
+                    </div><br><br>
                     <ion-item ng-repeat= "r in races | filter:searchText">
                         <a class="item item-thumbnail-left">
-                              <img ng-src="/img/race.jpg">
-                              <h2>{{ r.Name }}</h2>
-                              <h4>{{ r.Distance }}km - Level: {{r.Level}}</h4>
-                              <h4>Starts at: {{ r.Date }}</h4>
-                              <h4>Start place: {{ r.LocationIni }}</h4>
+                            <img ng-src="/img/race.jpg">
+                            <h2>{{ r.Name }}</h2>
+                            <h4>{{ r.Distance }}km - Level: {{r.Level}}</h4>
+                            <h4>Starts at: {{ r.Date }}</h4>
+                            <h4>Start place: {{ r.LocationIni }}</h4>
                         </a>
                 </div>
+
+
             </div>
             <div class="col">
-                <p>Others...</p>
-                <p>Not avaiable yet :(</p>
-            </div>
+
+                <div class="list card">
+                    <div class="bar bar-header bar-balanced">
+                        <h1 class="title">Pending races</h1>
+                    </div><br><br>
+                    <ion-item ng-repeat= "r in races | filter:searchText">
+                        <a class="item item-thumbnail-left">
+                            <img ng-src="/img/race.jpg">
+                            <h2>{{ r.Name }}</h2>
+                            <h4>{{ r.Distance }}km - Level: {{r.Level}}</h4>
+                            <h4>Starts at: {{ r.Date }}</h4>
+                            <h4>Start place: {{ r.LocationIni }}</h4>
+                        </a>
+                </div>
+
+        </div>
         </div>
     </ion-content>
 </ion-view>

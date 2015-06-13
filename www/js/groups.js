@@ -4,6 +4,18 @@ angular.module('groups.controller', [])
     $scope.owngroups = [];
     $scope.othergroups = [];
     $scope.newgroup = [];
+    $scope.gid = [];
+    $scope.user = [];
+
+	 $scope.getUser = function () {
+        $http.get(URL + 'user/' + $window.localStorage['token'])
+            .success(function (data) {
+                $scope.user = data;
+            })
+            .error(function (data) {
+                console.log('Error:' + data);
+            });
+    }; 
 
     $scope.loadGroups=function () {
 
@@ -108,25 +120,50 @@ angular.module('groups.controller', [])
 	};
 
 
-    $scope.closeNewGroupModal = function () {
+    $scope.closeModal = function () {
         $scope.modal.hide();
+        $scope.modal2.hide();
     };
     
-    $scope.deleteGroup = function (gid) {
+
+  
+  	$ionicModal.fromTemplateUrl('deleteGroup.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal2) {
+        $scope.modal2 = modal2;
+    });
+
+    $scope.openDeleteGroupModal = function (gid,admin) {
+    	  $scope.gid=gid;
+    	  $scope.getUser();
+    	  console.log("gid "+ gid +" Admin "+admin + " Username "+$scope.user.Username)
+    	  if (admin==$scope.user.Username) {
+           $scope.modal2.show(); 	  
+    	  }else {
+			$window.alert("No puedes elimirar un grupo si no eres su Administrador!")		  
+		  }
+    };
+    
+    $scope.deleteGroup = function () {
+    	
 		$http({
 			method: 'DELETE',
-			url: URL+'groups/'+gid,
+			url: URL+'groups/'+$scope.gid,
 			data: {_id:window.localStorage.token},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				//window.location.href = '#/map/races/';
 				console.log(data);
 				$scope.loadGroups();
+				$scope.modal2.hide();
 			})
 			.error(function (data) {
 				$window.alert(data);
 				console.log('Error:' + data);
 			});
 	}; 
-    
+	
+	
+	
 })

@@ -56,7 +56,7 @@ angular.module('messages.controller', [])
 				$scope.loadMessage();
 			})
 			.error(function (data) {
-				$window.alert(data);
+				$window.alert("No estas autorizado a eliminar mensajes de otros.");
 				console.log('Error:' + data);
 			});
 	};

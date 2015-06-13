@@ -41,7 +41,7 @@
                             <i class="icon ion-log-out"></i>
                             Dejar el Grupo
                         </a>
-                        <a class="tab-item" ng-click="deleteGroup(g._id)" style="color: red;">
+                        <a class="tab-item" ng-click="openDeleteGroupModal(g._id, g.Admin)" style="color: red;">
                             <i class="icon ion-trash-b"></i>
                             Borrar Grupo
                         </a>
@@ -88,7 +88,7 @@
         <ion-modal-view style="height: 500px">
            <ion-header-bar class="bar bar-header bar-dark">
               <h1 class="title">Create New Group</h1>
-              <button class="button button-clear" ng-click="closeNewGroupModal()"><i class="icon ion-close"></i></button>
+              <button class="button button-clear" ng-click="closeModal()"><i class="icon ion-close"></i></button>
            </ion-header-bar>
            
            <ion-content >
@@ -126,3 +126,25 @@
          </ion-content>
        </ion-modal-view>
     </script>
+    
+    <script id="deleteGroup.html" type="text/ng-template">
+                <ion-modal-view>
+                    <ion-header-bar class="bar bar-header bar-dark">
+                        <h1 class="title">Deleting Group</h1>
+
+                    </ion-header-bar>
+                    <ion-content align="center">
+                        <div class="row">
+                        	<div class="col-5"></div>
+                        	<div class="col">
+                        		<h1> <i class="icon ion-alert-circled " style="color:red;"></i> Are you sure?</h1>
+                        		<p></p>
+                        		<h3>All messages wil be deleted and this action can't be undone.</h3>
+                        		                        		<br>
+                        		<button class="button button-block button-balanced" ng-click="closeModal()">No</button>
+                        		<button class="button button-block button-outline button-assertive" ng-click="deleteGroup()">Yes</button>
+									</div>
+                        	<div class="col-5"></div>									
+                    </ion-content>
+                </ion-modal-view>
+     </script>

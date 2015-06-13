@@ -395,10 +395,10 @@ module.exports = function (app) {
                 if (!user) {
                     res.send(404, 'User Not Found');
                 } else {
-                    if (user.Role === 'admin') res.send(200);
-                    else res.send(400,'Bad User');
-                        }
+                    if (user.Role === 'admin') res.send(200, 'admin');
+                    else res.send(200, 'registered');
                 }
+            }
         });
     };
 

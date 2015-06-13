@@ -1,15 +1,20 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $http, $window) {
-    //var URL='https://10.189.25.180:3030/';
+    //var URL='https://192.168.1.139:3030/';
     var URL='https://localhost:3030/';
     var rol = 1;
     $http.get(URL+'user/admin/'+$window.localStorage['token']).success(function(data) {
-        rol=2;
+        if (data=='admin'){
+            rol=2;
+        } else {
+            rol = 1;
+        }
     })
     .error(function(data) {
-        rol=1;
+        console.log('Error: ' + data);
     });
+
     $scope.setRol = function(setTab){
         rol = setTab;
     };

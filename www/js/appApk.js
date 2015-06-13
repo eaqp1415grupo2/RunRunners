@@ -6,7 +6,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
                 'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
-                'groups.controller', 'races.controller', 'userlist.controller', 'backoffice.controller'])
+                'groups.controller', 'races.controller', 'userlist.controller', 'backoffice.controller',
+                'messages.controller'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

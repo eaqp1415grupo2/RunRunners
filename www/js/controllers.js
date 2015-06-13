@@ -1,40 +1,28 @@
 'use strict';
 var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','userlist.controller','messages.controller']);
-var token={};
-var object={};
 
 var URL='https://localhost:3030/';
 //var URL='https://192.168.1.136:3030/';
-var groupid='555db5a80a9995be10000009';
 /**
  * Routing table including associated controllers.
  */
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 		.state('menu', 			{url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
-		.state('login', 			{url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
-		
-		.state('menu.home', 		{url: '/home', views: {'menuContent': 				{templateUrl: '/templates/map.html', controller: 'GpsCtrl'}}})
+		.state('login', 		{url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
+		.state('menu.home', 	{url: '/home', views: {'menuContent': 				{templateUrl: '/templates/map.html', controller: 'GpsCtrl'}}})
 		.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'}}})
 		.state('menu.races', 	{url: '/races', views: {'menuContent': 			{templateUrl: '/templates/races.html', controller: 'RacesCtrl'}}})
 		.state('menu.group', 	{url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
-		.state('menu.race', 		{url: "/race/:parentId",views: {'menuContent':  {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
+		.state('menu.race', 	{url: "/race/:parentId",views: {'menuContent':  {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.userlist', {url: "/users/:parent/:parentId",views: {'menuContent': {templateUrl: "templates/userlist.html",controller: 'UserListCtrl'}}})
 		.state('menu.profile', 	{url: '/profile', views: {'menuContent': 			{templateUrl: '/templates/profile3.html', controller: 'profileCtrl'}}})
 		.state('menu.logout', 	{url: '/logout', views: {'menuContent': 			{templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
 		.state('menu.stats', 	{url: '/stats', views: {'menuContent': 			{templateUrl: '/templates/stats.html', controller: 'statsCtrl'}}});
 
 	// if none of the above states are matched, use this as the fallback
-	console.log(window.localStorage.token);
-    console.log(window.location.search);
-	if((window.localStorage.token === undefined || window.localStorage.token == 'null' || window.localStorage.token == "") && window.location.search== ""){
-		$urlRouterProvider.otherwise('/login');
-	} else {
-        if(window.location.search != ""){
-			window.localStorage.token = window.location.search.substring(1);
-		}
-        $urlRouterProvider.otherwise('/map/home');
-	}
+	$urlRouterProvider.otherwise('/login');
+
 }]);
 
 /**
@@ -66,7 +54,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 			.error(function (data) {
 				console.log('Error:' + data);
 			});
-	}
+	};
 
 	//Carreras Pendientes
 	$scope.getracespending = function () {
@@ -101,7 +89,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 		 $scope.graph.labels = ['', done.Race];
 		 $scope.graph.series = ['Distance', 'Velocity', 'Time'];
 
-	 }
+	 };
 
 
 
@@ -109,38 +97,31 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 	//Devuelve las carreras Hechas
 	$scope.getracesdone = function () {
 
-
-
-
 		$http.get(URL+'user/done/' + window.localStorage.token)
-			.success(function (data) {
-				var hechas = data;
+		.success(function (data) {
+			var hechas = data;
+			angular.forEach(hechas, function(hecha) {
+				console.log(hecha);
+				console.log(hecha.Race);
+				$scope.dones.push(hecha);
+				$scope.graph.data = [
+					[0, hecha.Data.Distance ],
+					[0, hecha.Data.Distance/hecha.Data.Time],
+					[0, hecha.Data.Time]
+				];
+				$scope.graph.labels = ['', hecha.Race];
+				$scope.graph.series = ['Distance', 'Velocity', 'Time'];
+			//	angular.forEach(hecha, function(carreras){
 
-				angular.forEach(hechas, function(hecha) {
+			//		$scope.dones.push(carreras);
+			//		console.log(carreras);
+			//	})
 
-console.log(hecha);
-					console.log(hecha.Race);
-$scope.dones.push(hecha);
-					$scope.graph.data = [
-
-
-						[0, hecha.Data.Distance ]
-						,[0, hecha.Data.Distance/hecha.Data.Time], [0, hecha.Data.Time]
-
-					];
-					$scope.graph.labels = ['', hecha.Race];
-					$scope.graph.series = ['Distance', 'Velocity', 'Time'];
-				//	angular.forEach(hecha, function(carreras){
-
-				//		$scope.dones.push(carreras);
-				//		console.log(carreras);
-				//	})
-
-				});
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
 			});
+		})
+		.error(function (data) {
+			console.log('Error:' + data);
+		});
 	};
 });
 
@@ -232,6 +213,14 @@ MapApp.controller('MainCtrl', ['$scope', function($scope) {
 
 MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', function ($http, $scope,$location, $window){
 	$scope.users = [];
+	console.log($window.localStorage['token']);
+	if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
+		console.log("Entra");
+		if($window.location.search != ""){
+			$window.localStorage['token'] = $window.location.search.substring(1);
+		}
+		$window.location.href='#/map/home';
+	}
 
 	$scope.addUser = function(){
 		$scope.users.push(this.user);
@@ -242,9 +231,8 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', functi
 			data: this.user,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
-			console.log("data: "+data);
-			$window.localStorage.token=data;
-			$location.url('/map/home');
+			$window.localStorage['token']=data;
+			$window.location.href='#/map/home';
 		}).error(function(data) {
 			$window.alert("ERROR - POST");
 		});
@@ -252,7 +240,6 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', functi
 	};
 
 	$scope.loginUser = function(){
-		console.log(this.user);
 		var urlauth = URL+"user/auth";
 		$http({
 			method: 'POST',
@@ -260,9 +247,8 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', functi
 			data: this.user,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
-			console.log("token: "+data);
-			$window.localStorage.token=data;
-			$location.url('/map/home');
+			$window.localStorage['token']=data;
+			$window.location.href='#/map/home';
 		}).error(function(data) {
 			$window.alert("ERROR - AUTH");
 		});
@@ -291,8 +277,7 @@ MapApp.controller('tabCtrl', function(){
  */
 MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	alert("Vas a salir");
-	token = null;
-	window.localStorage.token = null;
+	window.localStorage.token = "";
 	window.location.href = '/';
 }]);
 
@@ -566,32 +551,6 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 
 });
 
-// formats a number as a latitude (e.g. 40.46... => "40°27'44"N")
-MapApp.filter('lat', function () {
-	return function (input, decimals) {
-		if (!decimals) decimals = 0;
-		input = input * 1;
-		var ns = input > 0 ? "N" : "S";
-		input = Math.abs(input);
-		var deg = Math.floor(input);
-		var min = Math.floor((input - deg) * 60);
-		var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-		return deg + "°" + min + "'" + sec + '"' + ns;
-	}
-});
-// formats a number as a longitude (e.g. -80.02... => "80°1'24"W")
-MapApp.filter('lon', function () {
-	return function (input, decimals) {
-		if (!decimals) decimals = 0;
-		input = input * 1;
-		var ew = input > 0 ? "E" : "W";
-		input = Math.abs(input);
-		var deg = Math.floor(input);
-		var min = Math.floor((input - deg) * 60);
-		var sec = ((input - deg - min / 60) * 3600).toFixed(decimals);
-		return deg + "°" + min + "'" + sec + '"' + ew;
-	}
-});
 /**
  * Handle Google Maps API V3+
  */

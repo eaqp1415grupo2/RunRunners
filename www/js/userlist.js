@@ -1,6 +1,8 @@
 angular.module('userlist.controller', [])
 
 .controller('UserListCtrl', function ($scope, $http, $stateParams , $window, $ionicLoading, $log) {
+    //var URL='https://192.168.1.139:3030/';
+    var URL='https://localhost:3030/';
     $scope.users = [];
     $scope.parent = [];
     console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);

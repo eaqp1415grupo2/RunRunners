@@ -1,10 +1,9 @@
 angular.module('login.controller', [])
 
 .controller('loginCtrl', function ($http, $scope,$location, $window){
-  //var URL='https://10.189.25.180:3030/';
+  //var URL='https://192.168.1.139:3030/';
   var URL='https://localhost:3030/';
   $scope.users = [];
-  console.log($window.localStorage['token']);
   if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
     console.log("Entra");
     if($window.location.search != ""){
@@ -48,7 +47,7 @@ angular.module('login.controller', [])
 
   $scope.loginFacebook = function(){
     console.log('facebook');
-    $window.location.href='/auth/facebook';
+    $window.location.assign(URL+'auth/facebook')
   };
 })
 

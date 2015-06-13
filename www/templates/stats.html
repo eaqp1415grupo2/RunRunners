@@ -36,10 +36,10 @@
                     <ion-item ng-repeat= "done in dones">
                         <a class="item item-thumbnail-left">
                             <img ng-src="/img/race.jpg">
-                            <h2>{{ done.Name }}</h2>
-                            <h4>{{ done.Distance }}km - Level: {{done.Level}}</h4>
-                            <h4>{{done.Type}}</h4>
-                            <button class="button button-small button-energized" ng-click="grafica(done)"> Stadistics</button>
+                            <h2>{{ done.Race }}</h2>
+                            <h4>{{ done.Data.Distance }}km - Time: {{done.Data.Time}}</h4>
+
+                            <button class="button button-small button-energized"  ng-click="grafica(done)"> Stadistics</button>
                         </a>
                 </div>
             </div>

@@ -91,33 +91,16 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 
 	//Gráfica de una Carrera Hecha
 	 $scope.grafica = function (done) {
-		 $http.get(URL + 'race/' + done._id)
-			 .success(function (data) {
-				 console.log(data);
-				 console.log(data.Distance);
-				 console.log(data.Time);
-
-				 var distacia = data.Distance;
-				 var nombre = data.Name;
-				 console.log(distacia);
-				 console.log(distacia)
-				 console.log(nombre);
-				 var time = data.Time;
-				 $scope.graph.data = [
+		 $scope.graph.data = [
 
 
-					 [0 ,distacia]
-,[14, 14]
+			 [0, done.Data.Distance]
+			 , [0, done.Data.Distance/done.Data.Time], [0, done.Data.Time]
 
-				 ];
-				 $scope.graph.labels = ['', nombre];
-				 $scope.graph.series = ['Distance', 'Velocity'];
+		 ];
+		 $scope.graph.labels = ['', done.Race];
+		 $scope.graph.series = ['Distance', 'Velocity', 'Time'];
 
-
-			 })
-			 .error(function (data) {
-				 console.log('Error:' + data);
-			 });
 	 }
 
 
@@ -135,12 +118,23 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 
 				angular.forEach(hechas, function(hecha) {
 
+console.log(hecha);
+					console.log(hecha.Race);
+$scope.dones.push(hecha);
+					$scope.graph.data = [
 
 
-					angular.forEach(hecha, function(carreras){
+						[0, hecha.Data.Distance ]
+						,[0, hecha.Data.Distance/hecha.Data.Time], [0, hecha.Data.Time]
 
-						$scope.dones.push(carreras);
-					})
+					];
+					$scope.graph.labels = ['', hecha.Race];
+					$scope.graph.series = ['Distance', 'Velocity', 'Time'];
+				//	angular.forEach(hecha, function(carreras){
+
+				//		$scope.dones.push(carreras);
+				//		console.log(carreras);
+				//	})
 
 				});
 			})

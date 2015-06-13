@@ -1,5 +1,5 @@
 'use strict';
-var MapApp = angular.module('MapApp', ['ionic', 'races.controller','groups.controller','userlist.controller','messages.controller']);
+var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','userlist.controller','messages.controller']);
 var token={};
 var object={};
 
@@ -42,11 +42,169 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
  */
 MapApp.controller('statsCtrl',function($scope, $http) {
 
-	$scope.getraces = function () {
-		$http.get(URL+'user/' + window.localStorage.token +'/races')
+	$scope.pendings = [{}];
+	$scope.dones = [{}];
+
+
+
+	$scope.graph = {};
+	/*
+	 var hoy = new Date();
+	 var dia = hoy.getDate();
+	 var mes = hoy.getMonth();
+	 var año = hoy.getFullYear();
+	 var fecha_actual = String(dia + "/" + mes + "/" + año);
+	 //fecha_actual = new Date(fecha_actual);
+	 var ayer = String(dia-1 + "/" + mes + "/" +año);
+	 //console.log(ayer);
+	 var antesayer =  String(dia-2 + "/" + mes + "/" +año);
+	 var tresayer =  String(dia-3 + "/" + mes + "/" +año);
+	 var cuatroayer = String(dia-4 + "/" + mes + "/" +año);
+	 var cincoayer =  String(dia-5 + "/" + mes + "/" +año);
+	 var seisayer =  String(dia-6 + "/" + mes + "/" +año);
+	 */
+	/*
+	 $scope.graph.data = [
+	 //Awake
+	 [16, 15, 20, 12, 16, 12, 8],
+
+	 ];
+	 $scope.graph.labels = [seisayer, cincoayer, cuatroayer, tresayer, antesayer, ayer, fecha_actual];
+
+	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	$scope.getstats = function () {
+
+		$http.get(URL + 'user/stats/' + window.localStorage.token)
 			.success(function (data) {
-				$scope.users = data;
+				$scope.globals = data;
+
+
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	}
+
+
+
+
+
+
+
+	$scope.getracespending = function () {
+		$http.get(URL+'user/pending/' + window.localStorage.token)
+			.success(function (data) {
+				var pendientes = data;
+//console.log(pendientes);
+				angular.forEach(pendientes, function(pendiente) {
+
+					//console.log(pendiente);
+
+					angular.forEach(pendiente, function(carreras){
+						console.log(carreras.Name);
+						$scope.pendings.push(carreras);
+
+						$scope.graph.data = [
+
+							[42 ,5],
+
+						];
+						$scope.graph.labels = ['a', 'b'];
+
+					})
+
+				});
+
+				//console.log(data);
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+	};
+
+	/*
+
+	 $scope.grafica = function (pending) {
+	 console.log(pending);
+	 console.log(pending._id);
+	 console.log(URL+'race/'+pending._id);
+	 $http.get(URL+'race/' + pending._id)
+
+	 $scope.getraces = function () {
+	 $http.get(URL+'user/' + window.localStorage.token +'/races')
+
+	 .success(function (data) {
+	 console.log(data);
+	 console.log(data.Distance);
+	 var distacia = data.Distance;
+	 var nombre = data.Name;
+	 $scope.graph.data = [
+
+	 [distacia],
+
+	 ];
+	 $scope.graph.labels = [nombre];
+
+
+	 })
+	 .error(function (data) {
+	 console.log('Error:' + data);
+	 });
+	 };
+
+
+	 */
+	$scope.getracesdone = function () {
+
+		$http.get(URL+'user/validate/' + window.localStorage.token)
+			.success(function (data) {
 				console.log(data);
+			})
+			.error(function (data) {
+				console.log('Error:' + data);
+			});
+
+
+		$http.get(URL+'user/race/' + window.localStorage.token)
+			.success(function (data) {
+				var hechas = data;
+//console.log(pendientes);
+				angular.forEach(hechas, function(hecha) {
+
+					//console.log(pendiente);
+
+					angular.forEach(hecha, function(carreras){
+						console.log(carreras.Name);
+						$scope.dones.push(carreras);
+					})
+
+				});
 			})
 			.error(function (data) {
 				console.log('Error:' + data);

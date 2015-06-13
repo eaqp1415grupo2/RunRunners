@@ -200,28 +200,6 @@ angularRoutingApp.controller('userController', ['$http', '$scope', 'ngDialog', '
         $scope.currentPage = 1;
     }, true);
 }]);
-/*
-angularRoutingApp.controller('headerController', function($scope, ngDialog){
-    $scope.clickToOpenSignUp = function () {
-        ngDialog.open({
-            template: 'addUser'
-        });
-    };
-});
-
-angularRoutingApp.config(['ngDialogProvider', function (ngDialogProvider) {
-    ngDialogProvider.setDefaults({
-        className: 'ngdialog-theme-default',
-        plain: false,
-        showClose: true,
-        closeByDocument: true,
-        closeByEscape: true,
-        appendTo: false,
-        preCloseCallback: function () {
-            console.log('default pre-close callback');
-        }
-    });
-}]);*/
 
 angularRoutingApp.controller('raceController', ['$http', '$scope', 'ngDialog', 'filterFilter', function($http, $scope, ngDialog,filterFilter) {
     $scope.newObject = {};
@@ -235,9 +213,10 @@ angularRoutingApp.controller('raceController', ['$http', '$scope', 'ngDialog', '
         $scope.objects = data;
         console.log(data);
     })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+    .error(function(data) {
+        console.log('Error: ' + data);
+    });
+
     $scope.deleteObject = function(newObject) {
         console.log(newObject);
         $http.delete('https://localhost:3030/race/' + $scope.newObject._id)
@@ -287,8 +266,6 @@ angularRoutingApp.controller('raceController', ['$http', '$scope', 'ngDialog', '
                 window.alert('Error:' + data);
             });
     };
-
-
 
     $scope.selectObject = function(object) {
         $http.get('https://localhost:3030/race/name/'+ object.Name).success(function(data) {

@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
     //var URL='https://10.189.25.180:3030/';
     var URL='https://localhost:3030/';
     var rol = 1;
-    $http.get(URL+'/user/admin/'+$window.localStorage['token']).success(function(data) {
+    $http.get(URL+'user/admin/'+$window.localStorage['token']).success(function(data) {
         rol=2;
     })
     .error(function(data) {

@@ -1,6 +1,8 @@
 angular.module('groups.controller', [])
 
 .controller('GroupsCtrl', function ($scope, $http, $ionicModal, $window, $ionicLoading, $log) {
+    //var URL='https://10.189.25.180:3030/';
+    var URL='https://localhost:3030/';
     $scope.owngroups = [];
     $scope.othergroups = [];
     $scope.newgroup = [];
@@ -162,8 +164,5 @@ angular.module('groups.controller', [])
 				$window.alert(data);
 				console.log('Error:' + data);
 			});
-	}; 
-	
-	
-	
-})
+	};
+});

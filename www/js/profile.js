@@ -5,6 +5,7 @@ angular.module('profile.controller', [])
     var URL='https://localhost:3030/';
     $scope.updateUser = {};
     console.log($window.localStorage['token']);
+    
     $http.get(URL + 'user/' + $window.localStorage['token'])
     .success(function (data) {
         $scope.users = data;
@@ -22,6 +23,7 @@ angular.module('profile.controller', [])
                 console.log('Error:' + data);
             });
     };
+    
     $ionicModal.fromTemplateUrl('update.html', {
         scope: $scope,
         animation: 'slide-in-up'

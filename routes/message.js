@@ -196,7 +196,8 @@ module.exports = function (app) {
                 res.send(404, 'User Not Found');
             } else {
                 Message.findOne({_id: req.params.id, 'Answers._id': answer}, function (err, message) {
-                    if (!message) {
+                    console.log("Error? "+req.params.id+">>"+answer);
+		    if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
                         Race.findOne({_id: message.ParentID}, function (err, race) {

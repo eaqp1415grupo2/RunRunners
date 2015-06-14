@@ -1,10 +1,9 @@
 angular.module('maps.controller', [])
 
 .controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
-    //var URL='https://192.168.1.139:3030/';
-    var URL='https://147.83.7.203:3030/';
-    //var URL='https://10.189.28.37:3030/';
-    //var URL='https://localhost:3030/';
+
+//No pongais las IP aqui las coge de controlles.js o de appApk.js asi no hay que cambiarlo en ningun .js 
+
     //$location.url('/map/home');
     //$ionicPlatform.ready(function() {
     //$scope.$on({reload: true});

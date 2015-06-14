@@ -1,8 +1,11 @@
 'use strict';
 var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','userlist.controller','messages.controller']);
 
-var URL='https://localhost:3030/';
-//var URL='https://192.168.1.136:3030/';
+    //var URL='https://192.168.1.139:3030/';
+    //var URL='https://147.83.7.203:3030/';
+    //var URL='https://10.189.28.37:3030/';
+    var URL='https://localhost:3030/';
+
 /**
  * Routing table including associated controllers.
  */

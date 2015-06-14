@@ -1,10 +1,9 @@
 angular.module('userlist.controller', [])
 
 .controller('UserListCtrl', function ($scope, $http, $stateParams , $window, $ionicLoading, $log) {
-    //var URL='https://192.168.1.139:3030/';
-    var URL='https://147.83.7.203:3030/';
-    //var URL='https://10.189.28.37:3030/';
-    //var URL='https://localhost:3030/';
+	
+//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
+
     $scope.users = [];
     $scope.parent = [];
     console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);

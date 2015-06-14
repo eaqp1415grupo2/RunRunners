@@ -339,9 +339,14 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 	$scope.info32 = function () {
-		$location.url('/map/home');
+		window.location.reload(true);
 	}
+	document.addEventListener("backbutton", onBackKeyDown, false);
 
+	function onBackKeyDown() {
+		// Handle the back button
+
+	}
 	var map = new google.maps.Map(document.getElementById('map-canvas'),
 		mapOptions);
 	var directionsDisplay = new google.maps.DirectionsRenderer({'map': map});
@@ -585,7 +590,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 									//datosfinales.push(data);
 									alert("acabas de crear carrera");
 									console.log(datosfinales);
-									$location.url('/map/races');
+									window.location.reload(true);
 									$scope.modal.hide();
 								}).error(function (data) {
 									console.log(datosfinales);
@@ -688,7 +693,8 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 				var tiempo = (response.routes[0].legs[0].duration.value)/60; //en seconde
 				console.log("km  " + distance);
 				console.log("tiempo  " + tiempo);
-				google.maps.event.addDomListener(map, 'click', initialize);
+				//google.maps.event.addDomListener(map, 'click', initialize);
+
 				//directionsDisplay = new google.maps.DirectionsRenderer({map:map});
 				//directionsDisplay.setMap(map);
 
@@ -854,3 +860,4 @@ MapApp.directive("appMap", function ($window) {
 		} // end of link:
 	}; // end of return
 
+});

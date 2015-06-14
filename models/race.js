@@ -15,6 +15,10 @@ var Users = new Schema({
     Username: {type:String}
 });
 
+var Groups = new Schema({
+    _id: {type: Schema.ObjectId, ref: 'Group'},
+    Group: {type: String}
+})
 var raceSchema = new Schema({
     Name: {type: String},
     Level: {type: String, enum: ['Beginner', 'Initiated', 'Professional']},
@@ -33,6 +37,7 @@ var raceSchema = new Schema({
     Tags: [Tags],
     Admin: {type: String, ref: 'User.Username'},
     Users: [Users],
+    Groups: [Groups],
     Tour: [Tour]
 }, {versionKey: false});
 

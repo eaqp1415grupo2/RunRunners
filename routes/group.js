@@ -150,6 +150,15 @@ module.exports = function (app) {
                                             group.Races.push(racepush);
                                             group.save(function (err) {
                                                 if (err) res.send(500, 'Mongo Error');
+                                                else console.log("Updated");
+                                            });
+                                           var grouppush = ({
+                                                _id: group._id,
+                                                Group: group.Name
+                                            });
+                                            race.Groups.push(grouppush);
+                                            race.save(function(err){
+                                                if (err) res.send(500, 'Mongo Error');
                                                 else res.send(200, group);
                                             });
                                         }
@@ -205,6 +214,19 @@ module.exports = function (app) {
                             User.findOne(users[i]._id, function (err, usuario) {
                                 usuario.Groups.pull(group._id);
                                 usuario.save(function (err) {
+                                    if (!err) {
+                                        console.log('User Removed');
+                                    } else {
+                                        console.log('ERROR: ' + err);
+                                        res.send(500, "Mongo Error");
+                                    }
+                                });
+                            });
+                        }
+                        for (var i = 0; i < group.Races.length; i++) {
+                            Race.findOne(group.Races[i]._id, function (err, race) {
+                                race.Groups.pull(group._id);
+                                race.save(function (err) {
                                     if (!err) {
                                         console.log('User Removed');
                                     } else {

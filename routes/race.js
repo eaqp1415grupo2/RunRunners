@@ -161,7 +161,6 @@ module.exports = function (app) {
                             if(req.body.Type != null)  race.Type = req.body.Type;
                             if(req.body.Tags != null) race.Tags = req.body.Tags;
                             if(req.body.Tour != null) race.Tour = req.body.Tour;
-
                             race.save(function (err) {
                                 if (!err) {
                                     console.log('Updated');
@@ -373,6 +372,19 @@ module.exports = function (app) {
         });
     };
 
+    findNoGroupRace = function (req, res) {
+        Race.find({'Groups._id': {$nin: [req.params.id]}}, function (err, data) {
+            if (err)res.send(500, 'Mongo Error');
+            else res.send(data);
+        });
+    };
+
+    findGroupRace = function (req, res) {
+        Race.find({'Groups._id': req.params.id}, function (err, data) {
+            if (err)res.send(500, 'Mongo Error');
+            else res.send(data);
+        });
+    };
 
 //Link routes and functions
     app.get('/race', findAllRaces);
@@ -381,6 +393,8 @@ module.exports = function (app) {
     app.get('/race/:id', findRaceByID);
     app.get('/race/no/:id', findNoUserRace);
     app.get('/race/user/:id', findUserRace);
+    app.get('/race/group/:id', findGroupRace);
+    app.get('/race/no/group/:id', findNoGroupRace);
     app.post('/race', createRace);
     app.put('/race/:id', updateRace);
     app.delete('/race/:id', deleteRace);

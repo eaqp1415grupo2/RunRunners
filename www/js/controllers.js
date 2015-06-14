@@ -1,10 +1,14 @@
 'use strict';
-var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','userlist.controller','messages.controller']);
+
+var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','groupraces.controller','userlist.controller','messages.controller']);
+
+
+var URL='https://localhost:3030/';
+
 
     //var URL='https://192.168.1.139:3030/';
     //var URL='https://147.83.7.203:3030/';
     //var URL='https://10.189.28.37:3030/';
-    var URL='https://localhost:3030/';
 
 /**
  * Routing table including associated controllers.
@@ -19,6 +23,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.group', 	{url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.race', 	{url: "/race/:parentId",views: {'menuContent':  {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.userlist', {url: "/users/:parent/:parentId",views: {'menuContent': {templateUrl: "templates/userlist.html",controller: 'UserListCtrl'}}})
+		.state('menu.racegroup', {url: "/groupraces/:id",views: {'menuContent': {templateUrl: "templates/groupraces.html",controller: 'groupRacesCtrl'}}})
 		.state('menu.profile', 	{url: '/profile', views: {'menuContent': 			{templateUrl: '/templates/profile3.html', controller: 'profileCtrl'}}})
 		.state('menu.logout', 	{url: '/logout', views: {'menuContent': 			{templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
 		.state('menu.stats', 	{url: '/stats', views: {'menuContent': 			{templateUrl: '/templates/stats.html', controller: 'statsCtrl'}}});

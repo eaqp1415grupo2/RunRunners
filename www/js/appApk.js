@@ -1,5 +1,4 @@
 // Ionic Starter App
-
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
@@ -12,9 +11,10 @@ var URL='https://localhost:3030/';
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
                 'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
                 'groups.controller', 'races.controller', 'userlist.controller',
-                'messages.controller'])
+                'messages.controller','groupraces.controller'])
 
 .run(function($ionicPlatform) {
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -104,6 +104,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
+    .state('map.groupraces', {
+      url: "/groupraces/:id",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/groupraces.html",
+          controller: 'groupRacesCtrl'
+        }
+      }
+    })
     .state('map.userlist', {
       url: "/users/:parent/:parentId",
       views: {
@@ -117,7 +126,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       url: '/crono',
       views: {
         'menuContent': {
-          templateUrl: "templates/crono.html"
+          templateUrl: "templates/crono.html",
+          controller:"cronoCtrl"
         }
       }
     })
@@ -129,16 +139,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
           controller: 'logoutCtrl'
         }
       }
-    })
-    /*.state('map.backoffice', {
-      url: '/backoffice',
-      views: {
-        'menuContent': {
-          templateUrl: "templates/backoffice.html",
-          controller: 'backofficeCtrl'
-        }
-      }
-    })*/;
+    });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 });

@@ -59,7 +59,7 @@ angular.module('maps.controller', [])
      }
      */
     $scope.info = function (){
-        alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
+        alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botï¿½n derecho")
     };
     /***********************************************************************************/
     navigator.geolocation.getCurrentPosition(function (position) {

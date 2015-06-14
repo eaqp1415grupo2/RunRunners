@@ -172,6 +172,7 @@ angular.module('groups.controller', [])
     $scope.closeModal = function () {
         $scope.modal.hide();
         $scope.modal2.hide();
+        $scope.modal3.hide();
     };
     
 
@@ -212,4 +213,76 @@ angular.module('groups.controller', [])
 				console.log('Error:' + data);
 			});
 	};
+
+   //NewGroupModal
+	$ionicModal.fromTemplateUrl('EditGroupModal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal3) {
+        $scope.modal3 = modal3;
+    });
+
+    $scope.openEditGroupModal = function () {
+        $scope.modal3.show();
+    };
+    
+    $scope.openEditGroupModal = function (gid,admin) {
+    	  $scope.gid=gid;
+    	  $scope.getUser();
+    	  console.log("gid "+ gid +" Admin "+admin + " Username "+$scope.user.Username)
+    	  if (admin==$scope.user.Username) {
+           $scope.modal3.show(); 	  
+    	  }else {
+			$window.alert("No puedes elimirar un grupo si no eres su Administrador!")		  
+		  }
+    };
+	
+	$scope.editGroup = function () {
+		//var LocationString=$scope.editgroup.Location;
+		var lat =0;
+		var lng=0;
+				
+		console.log("Edit: "+$scope.editgroup.Name);
+		if(($scope.editgroup.Name==null)||($scope.editgroup.Name=="")){
+		//console.log("Mensaje vacio no se postea");
+		$window.alert("Debes escribir el nombre del grupo!");
+		}else{
+		   var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({"address": $scope.editgroup.Location }, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
+				$scope.Loc = results[0].geometry.location,
+					lat = $scope.Loc.lat(),
+					lng = $scope.Loc.lng();
+					console.log("Location translated "+lat+","+lng);
+	
+			   $http({
+			     method: 'PUT',
+			     url: URL+'groups/'+$scope.gid,
+			     data: {
+					_id:window.localStorage.token,
+					Info:$scope.editgroup.Info,
+					Name:$scope.editgroup.Name,
+					Level:$scope.editgroup.Level,
+					Location: {
+								Lng: lng,
+								Ltd: lat
+							  	}
+					},
+					headers: {'Content-Type': 'application/json'}
+				}).success(function (data) {
+					console.log(data);
+					$scope.loadGroups();
+					$scope.editgroup.Info="";
+					$scope.editgroup.Name="";
+					$scope.editgroup.Level="";
+					$scope.editgroup.Location="";
+					$scope.modal3.hide();
+				}).error(function (data) {
+					console.log('Error:' + data);});
+		   }			
+		})
+	  }
+	};	
+	
+	
 });

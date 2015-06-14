@@ -91,7 +91,10 @@ module.exports = function (app) {
                 Group.findOne({_id: req.params.id, 'Users._id': id.iss}, function (err, users) {
                     User.findOne({_id: id.iss}, function (err, user) {
                         if (!err && users == null && user != null) {
-                            var grouppush = ({_id: user._id, Username: user.Username});
+                            var grouppush = ({
+                                _id: user._id,
+                                Username: user.Username
+                            });
                             group.Users.push(grouppush);
                             group.save(function (err) {
                                 if (!err) {
@@ -131,12 +134,11 @@ module.exports = function (app) {
                     if (!group) {
                         res.send(404, 'Group Not Found');
                     } else {
-                        Group.findOne({_id: req.params.id, 'Races._id': req.body.raceid}, function (err, groups) {
-                            if (!groups) {
-                                if (group.Admin != user.Username) {
-                                    res.send(400, 'Bad User');
-                                }
-                                else {
+                        if (group.Admin != user.Username) {
+                            res.send(400, 'Bad User');
+                        } else {
+                            Group.findOne({_id: req.params.id, 'Races._id': req.body.raceid}, function (err, groups) {
+                                if (!groups) {
                                     Race.findOne({_id: req.body.raceid}, function (err, race) {
                                         if (!race) res.send(404, 'Race Not Found');
                                         else {
@@ -152,29 +154,37 @@ module.exports = function (app) {
                                             });
                                         }
                                     });
+                                } else {
+                                    res.send(400, 'Race Already in');
                                 }
-                            } else {
-                                res.send(400, 'Race Already in');
-                            }
-                        });
+                            });
+                        }
                     }
                 });
             }
-
         });
     };
 
     updateGroup = function (req, res) {
-        Group.findOne({"Name": req.params.name}, function (err, group) {
-            if (req.body.Name != null) group.Name = req.body.Name;
-            if (req.body.Info != null) group.Info = req.body.Info;
-            if (req.body.Level != null) group.Level = req.body.Level;
-            if (req.body.Location != null) group.Location = req.body.Location;
-            group.save(function (error) {
-                if (error) console.log("Error: " + error);
-                else console.log("Group Updated");
-            });
-            res.send(group);
+        var id = jwt.decode(req.body._id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user) res.send(404, 'User Not Found');
+            else {
+                Group.findOne({"Name": req.params.name}, function (err, group) {
+                    if (group.Admin != user.Username) res.send(400, 'Bad User');
+                    else {
+                        if (req.body.Name != null) group.Name = req.body.Name;
+                        if (req.body.Info != null) group.Info = req.body.Info;
+                        if (req.body.Level != null) group.Level = req.body.Level;
+                        if (req.body.Location != null) group.Location = req.body.Location;
+                        group.save(function (error) {
+                            if (error) console.log("Error: " + error);
+                            else res.send(group);
+                        });
+                    }
+                });
+
+            }
         });
     };
 
@@ -213,7 +223,6 @@ module.exports = function (app) {
                                 res.send(500, "Mongo Error");
                             }
                         });
-
                     }
                 })
             }
@@ -356,7 +365,7 @@ module.exports = function (app) {
     app.get('/groups/:id', findGroupById);
     app.get('/groups/no/:id', findNoUserGroup);
     app.get('/groups/user/:id', findUserGroup);
-    app.get('/groups/:id/race',findGroupRaces);
+    app.get('/groups/:id/race', findGroupRaces);
     app.post('/groups', createGroup);
     app.post('/groups/:id/user', addUser);
     app.post('/groups/:id/race', addRace);

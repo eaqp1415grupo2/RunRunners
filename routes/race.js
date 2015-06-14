@@ -144,28 +144,35 @@ module.exports = function (app) {
 
 //PUT - Update a register already exists
     updateRace = function (req, res) {
-        Race.findById(req.params.id, function (err, race) {
-            if (!race) {
-                res.send(404, "Race not found");
-            } else {
-                race.Name = req.body.Name;
-                race.Level = req.body.Level;
-                race.LocationIni = req.body.LocationIni;
-                race.Distance = req.body.Distance;
-                race.Type = req.body.Type;
-                race.Tags = req.body.Tags;
-                race.Users = req.body.Users;
-                race.Messages = req.body.Messages;
-                race.Tour = req.body.Tour;
-
-                race.save(function (err) {
-                    if (!err) {
-                        console.log('Updated');
+        var id = jwt.decode(req.body._id, Secret);
+        User.findOne({_id: id.iss}, function (err, user) {
+            if (!user)res.send(404, 'User Not Found');
+            else {
+                Race.findById(req.params.id, function (err, race) {
+                    if (!race) {
+                        res.send(404, "Race not found");
                     } else {
-                        res.send(500, "Mongo Error");
-                        console.log('ERROR: ' + err);
+                        if(race.Admin != user.Username) res.send(400,'Bad User');
+                        else {
+                           if(req.body.Name != null) race.Name = req.body.Name;
+                            if(req.body.Level != null)race.Level = req.body.Level;
+                            if(req.body.LocationIni != null) race.LocationIni = req.body.LocationIni;
+                            if(req.body.Distance != null) race.Distance = req.body.Distance;
+                            if(req.body.Type != null)  race.Type = req.body.Type;
+                            if(req.body.Tags != null) race.Tags = req.body.Tags;
+                            if(req.body.Tour != null) race.Tour = req.body.Tour;
+
+                            race.save(function (err) {
+                                if (!err) {
+                                    console.log('Updated');
+                                } else {
+                                    res.send(500, "Mongo Error");
+                                    console.log('ERROR: ' + err);
+                                }
+                                res.send(200, race);
+                            });
+                        }
                     }
-                    res.send(200, race);
                 });
             }
         });

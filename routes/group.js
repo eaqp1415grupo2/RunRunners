@@ -170,7 +170,7 @@ module.exports = function (app) {
         User.findOne({_id: id.iss}, function (err, user) {
             if (!user) res.send(404, 'User Not Found');
             else {
-                Group.findOne({"Name": req.params.name}, function (err, group) {
+                Group.findOne({_id: req.params.id}, function (err, group) {
                     if (group.Admin != user.Username) res.send(400, 'Bad User');
                     else {
                         if (req.body.Name != null) group.Name = req.body.Name;

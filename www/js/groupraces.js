@@ -13,7 +13,8 @@ angular.module('groupraces.controller', [])
 	 $scope.getUser = function () {
         $http.get(URL + 'user/' + $window.localStorage['token'])
             .success(function (data) {
-                $scope.user = data;
+            	                console.log('User:' + data.Username);
+                $scope.user = data.Username;
             })
             .error(function (data) {
                 console.log('Error:' + data);
@@ -23,7 +24,9 @@ angular.module('groupraces.controller', [])
     $scope.getGroupAdmin = function () {
         $http.get(URL + 'groups/' + $stateParams.id)
             .success(function (data) {
-                $scope.Admin = data;
+            	                console.log('Admin:' + data.Admin);
+                $scope.Admin = data.Admin;
+                
             })
             .error(function (data) {
                 console.log('Error:' + data);
@@ -34,9 +37,11 @@ angular.module('groupraces.controller', [])
 
 		$scope.getUser();
 		$scope.getGroupAdmin();
-			console.log($scope.user+' '+$scope.Admin);
-		if ($scope.user=$scope.Admin) {
 		
+		
+			
+		if ($scope.user==$scope.Admin) {
+			//window.alert($scope.user+' >>>> '+$scope.Admin);
 		 $scope.loadGroupRaces();
 		 $scope.loadNoGroupRaces();
 

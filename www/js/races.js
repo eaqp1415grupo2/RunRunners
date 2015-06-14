@@ -2,6 +2,8 @@ angular.module('races.controller', [])
 
 .controller('RacesCtrl', function($scope, $ionicModal, $http, $window, $stateParams, $ionicLoading, $log) {
     //var URL='https://192.168.1.139:3030/';
+    //var URL='https://147.83.7.203:3030/';
+    //var URL='https://10.189.28.37:3030/';
     var URL='https://localhost:3030/';
     $scope.ownraces = [];
     $scope.otherraces = [];

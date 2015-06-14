@@ -1,8 +1,10 @@
 angular.module('messages.controller', [])
 
 .controller("MessagesCtrl", function ($scope, $stateParams, $http, $ionicLoading, $ionicModal,$log, $window) {
-	//var URL='https://192.168.1.139:3030/';
-	var URL='https://localhost:3030/';
+	//var URL ='https://192.168.1.139:3030/';
+	//var URL ='https://147.83.7.203:3030/';
+	//var URL ='https://10.189.28.37:3030/';
+	var URL ='https://localhost:3030/';
 	$scope.messages = [];
     console.log('sP: '+$stateParams.parentId);
     $scope.postMessage=[];
@@ -73,7 +75,7 @@ angular.module('messages.controller', [])
 
     $scope.openAnswerModal = function (mid) {
     	  $scope.mid=mid;
-    	  console.log("mid "+ mid)
+    	  console.log("mid "+ mid);
         $scope.modal.show();
     };
 

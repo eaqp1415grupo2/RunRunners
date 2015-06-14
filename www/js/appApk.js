@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
                 'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
-                'groups.controller', 'races.controller', 'userlist.controller', 'backoffice.controller',
+                'groups.controller', 'races.controller', 'userlist.controller',
                 'messages.controller'])
 
 .run(function($ionicPlatform) {
@@ -125,7 +125,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         }
       }
     })
-    .state('map.backoffice', {
+    /*.state('map.backoffice', {
       url: '/backoffice',
       views: {
         'menuContent': {
@@ -133,7 +133,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
           controller: 'backofficeCtrl'
         }
       }
-    });
+    })*/;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 });

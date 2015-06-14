@@ -30,6 +30,7 @@ angular.module('login.controller', [])
 
   $scope.loginUser = function(){
     var urlauth = URL+"user/auth";
+    console.log(urlauth);
     $http({
       method: 'POST',
       url: urlauth,
@@ -39,6 +40,7 @@ angular.module('login.controller', [])
       $window.localStorage['token']=data;
       $window.location.href='#/map/home';
     }).error(function(data) {
+      console.log(data);
       $window.alert("ERROR - AUTH");
     });
     this.user = {};

@@ -296,258 +296,411 @@ MapApp.controller('cronoCtrl', ['$scope', function($scope) {
  */
 MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
 
-		//$location.url('/map/home');
-	    //$ionicPlatform.ready(function() {
-		//$scope.$on({reload: true});
-		//$state($state.current, {}, {reload: true});
-		$scope.races = {};
-		var races, poly, map, markers;
-	    var geocoder;
-		$scope.whoiswhere = [];
-	 	$scope.basel = {lat: 41.3868765, lon: 2.1700207};
-
-		function initialize() {
+	//$location.url('/map/home');
+	//$ionicPlatform.ready(function() {
+	//$scope.$on({reload: true});
+	//$state($state.current, {}, {reload: true});
+	var directionsService = new google.maps.DirectionsService();
+	$scope.races = {};
+	var races, poly, map, markers;
+	var geocoder;
+	$scope.whoiswhere = [];
+	$scope.basel = {lat: 41.3868765, lon: 2.1700207};
+	//var directionsDisplay = new google.maps.DirectionsRenderer({'map': map}
+	function initialize() {
+		alert("hola");
 		//	geocoder = new google.maps.Geocoder();
 
-			var mapOptions = {
-				streetViewControl:true,
-				center: new google.maps.LatLng(47.55, 7.59),
-				zoom: 18,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
-			};
-
+		var mapOptions = {
+			streetViewControl: true,
+			center: new google.maps.LatLng(47.55, 7.59),
+			zoom: 18,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
 		/*	directionsDisplay = new google.maps.DirectionsRenderer();
-			var inticor= new google.maps.LatLng("Your Lat Long here");
-			;
-			directionsDisplay.setMap(map);
-			calcRoute();
-			*/
-			var map = new google.maps.Map(document.getElementById('map-canvas'),
-				mapOptions);
-			// Add a listener for the click event
-		}
+		 var inticor= new google.maps.LatLng("Your Lat Long here");
+		 ;
+		 directionsDisplay.setMap(map);
+		 calcRoute();
+		 */
 
-		google.maps.event.addDomListener(window, 'load', initialize);
+		var map = new google.maps.Map(document.getElementById('map-canvas2'),
+			mapOptions);
 
-		// Add a listener for the click event+
-/*
-		function calcRoute() {
-			alert("calculando ruta...");
-			var start = (41.386608, 2.16402);
-			var end = (41.3886325,2.168484);
-			var request = {
-				origin:start,
-				destination:end,
-				travelMode: google.maps.TravelMode.WALKING
-			};
-			directionsService.route(request, function(response, status) {
-				if (status == google.maps.DirectionsStatus.OK) {
-					alert("in");
-					directionsDisplay = new google.maps.DirectionsRenderer();
-					directionsDisplay.setMap(map);
-					directionsDisplay.setDirections(response);
+		// Add a listener for the click event
+	}
+
+
+
+	var mapOptions = {
+		streetViewControl: true,
+		center: new google.maps.LatLng(47.55, 7.59),
+		zoom: 18,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+	$scope.info32 = function () {
+		$location.url('/map/home');
+	}
+
+	var map = new google.maps.Map(document.getElementById('map-canvas'),
+		mapOptions);
+	var directionsDisplay = new google.maps.DirectionsRenderer({'map': map});
+	//google.maps.event.addDomListener(window, 'load', carrera);
+	// Add a listener for the click event+
+	/*
+	 function calcRoute() {
+	 alert("calculando ruta...");
+	 var start = (41.386608, 2.16402);
+	 var end = (41.3886325,2.168484);
+	 var request = {
+	 origin:start,
+	 destination:end,
+	 travelMode: google.maps.TravelMode.WALKING
+	 };
+	 directionsService.route(request, function(response, status) {
+	 if (status == google.maps.DirectionsStatus.OK) {
+	 alert("in");
+	 directionsDisplay = new google.maps.DirectionsRenderer();
+	 directionsDisplay.setMap(map);
+	 directionsDisplay.setDirections(response);
+	 }
+	 });
+	 }
+	 */
+	$scope.info = function () {
+		alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
+	}
+	/***********************************************************************************/
+	navigator.geolocation.getCurrentPosition(function (position) {
+		//$scope.position=position;
+		var c = position.coords;
+		$scope.gotoLocation(c.latitude, c.longitude);
+		$scope.$apply();
+	}, function (e) {
+		console.log("Error retrieving position " + e.code + " " + e.message)
+	});
+	$scope.gotoLocation = function (lat, lon) {
+		if ($scope.lat != lat || $scope.lon != lon) {
+			$scope.basel = {lat: lat, lon: lon};
+			// to be user as markers, objects should have "lat", "lon", and "name" properties
+			$scope.whoiswhere = [ //marker
+				{
+					"name": "You are here!",
+					"lat": $scope.basel.lat,
+					"lon": $scope.basel.lon
 				}
-			});
+			];
+			if (!$scope.$$phase) $scope.$apply("basel");
 		}
-		*/
-		$scope.info = function (){
-			alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
-		}
-/***********************************************************************************/
+	};
+
+
+
+	$http.get(URL + 'race/user/' + window.localStorage.token, $scope).success(function (data) {
+		races = data;
+		angular.forEach(races, function (race) {
+			$scope.objects = race;
+			$scope.Name = race.Name;
+			$scope.Distance = race.Distance;
+			$scope.Level = race.Level;
+			$scope.Date = race.Date;
+			$scope.LocationIniLng = race.LocationIni.Lng;
+			$scope.LocationIniLtd = race.LocationIni.Ltd;
+			goto(race);
+			//	localizarte(position);
+			console.log($scope.LocationIniLng);
+			console.log($scope.LocationIniLtd);
+		});
+	});
+
+	function goto(race) {
 		navigator.geolocation.getCurrentPosition(function (position) {
-			//$scope.position=position;
-			var c = position.coords;
-			$scope.gotoLocation(c.latitude, c.longitude);
+			//	for (var i = 0; i < 2; i++) {
+
+			var lat = race.LocationIni.Lng;
+			var lon = race.LocationIni.Ltd;
+			var name = race.Name;
+			var lat2 = race.LocationFin.Lng;
+			var lon2 = race.LocationFin.Ltd;
+
+			gotolocation2(lat, lon, name);
+			//gotolocation3(lat2, lon2, name);
 			$scope.$apply();
+			//}
 		}, function (e) {
 			console.log("Error retrieving position " + e.code + " " + e.message)
 		});
-		$scope.gotoLocation = function (lat, lon) {
+		function gotolocation2(lat, lon, name) {
+			//alert (lat);
+			//alert(lon);
+			//alert(name);
 			if ($scope.lat != lat || $scope.lon != lon) {
-				$scope.basel = {lat: lat, lon: lon};
+				$scope.basel = {
+
+					lat: lat,
+					lon: lon,
+					name: name
+				};
+
 				// to be user as markers, objects should have "lat", "lon", and "name" properties
 				$scope.whoiswhere = [ //marker
 					{
-						"name": "You are here!",
+						"name": $scope.basel.name + "(INI)",
 						"lat": $scope.basel.lat,
 						"lon": $scope.basel.lon
+
 					}
+
 				];
 				if (!$scope.$$phase) $scope.$apply("basel");
 			}
-		};
-
-		$scope.centerOnMe = function() {
-			alert("centrando");
 		}
 
+		/*
+		 function gotolocation3(lat2, lon2, name) {
+		 //alert (lat);
+		 //alert(lon);
+		 //alert(name);
+		 if ($scope.lat != lat2 || $scope.lon != lon2) {
+		 $scope.basel = {
 
-		$http.get(URL + 'race', $scope).success(function (data) {
-				races = data;
-				angular.forEach(races, function (race) {
-					$scope.objects = race;
-					$scope.Name = race.Name;
-					$scope.Distance = race.Distance;
-					$scope.Level = race.Level;
-					$scope.Date = race.Date;
-					$scope.LocationIniLng = race.LocationIni.Lng;
-					$scope.LocationIniLtd = race.LocationIni.Ltd;
-					goto(race);
-				//	localizarte(position);
-					console.log($scope.LocationIniLng);
-					console.log($scope.LocationIniLtd);
-				});
+		 lat: lat2,
+		 lon: lon2,
+		 name: name
+		 };
+
+		 // to be user as markers, objects should have "lat", "lon", and "name" properties
+		 $scope.whoiswhere = [ //marker
+		 {
+		 "name": $scope.basel.name +  "  (FIN)",
+		 "lat": $scope.basel.lat,
+		 "lon": $scope.basel.lon
+
+		 }
+
+		 ];
+		 if (!$scope.$$phase) $scope.$apply("basel");
+		 }
+
+		 }*/
+
+	}
+
+
+	//Obtener carreras html
+	//Obtener carreras html
+
+		$http.get(URL + 'race/user/' + window.localStorage.token).success(function (data) {
+			$scope.races = data;
+			console.log(data);
+		})
+			.error(function (data) {
+				console.log('Error: ' + data);
 			});
 
-			function goto(race) {
-				navigator.geolocation.getCurrentPosition(function (position) {
-					//	for (var i = 0; i < 2; i++) {
+	//});
+	/***********************************************************************************/
 
-					var lat = race.LocationIni.Lng;
-					var lon = race.LocationIni.Ltd;
-					var name = race.Name;
-					gotolocation2(lat, lon, name);
-					$scope.$apply();
-					//}
-				}, function (e) {
-					console.log("Error retrieving position " + e.code + " " + e.message)
-				});
-				function gotolocation2(lat, lon, name) {
-					//alert (lat);
-					//alert(lon);
-					//alert(name);
-					if ($scope.lat != lat || $scope.lon != lon) {
-						$scope.basel = {
+	$ionicModal.fromTemplateUrl('create.html', {
+		scope: $scope,
+		animation: 'slide-in-up'
+	}).then(function (modal) {
+		$scope.modal = modal;
+	});
 
-							lat: lat,
-							lon: lon,
-							name: name
-						};
-
-						// to be user as markers, objects should have "lat", "lon", and "name" properties
-						$scope.whoiswhere = [ //marker
-							{
-								"name": $scope.basel.name,
-								"level": $scope.basel.level,
-								"lat": $scope.basel.lat,
-								"lon": $scope.basel.lon
-
-							}
-
-						];
-						if (!$scope.$$phase) $scope.$apply("basel");
-					}
-				}
-			}
-			//Obtener carreras html
-			$http.get(URL + 'race').success(function (data) {
-				$scope.races = data;
-				console.log(data);
-			})
-				.error(function (data) {
-					console.log('Error: ' + data);
-				});
-		//});
-		/***********************************************************************************/
-
-		$ionicModal.fromTemplateUrl('create.html', {
-			scope: $scope,
-			animation: 'slide-in-up'
-		}).then(function (modal) {
-			$scope.modal = modal;
-		});
-
-		$scope.openModalRace = function () {
-			$scope.modal.show();
-		};
+	$scope.openModalRace = function () {
+		$scope.modal.show();
+	};
 
 
 	$scope.okRace = function () {
-			alert("creando carrera");
-			var lat =0;
-			var lng=0;
-			var datos;
-			var i;
-			datos  = {
-				Name: this.Name2,
-				Level: this.Level2,
-				Inicio: this.LocationIni,
-				Final: this.LocationFin,
-				Distancia: this.Distance2,
-				Type: this.Type,
-				_id: window.localStorage.token,
-				Fecha: this.Fecha,
-				Hora: this.Hora
-			};
-            codeAddress(datos);
-			//console.log(datos);
-			function codeAddress(datos) {
-				var geocoder = new google.maps.Geocoder();
+		alert("creando carrera");
+		var lat =0;
+		var lng=0;
+		var datos;
+		var i;
+		datos  = {
+			Name: this.Name2,
+			Level: this.Level2,
+			Inicio: this.LocationIni,
+			Final: this.LocationFin,
+			Type: this.Type,
+			_id: window.localStorage.token,
+			Fecha: this.Fecha,
+			Hora: this.Hora
+		};
+		codeAddress(datos);
+		//console.log(datos);
+		function codeAddress(datos) {
+			var geocoder = new google.maps.Geocoder();
 
-				var inicio = datos.Inicio;
-				var final = datos.Final;
-				//var locations = new Array("inicio", "final");
-				alert(inicio);
-				alert(final);
-				//for(var i = 0; i < locations.length; i++) {
-					geocoder.geocode({"address": inicio }, function (results, status) {
+			var inicio = datos.Inicio;
+			var final = datos.Final;
+			//var locations = new Array("inicio", "final");
+			alert(inicio);
+			alert(final);
+			//for(var i = 0; i < locations.length; i++) {
+			geocoder.geocode({"address": inicio }, function (results, status) {
+				if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
+					var location = results[0].geometry.location,
+						lat = location.lat(),
+						lng = location.lng();
+					geocoder.geocode({"address": final}, function (results, status) {
 						if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
-							var location = results[0].geometry.location,
-								lat = location.lat(),
-								lng = location.lng();
-							geocoder.geocode({"address": final}, function (results, status) {
-								if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
 
-									var location2 = results[0].geometry.location,
-										lat2 = location2.lat(),
-										lng2 = location2.lng();
+							var location2 = results[0].geometry.location,
+								lat2 = location2.lat(),
+								lng2 = location2.lng();
 
-									alert("inicio " + location);
-									alert("final" + location2);
+							alert("inicio " + location);
+							alert("final" + location2);
+							var origen = new google.maps.LatLng(lat, lng);
+							var destino = new google.maps.LatLng(lat2, lng2);
+							var distancia = google.maps.geometry.spherical.computeDistanceBetween(origen, destino)/1000;
 
-									var datosfinales = {
-										Name: datos.Name,
-										Level: datos.Level,
-										LocationIni: {
-											Lng: lat,
-											Ltd: lng
-										},
-										LocationFin: {
-											Lng: lat2,
-											Ltd: lng2
-										},
-										Distance: datos.Distancia,
-										Type: datos.Type,
-										_id: datos._id,
-										Date: datos.Fecha,
-										Time: datos.Hora
-									};
+							var datosfinales = {
+								Name: datos.Name,
+								Level: datos.Level,
+								LocationIni: {
+									Lng: lat,
+									Ltd: lng
+								},
+								LocationFin: {
+									Lng: lat2,
+									Ltd: lng2
+								},
+								Distance: distancia.toFixed(2),
+								Type: datos.Type,
+								_id: datos._id,
+								Date: datos.Fecha,
+								Time: datos.Hora
+							};
+							console.log(datosfinales);
+							console.log("despues lng " + datosfinales.LocationIni.Lng);
+							console.log("despues ltd " + datosfinales.LocationIni.Ltd);
+
+							//cuando tenemos ya bien los datos hacemos el post
+							$http.post('race/', datosfinales)
+								.success(function (data) {
+									//datosfinales.push(data);
+									alert("acabas de crear carrera");
 									console.log(datosfinales);
-									console.log("despues lng " + datosfinales.LocationIni.Lng);
-									console.log("despues ltd " + datosfinales.LocationIni.Ltd);
-
-									//cuando tenemos ya bien los datos hacemos el post
-									$http.post('race/', datosfinales)
-										.success(function (data) {
-											//datosfinales.push(data);
-											alert("acabas de crear carrera");
-											console.log(datosfinales);
-											$location.url('/map/home');
-											$scope.modal.hide();
-									}).error(function (data) {
-										console.log(datosfinales);
-										console.log('Error: ' + datosfinales);
-									});
+									$location.url('/map/races');
+									$scope.modal.hide();
+								}).error(function (data) {
+									console.log(datosfinales);
+									console.log('Error: ' + datosfinales);
+								});
 
 
-								}
-							});
 						}
 					});
+				}
+			});
+
+		}
+
+	};
+	/*
+	$scope.Route= function(r) {
+		alert("in");
+
+
+
+
+			var directionsDisplay = new google.maps.DirectionsRenderer();
+			var directionsService = new google.maps.DirectionsService();
+
+
+			console.log($scope.map);
+			directionsDisplay.setMap($scope.map);
+
+			function calcRoute() {
+				var lat = r.LocationIni.Lng;
+				var lon = r.LocationIni.Ltd;
+				var lat2 = r.LocationFin.Lng;
+				var lon2 = r.LocationFin.Ltd;
+				var start = lat + "," + lon;
+				var end = lat2 + "," + lon2;
+
+
+				var request = {
+					origin: start,
+					destination: end,
+					optimizeWaypoints: true,
+					travelMode: google.maps.TravelMode.DRIVING
+				};
+
+				directionsService.route(request, function (response, status) {
+					if (status == google.maps.DirectionsStatus.OK) {
+						console.log(response);
+						directionsDisplay.setDirections(response);
+						console.log('enter!');
+					}
+				});
+
 
 			}
 
+			calcRoute();
+
+
+
+	}
+	*/
+	$scope.Route = function (r) {
+
+		alert("in");
+		var lat = r.LocationIni.Lng;
+		var lon = r.LocationIni.Ltd;
+		var lat2 = r.LocationFin.Lng;
+		var lon2 = r.LocationFin.Ltd;
+		var start = new google.maps.LatLng(lat, lon);
+		var end= new google.maps.LatLng(lat2, lon2);
+		console.log(r);
+		console.log(start);
+		console.log(end);
+	    var request = {
+			origin: start,
+			destination: end,
+			travelMode: google.maps.TravelMode.WALKING
 		};
+		directionsService.route(request, function (response, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+				console.log(response);
+
+				var mapOptions = {
+					streetViewControl:true,
+					center: new google.maps.LatLng(47.55, 7.59),
+					zoom: 18,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				};
+
+				var map = new google.maps.Map(document.getElementById('map-canvas'),
+					mapOptions);
+				// Add a listener for the click event
+
+
+				directionsDisplay.setDirections(response);
+				directionsDisplay.setMap(map);
+				var distance = (response.routes[0].legs[0].distance.value)/1000; //en metre
+				// Display the duration:
+				var tiempo = (response.routes[0].legs[0].duration.value)/60; //en seconde
+				console.log("km  " + distance);
+				console.log("tiempo  " + tiempo);
+				google.maps.event.addDomListener(map, 'click', initialize);
+				//directionsDisplay = new google.maps.DirectionsRenderer({map:map});
+				//directionsDisplay.setMap(map);
+
+			}
+			else {
+				alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+			}
+		});
+
+
+	}
+
 
 });
 
@@ -701,4 +854,3 @@ MapApp.directive("appMap", function ($window) {
 		} // end of link:
 	}; // end of return
 
-});

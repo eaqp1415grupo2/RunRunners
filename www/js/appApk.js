@@ -7,7 +7,7 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
                 'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
                 'groups.controller', 'races.controller', 'userlist.controller',
-                'messages.controller'])
+                'messages.controller','groupraces.controller'])
 
     //var URL='https://192.168.1.139:3030/';
     var URL='https://147.83.7.203:3030/';
@@ -101,6 +101,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         'menuContent': {
           templateUrl: "templates/messages.html",
           controller: 'MessagesCtrl'
+        }
+      }
+    })
+    .state('map.groupraces', {
+      url: "/groupraces/:id",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/groupraces.html",
+          controller: 'groupRacesCtrl'
         }
       }
     })

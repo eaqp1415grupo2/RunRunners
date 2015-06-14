@@ -49,7 +49,7 @@ angular.module('stats.controller', [])
             });
     };
 
-    //Gráfica de una Carrera Hecha
+    //Grï¿½fica de una Carrera Hecha
     $scope.grafica = function (done) {
         $scope.graph.data = [
 

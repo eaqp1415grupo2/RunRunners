@@ -1,7 +1,6 @@
 angular.module('groups.controller', [])
 
 .controller('GroupsCtrl', function ($scope, $http, $ionicModal, $window, $ionicLoading, $log) {
-
 //No pongais las IP aqui las coge de controlles.js o de appApk.js asi no hay que cambiarlo en races.js groups.js ni messages.js 
 
     $scope.owngroups = [];

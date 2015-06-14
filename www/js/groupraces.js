@@ -70,7 +70,7 @@ angular.module('groupraces.controller', [])
 			headers: {'Content-Type': 'application/json'}
 		}).success(function (data) {
 				//window.location.href = '#/map/races/';
-				console.log('Eliminado '+data);
+				console.log('Eliminado OK'+data);
 				$scope.loadGroupRaces();
 				$scope.loadNoGroupRaces();
 			})

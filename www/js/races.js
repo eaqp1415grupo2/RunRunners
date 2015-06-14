@@ -116,7 +116,7 @@ angular.module('races.controller', [])
     $scope.startRace = function (rid) {
 		$window.localStorage['startRace']=rid;
 		console.log("Starting Race: "+$window.localStorage['startRace']);
-		//Redireccion		
+		$window.location.href = '#/map/crono';
 		
     };
 

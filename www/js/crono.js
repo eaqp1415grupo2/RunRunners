@@ -33,6 +33,10 @@ angular.module('crono.controller', [])
         };
 
         $scope.startTimer = function () {
+            $scope.counter = 0;
+            $scope.timer = 0;
+            $scope.seconds = 0;
+            $scope.minutes = 0;
             var date = new Date();
             var fecha = (date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());
             var hora = (date.getHours+":"+date.getMinutes()+":"+date.getSeconds());

@@ -22,12 +22,13 @@ module.exports = function (app) {
     };
 
     findRaceByVicinity = function (req, res) {
+        var id = jwt.decode(req.params.id, Secret);
         var userrequest,
             lngMin,
             lngMax,
             ltdMin,
             ltdMax;
-        Group.findById(req.params.id, function (err, user) {
+        User.findById(id.iss, function (err, user) {
             if (!user) {
 
                 res.send(404, 'No se encuentra este nombre de usuario, revise la petici�n');

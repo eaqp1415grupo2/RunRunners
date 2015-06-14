@@ -372,6 +372,7 @@ module.exports = function (app) {
                         user.Races[i].Data.Time = req.body.Time;
                         user.Races[i].State = 'Done';
                         user.Races[i].Data.Distance = req.body.Distance;
+                        user.Races[i].Data.Tour = req.body.Tour;
                         user.save(function (err) {
                             if (err) res.send(500, 'Mongo Error');
                             else res.send(200, user.Races[i]);
@@ -401,6 +402,7 @@ module.exports = function (app) {
             }
         });
     };
+
 
 
 

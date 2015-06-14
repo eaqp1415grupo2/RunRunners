@@ -112,7 +112,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       url: '/crono',
       views: {
         'menuContent': {
-          templateUrl: "templates/crono.html"
+          templateUrl: "templates/crono.html",
+          controller:"cronoCtrl"
         }
       }
     })

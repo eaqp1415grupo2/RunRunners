@@ -161,7 +161,6 @@ module.exports = function (app) {
                             if(req.body.Type != null)  race.Type = req.body.Type;
                             if(req.body.Tags != null) race.Tags = req.body.Tags;
                             if(req.body.Tour != null) race.Tour = req.body.Tour;
-
                             race.save(function (err) {
                                 if (!err) {
                                     console.log('Updated');

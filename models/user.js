@@ -7,7 +7,11 @@ var RaceSchema = new Schema({
     State: {type: String, enum: ['Done','Pending']},
     Data: {
         Time: {type: Number},
-        Distance: {type: Number}
+        Distance: {type: Number},
+        Tour:[ {
+            Lng: {type: Number},
+            Ltd: {type: Number}
+        }]
     }
 });
 

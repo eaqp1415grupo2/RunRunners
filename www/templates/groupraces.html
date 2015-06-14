@@ -1,8 +1,9 @@
-<ion-view view-title="Group Races">
+<ion-view view-title="Races">
     <ion-header-bar class="bar-assertive item-input-inset">
+        <h1 class="title">Races</h1>
     </ion-header-bar>
-    <ion-content >
-        <div class="list"ng-init="loadGroupRaces()">
+    <ion-content ng-init="loadGroupRaces()">
+        <div class="list">
         <div class="item item-input-inset">
             <label class="item-input-wrapper" >
               <input type="text" placeholder="Races Search" ng-model="searchText">
@@ -13,9 +14,7 @@
             Carreras del Grupo
           </div>
 
-  
-
-        <div class="card" ng-repeat="r in groupraces | filter:searchText">
+        <div class="card" ng-repeat="r in groupraces | filter:searchText" href="#/map/race/{{r._id}}">
             <div class="item" style="background-color: #D2F8D2">
                 <div class="row row-no-padding">
                     <div class="col">
@@ -44,25 +43,50 @@
             		</a>
                 </div>
            	</div>
-         <div ng-click="deleteRace(r._id)" class="item tabs  tabs-icon-left" style="color: red">
-             <i class="icon  ion-ios-minus-outline"> Quit Group Race</i>
+
+         <div ng-click="startRace(r._id)" class="item tabs  tabs-icon-left">
+             <i class="icon  ion-android-alarm-clock"> Start Race</i>
           </div>
         </div>
 
+        </ion-item>
 
-
-		<div class="item item-divider">Añada Carreras al Grupo</div>
-
-		  <div class="list" ng-init="loadNoGroupRaces()">
-          <div class="item item-button-right" ng-repeat="r in otherraces | filter:searchText">
-           {{r.Name}} - {{r.Distance}}
-    		  <button class="button button-balanced" onclick="addRaceToGroup()">
-           <i class="icon ion-plus-round"></i>
-    		  </button>
-         </div>
+		<div class="item item-divider">
+            Otras Carreras
+          </div>
+            <ion-item >
+					<div class="list" ng-init="loadNoGroupRaces()">
+					  <div class="item item-button-right" ng-repeat="r in otherraces | filter:searchText">
+    					{{r.Name}} - {{r.Distance}}
+    				  <button class="button button-balanced" onclick="addRace(r._id)">
+      			    <i class="icon ion-plus-round"></i>
+    				  </button>
+  				    </div>
+                        </ion-item>
         </div>
-
+     
             
     </ion-content>
 </ion-view>
 
+   <script id="deleteRace.html" type="text/ng-template">
+                <ion-modal-view>
+                    <ion-header-bar class="bar bar-header bar-dark">
+                        <h1 class="title">Deleting Race</h1>
+
+                    </ion-header-bar>
+                    <ion-content align="center">
+                        <div class="row">
+                        	<div class="col-5"></div>
+                        	<div class="col">
+                        		<h1> <i class="icon ion-alert-circled " style="color:red;"></i> Are you sure?</h1>
+                        		<p></p>
+                        		<h3>All messages wil be deleted and this action can't be undone.</h3>
+                        		<br>
+                        		<button class="button button-block button-balanced" ng-click="closeModal()">No</button>
+                        		<button class="button button-block button-outline button-assertive" ng-click="deleteRace()">Yes</button>
+									</div>
+                        	<div class="col-5"></div>									
+                    </ion-content>
+                </ion-modal-view>
+     </script>

@@ -40,7 +40,8 @@ angular.module('groupraces.controller', [])
         //Obtener carreras propias
         $http.get(URL+'groups/'+$stateParams.id+'/race').success(function(data) {
             $scope.groupraces = data;
-            console.log('own Races:'+$scope.groupraces);
+            console.log('Group Races:'+$scope.groupraces);
+            console.log('Group Races:'+data.length);
         })
         .error(function(data) {
             console.log('Error: ' + data);

@@ -15,8 +15,8 @@
             <div class="item item-divider">
                 Mis Grupos
             </div>
-            <ion-item ng-repeat="g in owngroups | filter:searchText" href="#/map/group/{{g._id}}">
-                <div class="card" on-hold="openEditGroupModal(g._id,g.Admin)">
+
+                <div class="card" ng-repeat="g in owngroups | filter:searchText" href="#/map/group/{{g._id}}"on-hold="openEditGroupModal(g._id,g.Admin)">
                     <div class="item item-avatar" style="background-color: #D2F8D2">
 
                                 <h2>{{g.Name}}</h2>
@@ -47,12 +47,12 @@
                         </a>
                     </div>
                 </div>
-            </ion-item>
+
             <div class="item item-divider">
                 Otros Grupos
             </div>
-            <ion-item ng-repeat="g in othergroups | filter:searchText">
-                <div class="card">
+
+                <div class="card"ng-repeat="g in othergroups | filter:searchText">
                     <div class="item item-avatar" style="background-color: #F8EBD2">
                         <h2>{{g.Name}}</h2>
                         <p>{{g.Level}}</p>
@@ -78,7 +78,7 @@
                         </a>
                     </div>
                 </div>
-            </ion-item>
+
         </div>
     </ion-content>
 </ion-view>

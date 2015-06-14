@@ -1,9 +1,6 @@
 angular.module('profile.controller', [])
 
 .controller('profileCtrl',function($scope, $http, $ionicModal, $location, $window) {
-
-//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
     $scope.updateUser = {};
     console.log($window.localStorage['token']);
     

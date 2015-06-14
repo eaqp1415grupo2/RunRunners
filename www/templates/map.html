@@ -32,11 +32,9 @@
                             <h4>Starts at: {{ r.Date }}</h4>
                             <h4>Start place: {{ r.LocationIni }}</h4>
                             <h4>End place: {{ r.LocationFin }}</h4>
-
-                            <button class="button button-light" ng-click="Route(r)"><i class="icon ion-search"></i> Ver ruta </button>
-                            <button class="button button-light" ng-click="info32()"><i class="icon ion-search"></i> Ver carreras </button>
+                            <button class="button button-light" id="mostrar" ng-click="Route(r)"><i class="icon ion-search"></i> Ver ruta </button>
+                            <button class="button button-light" id="rrr" ng-click="info32()"><i class="icon ion-earth"></i> Ver carreras </button>
                             <button class="button button-light" ng-click="openModalRace(r)"><i class="icon ion-settings"></i> Update </button>
-
                         </a>
 
                 </div>

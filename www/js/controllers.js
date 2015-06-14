@@ -1,21 +1,20 @@
 'use strict';
 
-var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller','groupraces.controller','userlist.controller','messages.controller']);
-
+var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','groups.controller',
+							'groupraces.controller','userlist.controller','messages.controller',
+							'backoffice.controller']);
 
 var URL='https://localhost:3030/';
-
-
-    //var URL='https://192.168.1.139:3030/';
-    //var URL='https://147.83.7.203:3030/';
-    //var URL='https://10.189.28.37:3030/';
+//var URL='https://192.168.1.139:3030/';
+//var URL='https://147.83.7.203:3030/';
+//var URL='https://10.189.28.37:3030/';
 
 /**
  * Routing table including associated controllers.
  */
 MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 	$stateProvider
-		.state('menu', 			{url: "/map", abstract: true, templateUrl: "/templates/menu.html"})
+		.state('menu', 			{url: "/map", abstract: true, templateUrl: "/templates/menu.html", controller: 'mainCtrl'})
 		.state('login', 		{url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', 	{url: '/home', views: {'menuContent': 				{templateUrl: '/templates/map.html', controller: 'GpsCtrl'}}})
 		.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'}}})
@@ -26,11 +25,10 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('menu.racegroup', {url: "/groupraces/:id",views: {'menuContent': {templateUrl: "templates/groupraces.html",controller: 'groupRacesCtrl'}}})
 		.state('menu.profile', 	{url: '/profile', views: {'menuContent': 			{templateUrl: '/templates/profile3.html', controller: 'profileCtrl'}}})
 		.state('menu.logout', 	{url: '/logout', views: {'menuContent': 			{templateUrl: '/templates/logout.html', controller: 'logOutCtrl'}}})
-		.state('menu.stats', 	{url: '/stats', views: {'menuContent': 			{templateUrl: '/templates/stats.html', controller: 'statsCtrl'}}});
-
+		.state('menu.stats', 	{url: '/stats', views: {'menuContent': 			{templateUrl: '/templates/stats.html', controller: 'statsCtrl'}}})
+		.state('menu.backoffice', {url: '/backoffice', views: {'menuContent': {templateUrl: "templates/backoffice.html", controller: 'backofficeCtrl'}}});
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/login');
-
 }]);
 
 /**
@@ -210,13 +208,29 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 					console.log('Error: ' + data);
 				});
 		}
-
 });
 /**
  * MAIN CONTROLLER - handle inapp browser
  */
-MapApp.controller('MainCtrl', ['$scope', function($scope) {
+MapApp.controller('mainCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
+	var rol = 1;
+	$http.get(URL+'user/admin/'+$window.localStorage['token']).success(function(data) {
+		if (data=='admin'){
+			rol=2;
+		} else {
+			rol = 1;
+		}
+	})
+	.error(function(data) {
+		console.log('Error: ' + data);
+	});
 
+	$scope.setRol = function(setTab){
+		rol = setTab;
+	};
+	$scope.isSet = function(isSet){
+		return rol === isSet;
+	};
 }]);
 
 MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', function ($http, $scope,$location, $window){
@@ -290,16 +304,6 @@ MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 }]);
 
 /**
- * CRONO CONTROLLER - handle inapp browser
- */
-MapApp.controller('cronoCtrl', ['$scope', function($scope) {
-
-}]);
-
-
-
-
-/**
  * A google map / GPS controller.
  */
 MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
@@ -346,40 +350,20 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 		zoom: 18,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
-	$scope.info32 = function () {
-		window.location.reload(true);
-	}
-	document.addEventListener("backbutton", onBackKeyDown, false);
+    $scope.info32 = function () {
+		if (document.getElementById("mostrar").style.display == "none") {
+			window.location.reload(true);
+		}else {
+			alert("Tus carreras se visualizan en el mapa");
+			}
+		};
+	
 
-	function onBackKeyDown() {
-		// Handle the back button
-
-	}
+	
 	var map = new google.maps.Map(document.getElementById('map-canvas'),
 		mapOptions);
 	var directionsDisplay = new google.maps.DirectionsRenderer({'map': map});
-	//google.maps.event.addDomListener(window, 'load', carrera);
-	// Add a listener for the click event+
-	/*
-	 function calcRoute() {
-	 alert("calculando ruta...");
-	 var start = (41.386608, 2.16402);
-	 var end = (41.3886325,2.168484);
-	 var request = {
-	 origin:start,
-	 destination:end,
-	 travelMode: google.maps.TravelMode.WALKING
-	 };
-	 directionsService.route(request, function(response, status) {
-	 if (status == google.maps.DirectionsStatus.OK) {
-	 alert("in");
-	 directionsDisplay = new google.maps.DirectionsRenderer();
-	 directionsDisplay.setMap(map);
-	 directionsDisplay.setDirections(response);
-	 }
-	 });
-	 }
-	 */
+	
 	$scope.info = function () {
 		alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
 	}
@@ -433,8 +417,6 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 			var lat = race.LocationIni.Lng;
 			var lon = race.LocationIni.Ltd;
 			var name = race.Name;
-			var lat2 = race.LocationFin.Lng;
-			var lon2 = race.LocationFin.Ltd;
 
 			gotolocation2(lat, lon, name);
 			//gotolocation3(lat2, lon2, name);
@@ -469,34 +451,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 			}
 		}
 
-		/*
-		 function gotolocation3(lat2, lon2, name) {
-		 //alert (lat);
-		 //alert(lon);
-		 //alert(name);
-		 if ($scope.lat != lat2 || $scope.lon != lon2) {
-		 $scope.basel = {
-
-		 lat: lat2,
-		 lon: lon2,
-		 name: name
-		 };
-
-		 // to be user as markers, objects should have "lat", "lon", and "name" properties
-		 $scope.whoiswhere = [ //marker
-		 {
-		 "name": $scope.basel.name +  "  (FIN)",
-		 "lat": $scope.basel.lat,
-		 "lon": $scope.basel.lon
-
-		 }
-
-		 ];
-		 if (!$scope.$$phase) $scope.$apply("basel");
-		 }
-
-		 }*/
-
+	
 	}
 
 
@@ -515,7 +470,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 	/***********************************************************************************/
 
 	$ionicModal.fromTemplateUrl('create.html', {
-		scope: $scope,
+		scope: $scope
 		animation: 'slide-in-up'
 	}).then(function (modal) {
 		$scope.modal = modal;
@@ -549,10 +504,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 
 			var inicio = datos.Inicio;
 			var final = datos.Final;
-			//var locations = new Array("inicio", "final");
-			alert(inicio);
-			alert(final);
-			//for(var i = 0; i < locations.length; i++) {
+
 			geocoder.geocode({"address": inicio }, function (results, status) {
 				if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
 					var location = results[0].geometry.location,
@@ -565,8 +517,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 								lat2 = location2.lat(),
 								lng2 = location2.lng();
 
-							alert("inicio " + location);
-							alert("final" + location2);
+						
 							var origen = new google.maps.LatLng(lat, lng);
 							var destino = new google.maps.LatLng(lat2, lng2);
 							var distancia = google.maps.geometry.spherical.computeDistanceBetween(origen, destino)/1000;
@@ -595,7 +546,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 							//cuando tenemos ya bien los datos hacemos el post
 							$http.post('race/', datosfinales)
 								.success(function (data) {
-									//datosfinales.push(data);
+									
 									alert("acabas de crear carrera");
 									console.log(datosfinales);
 									window.location.reload(true);
@@ -614,56 +565,10 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 		}
 
 	};
-	/*
-	$scope.Route= function(r) {
-		alert("in");
-
-
-
-
-			var directionsDisplay = new google.maps.DirectionsRenderer();
-			var directionsService = new google.maps.DirectionsService();
-
-
-			console.log($scope.map);
-			directionsDisplay.setMap($scope.map);
-
-			function calcRoute() {
-				var lat = r.LocationIni.Lng;
-				var lon = r.LocationIni.Ltd;
-				var lat2 = r.LocationFin.Lng;
-				var lon2 = r.LocationFin.Ltd;
-				var start = lat + "," + lon;
-				var end = lat2 + "," + lon2;
-
-
-				var request = {
-					origin: start,
-					destination: end,
-					optimizeWaypoints: true,
-					travelMode: google.maps.TravelMode.DRIVING
-				};
-
-				directionsService.route(request, function (response, status) {
-					if (status == google.maps.DirectionsStatus.OK) {
-						console.log(response);
-						directionsDisplay.setDirections(response);
-						console.log('enter!');
-					}
-				});
-
-
-			}
-
-			calcRoute();
-
-
-
-	}
-	*/
+	
 	$scope.Route = function (r) {
 
-		alert("in");
+		
 		var lat = r.LocationIni.Lng;
 		var lon = r.LocationIni.Ltd;
 		var lat2 = r.LocationFin.Lng;
@@ -701,11 +606,8 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 				var tiempo = (response.routes[0].legs[0].duration.value)/60; //en seconde
 				console.log("km  " + distance);
 				console.log("tiempo  " + tiempo);
-				//google.maps.event.addDomListener(map, 'click', initialize);
-
-				//directionsDisplay = new google.maps.DirectionsRenderer({map:map});
-				//directionsDisplay.setMap(map);
-
+				document.getElementById("mostrar").style.display = "none";
+			
 			}
 			else {
 				alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);

@@ -1,9 +1,6 @@
 angular.module('stats.controller', [])
 
 .controller('statsCtrl',function($scope, $http) {
-
-//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
     $scope.pendings = [{}];
     $scope.dones = [{}];
     $scope.graph = {};

@@ -1,17 +1,12 @@
 angular.module('userlist.controller', [])
 
 .controller('UserListCtrl', function ($scope, $http, $stateParams , $window, $ionicLoading, $log) {
-	
-//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
     $scope.users = [];
     $scope.parent = [];
     console.log('Type: '+$stateParams.parent+' ParentId: '+$stateParams.parentId);
     $scope.parentId=$stateParams.parentId;
 
-
     $scope.loadUsers=function () {
-
         $http.get(URL+$stateParams.parent+'/'+$stateParams.parentId).success(function(data) {
             $scope.parent = data;
             $scope.users = data.Users;
@@ -42,5 +37,4 @@ angular.module('userlist.controller', [])
                 console.log('Error: ' + data);
             });
     };
-
 });

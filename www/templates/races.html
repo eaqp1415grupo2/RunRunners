@@ -16,12 +16,12 @@
             Mis Carreras
           </div>
 
-        <ion-item ng-repeat="r in ownraces | filter:searchText" href="#/map/race/{{r._id}}">
+        <ion-item ng-repeat="r in ownraces | filter:searchText" href="#/map/race/{{r._id}}" style="padding-bottom: 10px; padding-left: 10px;">
 
-        <div class="card">
+        <div class="card" >
             <div class="item" style="background-color: #D2F8D2">
-                <div class="row">
-                    <div class="col-20">
+                <div class="row row-no-padding">
+                    <div class="col">
                         <h1>{{r.Distance}} Km</h1>
                     </div>
                     <div class="col">
@@ -32,12 +32,12 @@
             </div>
             <div class="row">
                 <div class="col">
-                  <span class="item" href="#"><i class="icon ion-android-pin"></i>
+                  <a class="item" href="#"><i class="icon ion-android-pin"></i>
                		Lugar de salida: {{r.LocationIni}}
-           			</span>
+           			</a>
                 </div>
                 <div class="col">
-                   <a class="item" href="#"><i class="icon ion-android-alarm-clock"></i>
+                   <a class="item" href="#"><i class="icon ion-clock"></i>
               			Fecha: {{r.Date}}
             		</a>
                 </div>
@@ -63,6 +63,9 @@
               <i class="icon ion-trash-b"></i>
               Borrar Carrera
             </a>
+          </div>
+          <div ng-click="startRace(r._id)" class="item tabs  tabs-icon-left">
+             <i class="icon  ion-android-alarm-clock"> Start Race</i>
           </div>
         </div>
 

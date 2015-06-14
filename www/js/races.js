@@ -113,4 +113,11 @@ angular.module('races.controller', [])
         //$scope.modal2.hide();
     };
 
+    $scope.startRace = function (rid) {
+		$window.localStorage['startRace']=rid;
+		console.log("Starting Race: "+$window.localStorage['startRace']);
+		//Redireccion		
+		
+    };
+
 });

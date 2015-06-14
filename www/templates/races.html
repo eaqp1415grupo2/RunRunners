@@ -8,18 +8,17 @@
             <label class="item-input-wrapper" >
               <input type="text" placeholder="Races Search" ng-model="searchText">
             </label>
-            <button class="button button-small">
-              Create New Race
-            </button>
         </div>
           <div class="item item-divider">
             Mis Carreras
           </div>
+        
+        <ion-item ng-repeat="r in ownraces | filter:searchText" href="#/map/race/{{r._id}}">
 
-        <div class="card" ng-repeat="r in ownraces | filter:searchText" href="#/map/race/{{r._id}}">
+        <div class="card">
             <div class="item" style="background-color: #D2F8D2">
-                <div class="row row-no-padding">
-                    <div class="col">
+                <div class="row">
+                    <div class="col-20">
                         <h1>{{r.Distance}} Km</h1>
                     </div>
                     <div class="col">
@@ -67,14 +66,13 @@
           </div>
         </div>
 
-
+        </ion-item>
 
           <div class="item item-divider">
             Otras Carreras
           </div>
 
-
-            <div class="card" ng-repeat="r in otherraces | filter:searchText">
+            <div class="card">
                 <div class="item item-avatar" style="background-color: #F8EBD2">
                     <div class="row">
                         <div class="col-20">
@@ -122,7 +120,7 @@
               </div>
             </div>
 
-
+            </ion-item>
         </div>
      
             

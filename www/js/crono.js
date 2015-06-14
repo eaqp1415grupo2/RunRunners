@@ -1,17 +1,16 @@
 angular.module('crono.controller', [])
     .controller('cronoCtrl', function ($scope, $timeout, $http, $window) {
 
-        var URL = 'https://localhost:3030/';
+       // var URL = 'https://localhost:3030/';
         $scope.counter = 0;
         $scope.timer = 0;
         $scope.seconds = 0;
         $scope.minutes = 0;
         var Tour = [];
-        var time = 0;
         var user = {};
         var LocationIni;
         var mytimeout = null; // the current timeoutID
-        var race;
+        var race = $window.localStorage['startRace'];
         $scope.onTimeout = function () {
 
             $scope.counter++;
@@ -37,45 +36,48 @@ angular.module('crono.controller', [])
             var date = new Date();
             var fecha = (date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());
             var hora = (date.getHours+":"+date.getMinutes()+":"+date.getSeconds());
-            $http.get(URL + 'user/' + $window.localStorage['token'])
-                .success(function (data) {
-                    user = data;
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        var currentposition = position.coords;
-                        var Lat = currentposition.latitude;
-                        var Long = currentposition.longitude;
-                        LocationIni = ({'Ltd': Lat, 'Lng': Long});
+            console.log(race);
+            if(race == '' || race == undefined) {
+                $http.get(URL + 'user/' + $window.localStorage['token'])
+                    .success(function (data) {
+                        user = data;
+                        console.log("Entro Training: ");
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var currentposition = position.coords;
+                            var Lat = currentposition.latitude;
+                            var Long = currentposition.longitude;
+                            LocationIni = ({'Ltd': Lat, 'Lng': Long});
 
-                        console.log(user);
-                        var PostRace = ({
-                            Name: 'Race',
-                            Level: user.Level,
-                            Date: fecha,
-                            Hour: hora,
-                            LocationIni: LocationIni,
-                            Type: 'Entreno',
-                            _id: $window.localStorage['token']
+                            console.log(user);
+                            var PostRace = ({
+                                Name: 'Training: '+ fecha,
+                                Level: user.Level,
+                                Date: fecha,
+                                Hour: hora,
+                                LocationIni: LocationIni,
+                                Type: 'Entreno',
+                                _id: $window.localStorage['token']
 
-                        })
-                        $http({
-                            method: 'POST',
-                            url: URL + 'race',
-                            data: PostRace,
-                            headers: {'Content-Type': 'application/json'}
-                        }).success(function (data) {
-                           race = data._id;
-
-                        })
-                            .error(function (data) {
-                                console.log('Error:' + data);
                             });
+                            $http({
+                                method: 'POST',
+                                url: URL + 'race',
+                                data: PostRace,
+                                headers: {'Content-Type': 'application/json'}
+                            }).success(function (data) {
+                                race = data._id;
 
+                            })
+                                .error(function (data) {
+                                    console.log('Error:' + data);
+                                });
+
+                        });
+                    })
+                    .error(function (data) {
+                        console.log('Error:' + data);
                     });
-                })
-                .error(function (data) {
-                    console.log('Error:' + data);
-                });
-
+            }
             mytimeout = $timeout($scope.onTimeout, 1000);
         };
 
@@ -95,6 +97,11 @@ angular.module('crono.controller', [])
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 console.log(data);
+               if($window.localStorage['startRace']!=''){
+                   $window.localStorage['startRace']='' ;
+               }
+                race = '';
+                console.log( $window.localStorage['startRace']);
 
             })
                 .error(function (data) {
@@ -104,11 +111,5 @@ angular.module('crono.controller', [])
             console.log(race);
         };
 
-        $scope.$on('timer-stopped', function (event, remaining) {
-            if (remaining === 0) {
-                console.log('your time ran out!');
-            }
-        });
-    });//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
 
-}]);
+    });//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 

@@ -177,6 +177,61 @@ module.exports = function (app) {
         });
     };
 
+    removeAllUser = function(user, res){
+        for (var i = 0; i < user.Races.length; i++) {
+            Race.findOne(user.Races[i]._id, function (err, race) {
+                if (race.Admin === user.Username) {
+                    if(!race.Users[1]){
+                        race.remove(function(err){
+                            if(err) res.send(500,'Mongo Error');
+                        });
+                    }else {
+                        race.Admin = race.Users[1].Username;
+                    }
+                }
+                race.Users.pull(user._id);
+                race.save(function (err) {
+                    if (!err) {
+                        console.log('User Removed');
+                    } else {
+                        res.send(500, "Mongo Error");
+                    }
+                });
+            });
+        }
+        for (var j = 0; j < user.Groups.length; j++) {
+            Group.findOne(user.Groups[i]._id, function (err, group) {
+                if (group.Admin === user.Username) {
+                    if (!group.Users[1]) {
+                        group.remove(function (err) {
+                            if (err) res.send(500, 'Mongo Error');
+                        });
+                    } else {
+                        group.Admin = group.Users[1].Username;
+                    }
+                }
+                group.Users.pull(user._id);
+                group.save(function (err) {
+                    if (!err) {
+                        console.log('User Removed');
+                    } else {
+                        console.log('ERROR: ' + err);
+                        res.send(500, "Mongo Error");
+                    }
+                });
+            });
+        }
+        user.remove(function (err) {
+            if (!err) {
+                console.log('Removed user');
+                res.send(200);
+            } else {
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
+                res.send(500, 'Server Error');
+            }
+        });
+    };
+
     //DELETE - Delete a User with specified Name
     deleteUser = function (req, res) {
         console.log("DELETE -/user/:id");
@@ -186,61 +241,16 @@ module.exports = function (app) {
                 res.send(404, 'Not Found');
             }
             if(!req.body.delete) {
-                var races = user.Races;
-                var groups = user.Groups;
-                for (var i = 0; i < races.length; i++) {
-                    Race.findOne(races[i]._id, function (err, race) {
-                        if (race.Admin === user.Username) {
-                            if(!race.Users[1]){
-                                race.remove(function(err){
-                                    if(err) res.send(500,'Mongo Error');
-                                });
-                            }else {
-                                race.Admin = race.Users[1].Username;
-                            }
-                        }
-                        race.Users.pull(id.iss);
-                        race.save(function (err) {
-                            if (!err) {
-                                console.log('User Removed');
-                            } else {
-                                console.log('ERROR: ' + err);
-                                res.send(500, "Mongo Error");
-                            }
-                        });
+                removeAllUser(user, res);
+            }else{
+                if(user.Role != 'admin'){
+                    res.send(400,'Bad User');
+                }else{
+                    User.findOne({_id: req.body.delete}, function(err, deleteuser){
+                       if(!deleteuser) res.send(404,'User Not Found');
+                        else removeAllUser(deleteuser, res);
                     });
                 }
-                for (var j = 0; j < groups.length; j++) {
-                    Group.findOne(groups[j]._id, function (err, group) {
-                        if (group.Admin === user.Username) {
-                            if (!group.Users[1]) {
-                                group.remove(function (err) {
-                                    if (err) res.send(500, 'Mongo Error');
-                                });
-                            } else {
-                                group.Admin = group.Users[1].Username;
-                            }
-                        }
-                        group.Users.pull(id.iss);
-                        group.save(function (err) {
-                            if (!err) {
-                                console.log('User Removed');
-                            } else {
-                                console.log('ERROR: ' + err);
-                                res.send(500, "Mongo Error");
-                            }
-                        });
-                    });
-                }
-                user.remove(function (err) {
-                    if (!err) {
-                        console.log('Removed user');
-                        res.send(200);
-                    } else {
-                        console.log('Internal error(%d): %s', res.statusCode, err.message);
-                        res.send(500, 'Server Error');
-                    }
-                });
             }
 
         });

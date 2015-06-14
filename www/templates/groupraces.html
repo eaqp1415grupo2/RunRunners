@@ -1,68 +1,58 @@
 <ion-view view-title="Group Races" ng-init="initListGroupRace()">
     <ion-header-bar class="bar-assertive item-input-inset">
     </ion-header-bar>
-    <ion-content >
+    <ion-content>
         <div class="list">
-        <div class="item item-input-inset">
-            <label class="item-input-wrapper" >
-              <input type="text" placeholder="Races Search" ng-model="searchText">
-            </label>
-
-        </div>
-          <div class="item item-divider">
-            Carreras del Grupo
-          </div>
-
-  
-
-        <div class="card" ng-repeat="r in groupraces | filter:searchText">
-            <div class="item" style="background-color: #D2F8D2">
-                <div class="row row-no-padding">
-                    <div class="col">
-                        <h1>{{r.Distance}} Km</h1>
-                    </div>
-                    <div class="col">
-                        <h2>{{r.Name}}</h2>
-                        <p>{{r.Level}}</p>
+            <div class="item item-input-inset">
+                <label class="item-input-wrapper" >
+                  <input type="text" placeholder="Races Search" ng-model="searchText">
+                </label>
+            </div>
+            <div class="item item-divider">
+                Carreras del Grupo
+            </div>
+            <div class="card" ng-repeat="r in groupraces | filter:searchText">
+                <div class="item" style="background-color: #D2F8D2">
+                    <div class="row row-no-padding">
+                        <div class="col">
+                            <h1>{{r.Distance}} Km</h1>
+                        </div>
+                        <div class="col">
+                            <h2>{{r.Name}}</h2>
+                            <p>{{r.Level}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+                <div class="row"></div>
                 <div class="col">
-                  <a class="item" href="#"><i class="icon ion-android-pin"></i>
-               		Lugar de salida: {{r.LocationIni}}
+                    <a class="item" href="#"><i class="icon ion-android-pin"></i>
+               		    Lugar de salida: {{r.LocationIni}}
            			</a>
                 </div>
                 <div class="col">
                    <a class="item" href="#"><i class="icon ion-clock"></i>
               			Fecha: {{r.Date}}
-            		</a>
+                   </a>
                 </div>
                 <div class="col">
                    <a class="item" href="#"><i class="icon ion-speakerphone"></i>
               			Administrador: {{r.Admin}}
-            		</a>
+                   </a>
                 </div>
            	</div>
-         <div ng-click="deleteRace(r._id)" class="item tabs  tabs-icon-left" style="color: red">
-             <i class="icon  ion-ios-minus-outline"> Quit Group Race</i>
-          </div>
+            <div ng-click="deleteRace(r._id)" class="item tabs  tabs-icon-left" style="color: red">
+                <i class="icon  ion-ios-minus-outline"> Quit Group Race</i>
+            </div>
         </div>
-
-
-
 		<div class="item item-divider">Añada Carreras al Grupo</div>
-
-		  <div class="list">
-          <div class="item item-button-right" ng-repeat="r in otherraces | filter:searchText">
-           {{r.Name}} - {{r.Distance}}
-    		  <button class="button button-balanced" ng-click="addRace(r._id)">
-           <i class="icon ion-plus-round"></i>
-    		  </button>
-         </div>
+        <div class="list">
+            <div class="item item-button-right" ng-repeat="r in otherraces | filter:searchText">
+                {{r.Name}} - {{r.Distance}}
+                <button class="button button-balanced" ng-click="addRace(r._id)">
+                    <i class="icon ion-plus-round"></i>
+                </button>
+            </div>
         </div>
-
-            
     </ion-content>
 </ion-view>
 

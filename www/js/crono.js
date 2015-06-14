@@ -1,7 +1,5 @@
 angular.module('crono.controller', [])
     .controller('cronoCtrl', function ($scope, $timeout, $http, $window) {
-
-       // var URL = 'https://localhost:3030/';
         $scope.counter = 0;
         $scope.timer = 0;
         $scope.seconds = 0;
@@ -93,7 +91,7 @@ angular.module('crono.controller', [])
                 raceId: race,
                 Time: time,
                 Tour: Tour
-            })
+            });
             $http({
                 method: 'PUT',
                 url: URL + 'user/race/'+ $window.localStorage['token'],

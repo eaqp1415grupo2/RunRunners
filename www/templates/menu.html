@@ -30,6 +30,11 @@
                     <i class="icon ion-person"></i> Profile</ion-item>
                <ion-item menu-close href="#/map/logout">
                     <i class="icon ion-power"></i> Log Out</ion-item>
+               <div ng-show="isSet(2)">
+                   <ion-item menu-close href="#/map/backoffice">
+                       Backoffice
+                   </ion-item>
+               </div>
             </ion-list>
         </ion-content>
     </ion-side-menu>

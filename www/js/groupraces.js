@@ -2,8 +2,6 @@ angular.module('groupraces.controller', [])
 
 .controller('groupRacesCtrl', function($scope, $ionicModal, $http, $window, $stateParams, $ionicLoading, $log) {
 
-//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
     $scope.groupraces = [];
     $scope.otherraces = [];
     $scope.rid = [];

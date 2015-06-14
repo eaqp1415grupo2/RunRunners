@@ -3,18 +3,16 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-//var URL='https://192.168.1.139:3030/';
+var URL='https://192.168.1.130:3030/';
 //var URL='https://147.83.7.203:3030/';
 //var URL='https://10.189.28.37:3030/';
-var URL='https://localhost:3030/';
+//var URL='https://localhost:3030/';
 
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
-                'stats.controller', 'maps.controller', 'logout.controller', 'crono.controller',
-                'groups.controller', 'races.controller', 'userlist.controller',
-                'messages.controller','groupraces.controller'])
+                'maps.controller', 'logout.controller', 'crono.controller', 'groups.controller',
+                'races.controller', 'userlist.controller', 'messages.controller','groupraces.controller'])
 
 .run(function($ionicPlatform) {
-
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -29,6 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
+
   $stateProvider
     .state('map', {
       url: "/map",
@@ -56,15 +55,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
         'menuContent': {
           templateUrl: "templates/profile3.html",
           controller: 'profileCtrl'
-        }
-      }
-    })
-    .state('map.stats', {
-      url: '/stats',
-      views: {
-        'menuContent': {
-          templateUrl: "templates/stats.html",
-          controller: 'statsCtrl'
         }
       }
     })

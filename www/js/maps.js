@@ -2,64 +2,42 @@ angular.module('maps.controller', [])
 
 .controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
 
-//No pongais las IP aqui las coge de controlles.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
-    //$location.url('/map/home');
-    //$ionicPlatform.ready(function() {
-    //$scope.$on({reload: true});
-    //$state($state.current, {}, {reload: true});
+    var directionsService = new google.maps.DirectionsService();
     $scope.races = {};
     var races, poly, map, markers;
     var geocoder;
     $scope.whoiswhere = [];
     $scope.basel = {lat: 41.3868765, lon: 2.1700207};
-
+    //var directionsDisplay = new google.maps.DirectionsRenderer({'map': map}
     function initialize() {
-        //	geocoder = new google.maps.Geocoder();
-
         var mapOptions = {
-            streetViewControl:true,
+            streetViewControl: true,
             center: new google.maps.LatLng(47.55, 7.59),
             zoom: 18,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
-        /*	directionsDisplay = new google.maps.DirectionsRenderer();
-         var inticor= new google.maps.LatLng("Your Lat Long here");
-         ;
-         directionsDisplay.setMap(map);
-         calcRoute();
-         */
-        var map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
-        // Add a listener for the click event
+        var map = new google.maps.Map(document.getElementById('map-canvas2'), mapOptions);
     }
 
-    google.maps.event.addDomListener(window, 'load', initialize);
+    var mapOptions = {
+        streetViewControl: true,
+        center: new google.maps.LatLng(47.55, 7.59),
+        zoom: 18,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    $scope.info32 = function () {
+        window.location.reload(true);
+    };
+    document.addEventListener("backbutton", onBackKeyDown, false);
 
-    // Add a listener for the click event+
-    /*
-     function calcRoute() {
-     alert("calculando ruta...");
-     var start = (41.386608, 2.16402);
-     var end = (41.3886325,2.168484);
-     var request = {
-     origin:start,
-     destination:end,
-     travelMode: google.maps.TravelMode.WALKING
-     };
-     directionsService.route(request, function(response, status) {
-     if (status == google.maps.DirectionsStatus.OK) {
-     alert("in");
-     directionsDisplay = new google.maps.DirectionsRenderer();
-     directionsDisplay.setMap(map);
-     directionsDisplay.setDirections(response);
-     }
-     });
-     }
-     */
-    $scope.info = function (){
-        alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el bot�n derecho")
+    function onBackKeyDown() {
+        // Handle the back button
+    }
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    var directionsDisplay = new google.maps.DirectionsRenderer({'map': map});
+    $scope.info = function () {
+        alert("Para crear una carrera marca tu inicio y final de la misma en el mapa con el botón derecho")
     };
     /***********************************************************************************/
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -85,12 +63,7 @@ angular.module('maps.controller', [])
         }
     };
 
-    $scope.centerOnMe = function() {
-        alert("centrando");
-    };
-
-
-    $http.get(URL + 'race', $scope).success(function (data) {
+    $http.get(URL + 'race/user/' + window.localStorage.token, $scope).success(function (data) {
         races = data;
         angular.forEach(races, function (race) {
             $scope.objects = race;
@@ -114,7 +87,9 @@ angular.module('maps.controller', [])
             var lat = race.LocationIni.Lng;
             var lon = race.LocationIni.Ltd;
             var name = race.Name;
+
             gotolocation2(lat, lon, name);
+            //gotolocation3(lat2, lon2, name);
             $scope.$apply();
             //}
         }, function (e) {
@@ -135,8 +110,7 @@ angular.module('maps.controller', [])
                 // to be user as markers, objects should have "lat", "lon", and "name" properties
                 $scope.whoiswhere = [ //marker
                     {
-                        "name": $scope.basel.name,
-                        "level": $scope.basel.level,
+                        "name": $scope.basel.name + "(INI)",
                         "lat": $scope.basel.lat,
                         "lon": $scope.basel.lon
 
@@ -147,17 +121,17 @@ angular.module('maps.controller', [])
             }
         }
     }
+
+
     //Obtener carreras html
-    $http.get(URL + 'race').success(function (data) {
+    $http.get(URL + 'race/user/' + window.localStorage.token).success(function (data) {
         $scope.races = data;
         console.log(data);
     })
-        .error(function (data) {
-            console.log('Error: ' + data);
-        });
-    //});
+    .error(function (data) {
+        console.log('Error: ' + data);
+    });
     /***********************************************************************************/
-
     $ionicModal.fromTemplateUrl('create.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -181,7 +155,6 @@ angular.module('maps.controller', [])
             Level: this.Level2,
             Inicio: this.LocationIni,
             Final: this.LocationFin,
-            Distancia: this.Distance2,
             Type: this.Type,
             _id: window.localStorage.token,
             Fecha: this.Fecha,
@@ -212,6 +185,9 @@ angular.module('maps.controller', [])
 
                             alert("inicio " + location);
                             alert("final" + location2);
+                            var origen = new google.maps.LatLng(lat, lng);
+                            var destino = new google.maps.LatLng(lat2, lng2);
+                            var distancia = google.maps.geometry.spherical.computeDistanceBetween(origen, destino)/1000;
 
                             var datosfinales = {
                                 Name: datos.Name,
@@ -224,7 +200,7 @@ angular.module('maps.controller', [])
                                     Lng: lat2,
                                     Ltd: lng2
                                 },
-                                Distance: datos.Distancia,
+                                Distance: distancia.toFixed(2),
                                 Type: datos.Type,
                                 _id: datos._id,
                                 Date: datos.Fecha,
@@ -240,7 +216,7 @@ angular.module('maps.controller', [])
                                     //datosfinales.push(data);
                                     alert("acabas de crear carrera");
                                     console.log(datosfinales);
-                                    $location.url('/map/home');
+                                    window.location.reload(true);
                                     $scope.modal.hide();
                                 }).error(function (data) {
                                     console.log(datosfinales);
@@ -257,6 +233,57 @@ angular.module('maps.controller', [])
 
     };
 
+    $scope.Route = function (r) {
+
+        alert("in");
+        var lat = r.LocationIni.Lng;
+        var lon = r.LocationIni.Ltd;
+        var lat2 = r.LocationFin.Lng;
+        var lon2 = r.LocationFin.Ltd;
+        var start = new google.maps.LatLng(lat, lon);
+        var end= new google.maps.LatLng(lat2, lon2);
+        console.log(r);
+        console.log(start);
+        console.log(end);
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.WALKING
+        };
+        directionsService.route(request, function (response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                console.log(response);
+
+                var mapOptions = {
+                    streetViewControl:true,
+                    center: new google.maps.LatLng(47.55, 7.59),
+                    zoom: 18,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                var map = new google.maps.Map(document.getElementById('map-canvas'),
+                    mapOptions);
+                // Add a listener for the click event
+
+
+                directionsDisplay.setDirections(response);
+                directionsDisplay.setMap(map);
+                var distance = (response.routes[0].legs[0].distance.value)/1000; //en metre
+                // Display the duration:
+                var tiempo = (response.routes[0].legs[0].duration.value)/60; //en seconde
+                console.log("km  " + distance);
+                console.log("tiempo  " + tiempo);
+                //google.maps.event.addDomListener(map, 'click', initialize);
+
+                //directionsDisplay = new google.maps.DirectionsRenderer({map:map});
+                //directionsDisplay.setMap(map);
+
+            }
+            else {
+                alert("Directions Request from " + start.toUrlValue(6) + " to " + end.toUrlValue(6) + " failed: " + status);
+            }
+        });
+    }
 })
 
 .directive("appMap", function ($window) {

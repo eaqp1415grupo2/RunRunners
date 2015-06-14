@@ -1,9 +1,6 @@
 angular.module('messages.controller', [])
 
 .controller("MessagesCtrl", function ($scope, $stateParams, $http, $ionicLoading, $ionicModal,$log, $window) {
-
-//No pongais las IP aqui. Las coge de controllers.js o de appApk.js asi no hay que cambiarlo en races.js groups.js ni messages.js 
-
     $scope.messages = [];
     console.log('sP: '+$stateParams.parentId);
     $scope.postMessage=[];

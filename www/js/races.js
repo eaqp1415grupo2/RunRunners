@@ -2,8 +2,6 @@ angular.module('races.controller', [])
 
 .controller('RacesCtrl', function($scope, $ionicModal, $http, $window, $stateParams, $ionicLoading, $log) {
 
-//No pongais las IP aqui las coge de controllers.js o de appApk.js asi no hay que cambiarlo en ningun .js 
-
     $scope.ownraces = [];
     $scope.otherraces = [];
     $scope.rid = [];

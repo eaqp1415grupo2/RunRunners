@@ -4,7 +4,6 @@ angular.module('login.controller', [])
 
   $scope.users = [];
   if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
-    console.log("Entra");
     if($window.location.search != ""){
       $window.localStorage['token'] = $window.location.search.substring(1);
     }
@@ -47,8 +46,7 @@ angular.module('login.controller', [])
   };
 
   $scope.loginFacebook = function(){
-    console.log('facebook');
-    $window.location.assign(URL+'auth/facebook')
+    $window.location.href = URL+'auth/facebook';
   };
 })
 

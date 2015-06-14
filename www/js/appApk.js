@@ -9,6 +9,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
                 'groups.controller', 'races.controller', 'userlist.controller',
                 'messages.controller'])
 
+    //var URL='https://192.168.1.139:3030/';
+    var URL='https://147.83.7.203:3030/';
+    //var URL='https://10.189.28.37:3030/';
+    //var URL='https://localhost:3030/';
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

@@ -265,7 +265,14 @@ module.exports = function (app) {
                             group.Races.pull(req.body.raceid);
                             group.save(function (err) {
                                 if (err) res.send(500, 'Mongo Error');
-                                else res.send(200);
+                               else console.log('Removed');
+                            });
+                            Race.findOne({_id:req.body.raceid}, function(err, race){
+                               race.Groups.pull(group._id);
+                                race.save(function(err){
+                                   if(err) res.send('Mongo Error');
+                                    else res.send(200);
+                                });
                             });
                         }
                     }

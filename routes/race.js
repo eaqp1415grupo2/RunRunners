@@ -144,6 +144,7 @@ module.exports = function (app) {
 
 
 //PUT - Update a register already exists
+    //PUT - Update a register already exists
     updateRace = function (req, res) {
         var id = jwt.decode(req.body._id, Secret);
         User.findOne({_id: id.iss}, function (err, user) {
@@ -155,9 +156,12 @@ module.exports = function (app) {
                     } else {
                         if(race.Admin != user.Username) res.send(400,'Bad User');
                         else {
-                           if(req.body.Name != null) race.Name = req.body.Name;
+                            if(req.body.Name != null) race.Name = req.body.Name;
                             if(req.body.Level != null)race.Level = req.body.Level;
                             if(req.body.LocationIni != null) race.LocationIni = req.body.LocationIni;
+                            if(req.body.LocationFin != null) race.LocationFin = req.body.LocationFin;
+                            if(req.body.Time != null) race.Time = req.body.Time;
+                            if(req.body.Date != null) race.Date = req.body.Date;
                             if(req.body.Distance != null) race.Distance = req.body.Distance;
                             if(req.body.Type != null)  race.Type = req.body.Type;
                             if(req.body.Tags != null) race.Tags = req.body.Tags;
@@ -177,6 +181,7 @@ module.exports = function (app) {
             }
         });
     };
+
 
 
     deleteRaceGroups = function (id) {

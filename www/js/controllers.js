@@ -131,7 +131,7 @@ MapApp.controller('statsCtrl',function($scope, $http,$window) {
 	};
 });
 
-MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) {
+MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location, $window) {
 
 	$scope.updateUser = {};
 
@@ -202,7 +202,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 				.success(function (data) {
 					alert("acabas de borrar el usuario, le redigiremos al inicio");
 					$window.localStorage['token'] = {};
-					window.location.href = '/';
+					$window.location.href = '/';
 				})
 				.error(function (data) {
 					console.log('Error: ' + data);
@@ -332,13 +332,6 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 			zoom: 15,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-		/*	directionsDisplay = new google.maps.DirectionsRenderer();
-		 var inticor= new google.maps.LatLng("Your Lat Long here");
-		 ;
-		 directionsDisplay.setMap(map);
-		 calcRoute();
-		 */
-		;
 		var map = new google.maps.Map(document.getElementById('map-canvas2'),
 			mapOptions);
 		// Add a listener for the click event
@@ -354,7 +347,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 
 	$scope.info32 = function () {
 		if (document.getElementById("mostrar").style.display == "none") {
-			window.location.reload(true);
+			$window.location.reload(true);
 		}else {
 			alert("Tus carreras se visualizan en el mapa");
 			}
@@ -524,7 +517,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 			Type: this.Type,
 			Fecha: this.Fecha,
 			Hora: this.Hora,
-			_id: window.localStorage.token
+			_id: $window.localStorage['token']
 		};
 		codeAddress(datos);
 		//console.log(datos);
@@ -578,7 +571,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 									//datosfinales.push(data);
 									alert("acabas de actualizar carrera");
 									console.log(datosfinales);
-									window.location.reload(true);
+									$window.location.reload(true);
 									$scope.modal.hide();
 								}).error(function (data) {
 									console.log(datosfinales);
@@ -663,7 +656,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 
 									alert("acabas de crear carrera");
 									console.log(datosfinales);
-									window.location.reload(true);
+									$window.location.reload(true);
 									$scope.modal.hide();
 								}).error(function (data) {
 									console.log(datosfinales);

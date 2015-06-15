@@ -35,7 +35,7 @@
                 </div>
                 <div class="col">
                    <a class="item" href="#"><i class="icon ion-clock"></i>
-              			Fecha: {{r.Date}}
+              			Fecha: {{r.Date | limitTo: 15}} - {{r.Time | date: "HH:mm"}} 
             		</a>
                 </div>
                 <div class="col">
@@ -94,7 +94,7 @@
                 </div>
                 <div class="col">
                    <a class="item" href="#"><i class="icon ion-android-alarm-clock"></i>
-              			Fecha: {{r.Date}}
+              			Fecha: {{r.Date | limitTo: 15}} - {{r.Time | date: "HH:mm"}} 
             		</a>
                 </div>
                 <div class="col">

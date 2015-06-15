@@ -2,6 +2,7 @@ angular.module('groups.controller', [])
 
 .controller('GroupsCtrl', function ($scope, $http, $ionicModal, $window, $ionicLoading, $log) {
 
+    $scope.editgroup = [];
     $scope.owngroups = [];
     $scope.othergroups = [];
     $scope.newgroup = [];
@@ -241,10 +242,7 @@ angular.module('groups.controller', [])
 		var lng=0;
 				
 		console.log("Edit: "+$scope.editgroup.Name);
-		if(($scope.editgroup.Name==null)||($scope.editgroup.Name=="")){
-		//console.log("Mensaje vacio no se postea");
-		$window.alert("Debes escribir el nombre del grupo!");
-		}else{
+
 		   var geocoder = new google.maps.Geocoder();
 			geocoder.geocode({"address": $scope.editgroup.Location }, function (results, status) {
 			if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
@@ -274,12 +272,12 @@ angular.module('groups.controller', [])
 					$scope.editgroup.Name="";
 					$scope.editgroup.Level="";
 					$scope.editgroup.Location="";
-					$scope.modal3.hide();
+					$scope.closeModal();
 				}).error(function (data) {
 					console.log('Error:' + data);});
 		   }			
 		})
-	  }
+	  
 	};	
 	
 	

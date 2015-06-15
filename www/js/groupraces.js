@@ -39,7 +39,7 @@ angular.module('groupraces.controller', [])
 		
 			
 		if ($scope.user==$scope.Admin) {
-			//window.alert($scope.user+' >>>> '+$scope.Admin);
+			window.alert($scope.user+' >>>> '+$scope.Admin);
 		 $scope.loadGroupRaces();
 		 $scope.loadNoGroupRaces();
 

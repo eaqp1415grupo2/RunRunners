@@ -12,37 +12,38 @@
                 Carreras del Grupo
             </div>
             <div class="card" ng-repeat="r in groupraces | filter:searchText">
-                <div class="item" style="background-color: #D2F8D2">
-                    <div class="row row-no-padding">
-                        <div class="col">
-                            <h1>{{r.Distance}} Km</h1>
-                        </div>
+                
+                
+            <div class="item" style="background-color: #D2F8D2">
+                    <div class="row">
                         <div class="col">
                             <h2>{{r.Name}}</h2>
-                            <p>{{r.Level}}</p>
+                            <p>{{r.Level}} - {{r.Distance}} Km</p>
                         </div>
                     </div>
-                </div>
-                <div class="row"></div>
-                <div class="col">
-                    <a class="item" href="#"><i class="icon ion-android-pin"></i>
-               		    Lugar de salida: {{r.LocationIni}}
+            </div>
+                
+                
+                 <a class="item" href="#"><i class="icon ion-android-pin"></i>
+               		Lugar de salida: {{r.LocationIni}}
            			</a>
-                </div>
-                <div class="col">
-                   <a class="item" href="#"><i class="icon ion-clock"></i>
-              			Fecha: {{r.Date}}
-                   </a>
-                </div>
-                <div class="col">
-                   <a class="item" href="#"><i class="icon ion-speakerphone"></i>
+                  <a class="item" href="#"><i class="icon ion-clock"></i>
+              			Fecha: {{r.Date | limitTo: 15}} 
+            		</a>
+            		<a class="item" href="#"><i class="icon ion-clock"></i>
+              			Hora: {{r.Time | date: "HH:mm"}} 
+            		</a>
+                  <a class="item" href="#"><i class="icon ion-speakerphone"></i>
               			Administrador: {{r.Admin}}
-                   </a>
-                </div>
-           	</div>
-            <div ng-click="deleteRace(r._id)" class="item tabs  tabs-icon-left" style="color: red">
+            		</a>
+           
+            <div ng-click="deleteRace(r._id)" class="item tabs  tabs-icon-left" style="color: white; background-color: rgb(253, 137, 137);">
                 <i class="icon  ion-ios-minus-outline"> Quit Group Race</i>
             </div>
+            
+            
+           	</div>            
+            
         </div>
 		<div class="item item-divider">Añada Carreras al Grupo</div>
         <div class="list">

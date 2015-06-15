@@ -27,10 +27,13 @@
                  <a class="item" href="#"><i class="icon ion-android-pin"></i>
                		Lugar de salida: {{r.LocationIni}}
            			</a>
-                                   <a class="item" href="#"><i class="icon ion-clock"></i>
-              			Fecha: {{r.Date}}
+                  <a class="item" href="#"><i class="icon ion-clock"></i>
+              			Fecha: {{r.Date | limitTo: 15}} 
             		</a>
-                                   <a class="item" href="#"><i class="icon ion-speakerphone"></i>
+            		<a class="item" href="#"><i class="icon ion-clock"></i>
+              			Hora: {{r.Time | date: "HH:mm"}} 
+            		</a>
+                  <a class="item" href="#"><i class="icon ion-speakerphone"></i>
               			Administrador: {{r.Admin}}
             		</a>
 
@@ -75,8 +78,11 @@
                                    <a class="item" href="#"><i class="icon ion-android-pin"></i>
                		Lugar de salida: {{r.LocationIni}}
            			</a>
-                                   <a class="item" href="#"><i class="icon ion-clock"></i>
-              			Fecha: {{r.Date}}
+                  <a class="item" href="#"><i class="icon ion-clock"></i>
+              			Fecha: {{r.Date | limitTo: 15}} - {{r.Time | date: "HH:mm"}} 
+            		</a>
+            		<a class="item" href="#"><i class="icon ion-clock"></i>
+              			Hora: {{r.Time | date: "HH:mm"}} 
             		</a>
                                    <a class="item" href="#"><i class="icon ion-speakerphone"></i>
               			Administrador: {{r.Admin}}

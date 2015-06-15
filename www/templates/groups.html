@@ -16,7 +16,7 @@
                 Mis Grupos
             </div>
 
-            <ion-item ng-repeat="g in owngroups | filter:searchText" href="#/map/group/{{g._id}}">
+            <ion-item ng-repeat="g in owngroups | filter:searchText" href="#/map/group/{{g._id}}" on-hold="openEditGroupModal(g._id,g.Admin)">
                 <div class="card">
                     <div class="item item-avatar" style="background-color: #D2F8D2">
 
@@ -182,7 +182,7 @@
     							</select>
   						  </label>
 	  					  <label class="item item-input">
-    							<input type="text" placeholder="City" ng-model="editgroup.Location">
+    							<input type="text" placeholder="City" ng-model="editgroup.Location" required>
   						  </label>
 					
 						<button class="button button-block button-calm" ng-click="editGroup()">Editar Grupo</button>

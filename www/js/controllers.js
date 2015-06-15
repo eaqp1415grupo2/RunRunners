@@ -4,9 +4,9 @@ var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','g
 							'groupraces.controller','userlist.controller','messages.controller',
 							'backoffice.controller']);
 
-//var URL='https://localhost:3030/';
+var URL='https://localhost:3030/';
 //var URL='https://192.168.1.139:3030/';
-var URL='https://147.83.7.203:3030/';
+//var URL='https://147.83.7.203:3030/';
 //var URL='https://10.189.28.37:3030/';
 
 /**
@@ -18,9 +18,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('login', 		{url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', 	{url: '/home', views: {'menuContent': 				{templateUrl: '/templates/map.html', controller: 'GpsCtrl'}}})
 		.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'}}})
-		//.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groupsapk.html', controller: 'GroupsCtrl'}}})
 		.state('menu.races', 	{url: '/races', views: {'menuContent': 			{templateUrl: '/templates/races.html', controller: 'RacesCtrl'}}})
-		//.state('menu.races', 	{url: '/races', views: {'menuContent': 			{templateUrl: '/templates/racesapk.html', controller: 'RacesCtrl'}}})
 		.state('menu.group', 	{url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.race', 	{url: "/race/:parentId",views: {'menuContent':  {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.userlist', {url: "/users/:parent/:parentId",views: {'menuContent': {templateUrl: "templates/userlist.html",controller: 'UserListCtrl'}}})
@@ -36,7 +34,7 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 /**
  * HEADER - handle menu toggle
  */
-MapApp.controller('statsCtrl',function($scope, $http) {
+MapApp.controller('statsCtrl',function($scope, $http,$window) {
 
 	$scope.pendings = [{}];
 	$scope.dones = [{}];
@@ -301,16 +299,16 @@ MapApp.controller('tabCtrl', function(){
 /**
  * LOG OUT CONTROLLER - handle inapp browser
  */
-MapApp.controller('logOutCtrl', ['$scope', function($scope) {
+MapApp.controller('logOutCtrl', ['$scope','$window', function($scope,$window) {
 	alert("Vas a salir");
 	$window.localStorage['token'] = "";
-	window.location.href = '/';
+	$window.location.href = '/';
 }]);
 
 /**
  * A google map / GPS controller.
  */
-MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location) {
+MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $ionicModal, $location,$window) {
 
 	//$location.url('/map/home');
 	//$ionicPlatform.ready(function() {

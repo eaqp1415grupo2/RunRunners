@@ -12,16 +12,6 @@ var Race = new Schema({
     State: {type: String, enum: ['Done', 'Pending']}
 });
 
-var Message = new Schema({
-    UserID: {type: Schema.ObjectId, ref: 'User'},
-    Username: {type: String},
-    Text: {type: String},
-    Answers: [{
-        UserID: {type: Schema.ObjectId, ref: 'User'},
-        Username: {type: String},
-        Answer: {type: String}
-    }]
-});
 var groupSchema = new Schema({
     Name: {type: String},
     Info: {type: String},
@@ -32,10 +22,9 @@ var groupSchema = new Schema({
         Lng: {type: Number},
         Ltd: {type: Number}
     },
-    Admin_Group: {type: String},
+    Admin: {type: String},
     Users: [User],
     Races: [Race],
-    Messages: [Message]
 }, {versionKey: false});
 
 module.exports = mongoose.model('Group', groupSchema);

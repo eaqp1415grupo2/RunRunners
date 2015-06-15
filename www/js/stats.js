@@ -1,98 +1,95 @@
-/**
- * Created by david on 25/05/2015.
- */
-//var token=window.localStorage.token;
-var app = angular.module('stats', [])
-    app.controller("getraces", function($scope, $http) {
+angular.module('stats.controller', [])
 
-        $http.get('https://localhost:3030/user/'+ window.localStorage.token +'/races')
+.controller('statsCtrl',function($scope, $http) {
+    $scope.pendings = [{}];
+    $scope.dones = [{}];
+    $scope.graph = {};
+
+    $http.get(URL+'user/validate/' + window.localStorage.token)
+    .success(function (data) {
+
+    })
+    .error(function (data) {
+        console.log('Error:' + data);
+    });
+
+    //Datos globales
+    $scope.getstats = function () {
+        $http.get(URL + 'user/stats/' + window.localStorage.token)
+        .success(function (data) {
+            $scope.globals = data;
+
+
+        })
+        .error(function (data) {
+            console.log('Error:' + data);
+        });
+    };
+
+    //Carreras Pendientes
+    $scope.getracespending = function () {
+        $http.get(URL+'user/pending/' + window.localStorage.token)
             .success(function (data) {
-                $scope.users = data;
-                console.log(data);
+                var pendientes = data;
+                angular.forEach(pendientes, function(pendiente) {
+
+                    angular.forEach(pendiente, function(carreras){
+                        $scope.pendings.push(carreras);
+                    })
+
+                });
+
+
             })
             .error(function (data) {
                 console.log('Error:' + data);
             });
+    };
 
-    });
-//$http.get('https://localhost:3030/user/'+token +'/races').success(function(data) {
-  //  $scope.users = data;
-//})
-  //  .error(function(data) {
-    //    console.log('Error: ' + data);
-    //});
-/*
-angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl2', function ($scope, $modal) {
+    //Gr�fica de una Carrera Hecha
+    $scope.grafica = function (done) {
+        $scope.graph.data = [
 
 
-    $scope.openstatistics = function () {
+            [0, done.Data.Distance]
+            , [0, done.Data.Distance/done.Data.Time], [0, done.Data.Time]
 
-        var modalInstance = $modal.open({
-            templateUrl: 'statistics',
-            controller: 'ModalInstanceCtrlStatistics'
-            //  controller: "ModalInstanceCtrlUpdate" ///a�adimos el controller que configuraremos update
+        ];
+        $scope.graph.labels = ['', done.Race];
+        $scope.graph.series = ['Distance', 'Velocity', 'Time'];
+
+    };
+
+    //Devuelve las carreras Hechas
+    $scope.getracesdone = function () {
+        $http.get(URL+'user/done/' + window.localStorage.token)
+        .success(function (data) {
+            var hechas = data;
+
+            angular.forEach(hechas, function(hecha) {
+
+                console.log(hecha);
+                console.log(hecha.Race);
+                $scope.dones.push(hecha);
+                $scope.graph.data = [
+
+
+                    [0, hecha.Data.Distance ]
+                    ,[0, hecha.Data.Distance/hecha.Data.Time], [0, hecha.Data.Time]
+
+                ];
+                $scope.graph.labels = ['', hecha.Race];
+                $scope.graph.series = ['Distance', 'Velocity', 'Time'];
+                //	angular.forEach(hecha, function(carreras){
+
+                //		$scope.dones.push(carreras);
+                //		console.log(carreras);
+                //	})
+
+            });
+        })
+        .error(function (data) {
+            console.log('Error:' + data);
         });
-    }
-
-});
-
-angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics', function ($scope, $modalInstance) {
-
-    $scope.cancelstatistics = function () {
-        $modalInstance.dismiss('cancel');
-    };
-
-    $scope.showmap = function () {
-        var mapOptions = {
-            center: new google.maps.LatLng(41.3927395, 2.1435036),
-            zoom: 10,
-            mapTypeId: google.maps.MapTypeId.ROADMAP};
-        var map = new google.maps.Map(document.getElementById("map2"),mapOptions)
     };
 });
-
-
-angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics2', function ($scope, $modalInstance) {
-
-    $scope.cancelstatistics2 = function () {
-        $modalInstance.dismiss('cancel');
-    };
-
-    $scope.showmap = function () {
-        var mapOptions = {
-            center: new google.maps.LatLng(41.3927395, 2.1435036),
-            zoom: 10,
-            mapTypeId: google.maps.MapTypeId.ROADMAP};
-        var map = new google.maps.Map(document.getElementById("map3"),mapOptions)
-    };
-});
-
-angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl4', function ($scope, $modal) {
-
-
-    $scope.openstatistics3 = function () {
-
-        var modalInstance = $modal.open({
-            templateUrl: 'statistics3',
-            controller: 'ModalInstanceCtrlStatistics3'
-            //  controller: "ModalInstanceCtrlUpdate" ///a�adimos el controller que configuraremos update
-        });
-    }
-
-});
-
-angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrlStatistics3', function ($scope, $modalInstance) {
-
-    $scope.cancelstatistics3 = function () {
-        $modalInstance.dismiss('cancel');
-    };
-
-    $scope.showmap = function () {
-        var mapOptions = {
-            center: new google.maps.LatLng(41.3927395, 2.1435036),
-            zoom: 10,
-            mapTypeId: google.maps.MapTypeId.ROADMAP};
-        var map = new google.maps.Map(document.getElementById("map4"),mapOptions)
-    };
-});
-    */

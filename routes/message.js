@@ -22,7 +22,6 @@ module.exports = function (app) {
         });
     };
 
-
     //GET - Return message in the DB by ID_message
     findMessageByID = function (req, res) {
         Message.findOne({_id: req.params.id}, function (err, msg) {
@@ -50,7 +49,6 @@ module.exports = function (app) {
         });
     };
 
-
     createMessage = function (req, res) {
         var id = req.body.ParentID;
         var race = true;
@@ -60,28 +58,26 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User not Found');
             } else {
-		console.log("User: "+user);
-		console.log("ParentID: "+id);
-                Race.findOne({_id: id, 'Users._id':userid.iss}, function (err, result){
-                   console.log("Result: "+result);
-			if (!result) {
+                Race.findOne({_id: id, 'Users._id': userid.iss}, function (err, result) {
+                    console.log("Result: " + result);
+                    if (!result) {
                         race = null;
                     }
                 });
 
-                Group.findOne({_id: id, 'Users._id':userid.iss}, function (err, result2) {
-                   console.log("Result2: "+result2);
-			if (!result2) {
+                Group.findOne({_id: id, 'Users._id': userid.iss}, function (err, result2) {
+                    console.log("Result2: " + result2);
+                    if (!result2) {
                         group = null;
                     }
                 });
-                console.log('Race: '+race, 'Group: '+group);
+                console.log('Race: ' + race, 'Group: ' + group);
                 if (!race && !group) {
                     res.send(404, 'Race and Group not Found');
 
                 } else {
                     var message = new Message({
-                        UserID: userid,
+                        UserID: userid.iss,
                         Username: user.Username,
                         Text: req.body.Text,
                         ParentID: id
@@ -97,13 +93,13 @@ module.exports = function (app) {
     };
 
     addAnswer = function (req, res) {
-	console.log("Hola");
-	var id=req.params.id;
+        console.log("Hola");
+        var id = req.params.id;
         var userid = jwt.decode(req.body.UserID, Secret);
-	console.log('id: '+userid);
+        console.log('id: ' + userid);
         User.findOne({_id: userid.iss}, function (err, user) {
-            	console.log('u: '+user);
-	    if (!user) {
+            console.log('u: ' + user);
+            if (!user) {
                 res.send(404, 'User Not Found');
             } else {
                 var race = true;
@@ -112,12 +108,12 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        Race.findOne({_id: id, 'Users._id':userid.iss}, function (err, result) {
+                        Race.findOne({_id: id, 'Users._id': userid.iss}, function (err, result) {
                             if (!result) {
                                 race = null;
                             }
                         });
-                        Group.findOne({_id: id, 'Users._id':userid.iss}, function (err, result2) {
+                        Group.findOne({_id: id, 'Users._id': userid.iss}, function (err, result2) {
                             if (!result2) {
                                 group = null;
                             }
@@ -125,7 +121,7 @@ module.exports = function (app) {
                         console.log(race, group);
                         if (!race && !group) {
                             res.send(404, 'Not Found');
-                        }else {
+                        } else {
                             var answer = ({
                                 UserID: id.iss,
                                 Username: user.Username,
@@ -153,14 +149,39 @@ module.exports = function (app) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        if (message.UserID != id.iss) {
-                            res.send(400, 'Bad User');
-                        } else {
-                            message.remove(function (err) {
-                                if (err) res.send(500, 'Mongo Error');
-                                else res.send(200, 'Answer Rmoved');
+                        Race.findOne({_id: message.ParentID}, function (err, race) {
+                            Group.findOne({_id: message.ParentID}, function (err, group) {
+                                if (!group && !race) {
+                                    res.send(404, 'Bad ParentID');
+                                }
+                                else {
+                                    if (!race) {
+                                        console.log(message.UserID, id.iss);
+                                        console.log(group.Admin, user.Username);
+                                        if (message.UserID != id.iss && group.Admin != user.Username && user.Role != 'admin') {
+
+                                            res.send(400, 'Bad User');
+                                        } else {
+                                            message.remove(function (err) {
+                                                if (err) res.send(500, 'Mongo Error');
+                                                else res.send(200, 'Message Rmoved');
+                                            });
+                                        }
+                                    } else {
+                                        if (message.UserID != id.iss && race.Admin != user.Username && user.Role != 'admin') {
+                                            res.send(400, 'Bad User');
+                                        }
+
+                                        else {
+                                            message.remove(function (err) {
+                                                if (err) res.send(500, 'Mongo Error');
+                                                else res.send(200, 'Message Rmoved');
+                                            });
+                                        }
+                                    }
+                                }
                             });
-                        }
+                        });
                     }
                 });
             }
@@ -174,24 +195,43 @@ module.exports = function (app) {
             if (!user) {
                 res.send(404, 'User Not Found');
             } else {
-                Message.findOne({_id: req.params.id, 'Answers._id':answer}, function (err, message) {
+                Message.findOne({_id: req.params.id, 'Answers._id': answer}, function (err, message) {
                     if (!message) {
                         res.send(404, 'Message Not Found');
                     } else {
-                        if (message.UserID != id.iss) {
-                            res.send(400, 'Bad User');
-                        } else {
-                            message.Answers.pull(answer);
-                            message.save(function (err) {
-                                if (err) res.send(500, 'Mongo Error');
-                                else res.send(200, 'Message REmoved');
+                        Race.findOne({_id: message.ParentID}, function (err, race) {
+                            Group.findOne({_id: message.ParentID}, function (err, group) {
+                                if (!race) {
+                                    if (message.UserID != id.iss && user.Username != group.Admin && user.Role != 'admin') {
+                                        res.send(400, 'Bad User');
+                                    } else {
+                                        message.Answers.pull(answer);
+                                        message.save(function (err) {
+                                            if (err) res.send(500, 'Mongo Error');
+                                            else res.send(200, 'Answer Removed');
+                                        });
+                                    }
+                                } else if (!group) {
+                                    if (message.UserID != id.iss && user.Username != race.Admin && user.Role != 'admin') {
+                                        res.send(400, 'Bad User');
+                                    } else {
+                                        message.Answers.pull(answer);
+                                        message.save(function (err) {
+                                            if (err) res.send(500, 'Mongo Error');
+                                            else res.send(200, 'Answer Removed');
+                                        });
+                                    }
+                                } else {
+                                    res.send(404, 'ParentID Not Found');
+                                }
                             });
-                        }
+                        });
                     }
                 });
             }
         });
     };
+
     app.get('/message', findAllMessage);
     app.get('/message/:id', findMessageByID);
     app.get('/message/parent/:id', findMessagesByParentID);
@@ -199,4 +239,5 @@ module.exports = function (app) {
     app.put('/message/:id', addAnswer);
     app.delete('/message/:id', deleteMessage);
     app.delete('/message/answer/:id', deleteAnswer);
-};
+}
+;

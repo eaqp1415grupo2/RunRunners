@@ -66,17 +66,8 @@ var secureServer = https.createServer(sslOptions,app).listen('3030', function(){
 app.use(express.static('www'));
 //de momento redirige a wall, a la espera de login
 
-app.get('/ionic', function(req, res) {
-    res.sendfile('./www/index.html');});
-
 app.get('/', function(req, res) {
-    res.sendfile('./www/login.html');});
-
-app.get('/backoffice', function(req, res) {
-    res.sendfile('./web/backoffice/backoffice.html');});
-
-app.get('/backoffice2', function(req, res) {
-    res.sendfile('./web/backoffice/index.html');});
+    res.sendfile('./www/index.html');});
 
 app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
         // The request will be redirected to Facebook for authentication, so this
@@ -89,11 +80,45 @@ app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res){
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res) {
-        console.log(res.user);
-        res.redirect('/ionic');
+    var User = require('./models/user.js');
+    var jwt = require('jwt-simple');
+    var moment = require('moment');
+    var Secret = require ('./config/secret.js');
+    var newUser = new User({
+        Username: req.user.name.givenName+req.user.id,
+        Password: req.user.id,
+        Name: req.user.name.givenName,
+        Surname: req.user.name.familyName,
+        Gender: req.user.gender,
+        Role: 'registered',
+        Type: 'facebook'
+    });
+
+
+    User.findOne({"Username": newUser.Username}, function (err, user) {
+        if (!user) {
+            newUser.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    if (err.name == 'ValidationError') {
+                        res.send(400, 'Validation error');
+                    } else {
+                        res.send(500, 'Server error');
+                    }
+                    console.log('Internal error: %s', err.message);
+                }
+            });
+        }
+        if (!err) {
+            var expires = moment().add(2, 'days').valueOf();
+            var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+            res.redirect('/?'+token);
+        } else {
+            console.log('Internal error: %s', err.message);
+            res.send(500, 'Server error');
+        }
+    });
 });
-
-
 
 //Conexi?n DB Mongo
 routes = require('./routes/race')(app);
@@ -101,7 +126,7 @@ routes4 = require('./routes/group')(app);
 routes3 = require('./routes/users')(app);
 routes2 = require('./routes/message')(app);
 
-mongoose.connect('mongodb://localhost:27017/race', function(err, res) {
+mongoose.connect('mongodb://localhost:27017/runrunners', function(err, res) {
 //mongoose.connect('mongodb://localhost/race', function(err, res) {
     if(err) {
         console.log('ERROR: connecting to Database. ' + err);

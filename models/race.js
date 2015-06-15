@@ -15,29 +15,29 @@ var Users = new Schema({
     Username: {type:String}
 });
 
-var Message = new Schema({
-    UserID: {type: Schema.ObjectId, ref: 'User'},
-    Username: {type: String},
-    Text: {type: String},
-    Answers: [{
-        UserID: {type: Schema.ObjectId, ref: 'User'},
-        Username: {type: String},
-        Answer: {type: String}
-    }]
-});
+var Groups = new Schema({
+    _id: {type: Schema.ObjectId, ref: 'Group'},
+    Group: {type: String}
+})
 var raceSchema = new Schema({
     Name: {type: String},
     Level: {type: String, enum: ['Beginner', 'Initiated', 'Professional']},
-    Date: {type: Date, format: "YYYY-MM-DD HH:mm:ss"},
+    Date: {type: String, format: "YYYY-MM-DD"},
+    Time: {type: String, format: "HH:mm"},
     LocationIni: {
+        Lng: {type: Number},
+        Ltd: {type: Number}
+    },
+    LocationFin: {
         Lng: {type: Number},
         Ltd: {type: Number}
     },
     Distance: {type: Number},
     Type: {type: String},
     Tags: [Tags],
+    Admin: {type: String, ref: 'User.Username'},
     Users: [Users],
-    Messages: [Message],
+    Groups: [Groups],
     Tour: [Tour]
 }, {versionKey: false});
 

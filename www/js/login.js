@@ -1,73 +1,63 @@
-var app = angular.module('loginRunRunners',['ionic']);
-var URL = "https://localhost:3030/user";
-//var URL='https://147.83.7.203:3030/user';
 
-app.controller('headerController', function($scope, ngDialog){
+angular.module('login.controller', [])
 
-});
+.controller('loginCtrl', function ($http, $scope,$location, $window){
 
-app.controller('userController', ['$http', '$scope', '$window', function ($http, $scope,$window){
-
-    var loginRunRunners = this;
-    var user = {};
-    loginRunRunners.users = [];
-    console.log("controller");
-    this.addUser = function(){
-        loginRunRunners.users.push(this.user);
-        $http({
-            method: 'POST',
-            url: URL,
-            data: this.user,
-            headers: {'Content-Type': 'application/json'}
-        }).success(function(data) {
-            console.log(data);
-            $window.localStorage.token = data;
-            window.location.href='/ionic';
-        }).error(function(data) {
-            window.alert("ERROR - POST");
-        });
-        this.user = {};
-    };
-
-    this.loginUser = function(){
-        console.log(this.user);
-        var urlauth = URL+"/auth";
-        $http({
-            method: 'POST',
-            url: urlauth,
-            data: this.user,
-            headers: {'Content-Type': 'application/json'}
-        }).success(function(data) {
-            console.log(data);
-            $window.localStorage.token = data;
-            window.location.href='/ionic';
-        }).error(function(data) {
-            window.alert("ERROR - AUTH");
-        });
-        this.user = {};
-    };
-
-    $scope.loginFacebook = function(){
-        console.log('facebook');
-        window.location.href='/auth/facebook';
+  $scope.users = [];
+  if(($window.localStorage['token'] != undefined && $window.localStorage['token'] != "") || $window.location.search != ""){
+    if($window.location.search != ""){
+      $window.localStorage['token'] = $window.location.search.substring(1);
     }
-}]);
+    $window.location.href='#/map/home';
+  }
 
-app.controller('facebookController', ['$http', '$scope', function ($http, $scope){
-    var loginRunRunners = this;
-    loginRunRunners.users = [];
-    console.log($scope.user);
-    loginRunRunners.users.push(this.user);
+  $scope.addUser = function(){
+    $scope.users.push(this.user);
+    var urlsignin = URL+"user";
+    $http({
+      method: 'POST',
+      url: urlsignin,
+      data: this.user,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data) {
+      $window.localStorage['token']=data;
+      $window.location.href='#/map/home';
+    }).error(function(data) {
+      $window.alert("ERROR - POST");
+    });
+    this.user = {};
+  };
 
-}]);
+  $scope.loginUser = function(){
+    var urlauth = URL+"user/auth";
+    console.log(urlauth);
+    $http({
+      method: 'POST',
+      url: urlauth,
+      data: this.user,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data) {
+      $window.localStorage['token']=data;
+      $window.location.href='#/map/home';
+    }).error(function(data) {
+      console.log(data);
+      $window.alert(urlauth);
+    });
+    this.user = {};
+  };
 
-app.controller('TabController', function(){
-    this.tab = 1;
+  $scope.loginFacebook = function(){
+    $window.location.href = URL+'auth/facebook';
+  };
+})
 
-    this.setTab = function(setTab){
-        this.tab = setTab;
-    };
-    this.isSet = function(isSet){
-        return this.tab === isSet;
-    };
+.controller('tabCtrl', function(){
+this.tab = 1;
+
+  this.setTab = function(setTab){
+    this.tab = setTab;
+  };
+  this.isSet = function(isSet){
+    return this.tab === isSet;
+  };
 });

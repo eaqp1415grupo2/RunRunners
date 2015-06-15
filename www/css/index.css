@@ -35,3 +35,28 @@
     float: right;
     font-style: italic;    
 }
+
+.ng-invalid.ng-dirty {
+    border-color: red;
+}
+
+.ng-valid.ng-dirty {
+    border-color: green;
+}
+
+.navbar-default .navbar-brand{
+    color:#ffffff;
+    font-size:20px;
+}
+
+.rowsign {
+    padding-top: 8%;
+}
+.cardpad{
+padding-top: 10px;
+padding-right: 10px;
+padding-bottom: 10px;
+padding-left: 10px;
+
+
+}

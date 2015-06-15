@@ -1,150 +1,24 @@
 
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-
-    <title>RunRunners Stats</title>
-    <!-- ionic css -->
-
-    <link href="//code.ionicframework.com/nightly/css/ionic.css" rel="stylesheet">
-    <script src="//code.ionicframework.com/nightly/js/ionic.bundle.js"></script>
-
-
-
-
-    <script type="text/javascript"
-            src="https://www.google.com/jsapi?autoload={
-            'modules':[{
-              'name':'visualization',
-              'version':'1',
-              'packages':['corechart']
-            }]
-          }"></script>
-
-    <script type="text/javascript">
-        google.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            console.log("hola");
-            var data = google.visualization.arrayToDataTable([
-                ['Day', 'Km'],
-                ['23-05-2015',  15,],
-                ['24-05-2015',  5],
-                ['25-05-2015',  10],
-                ['26-05-2015',  0]
-            ]);
-
-            var options = {
-                title: 'Stadistics',
-                curveType: 'function',
-                legend: { position: 'bottom' }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-            chart.draw(data, options);
-        }
-    </script>
-    <link rel="stylesheet" href="css/index.css">
-    <!-- cordova script -->
-    <!-- your app's script -->
-    <style type="text/css">
-        #map {
-            width: 430px;
-            height: 255px;
-        }
-        #panelmap {
-            width: 462px;
-            height: 245px;
-            top: -270px;
-            left:65px;
-        }
-        #map2, #map3, #map4 {
-            width: 430px;
-            height: 255px;
-            right: -75px;
-        }
-        #global{
-            right : -280px;
-            top: -190px;
-        }
-        #evolution {
-            right: -385px;
-            top: 10px;
-        }
-        #update{
-            border: 2px #0000FF solid;
-            margin: 28px 0 0 28px;
-        }
-        #update:hover {
-            background: #0000FF;
-        }
-        #delete{
-            border: 2px red solid;
-            margin: 30px 0 0 30px;
-        }
-        #delete:hover{
-            background: red;
-        }
-        #races{
-            right : -390px;
-            top: -190px;
-        }
-        <!--span{
-                position:relative;
-                width:90px;
-                height:90px;
-                left:5px;
-                top:30px;
-                color: black;
-            }-->
-        .form input{
-            display:block;
-            align:center;
-        }
-        .form input.ng-valid {
-            border: thin solid #090;
-        }
-        .form input.ng-invalid {
-            border: thin solid #FA787E;
-        }
-    </style>
-</head>
-
-<!-- 'starter' is the name of this angular module (js/app.js)-->
-<body >
-
-<ion-view title="Stats">
+<ion-view view-title="Stats">
     <ion-header-bar class="bar-dark item-input-inset">
         <h1 class="title">Stats</h1>
     </ion-header-bar>
     <ion-content>
-
-
-        <div class="col-md-4" align="center" id="global">
+        <div class="col-md-4" align="center"  >
             <br>
             <h3>Global statistics</h3>
-            </br>
-            <div><b > Distance:</b><a> 40Km</a></div>
-            <div><b > Time:</b><a> 04:25</a></div>
-            <div><b> Level:</b><a> Initiated</a></div>
-            <div><b> Type :</b><a> Urban</a></div>
-
-
-
-
-
-
+            <br>
+            <div ng-init="getstats()" id="global" ng-repeat="global in globals">
+                <div><b > Distance:</b><a> {{global.Distance}}</a></div>
+                <div><b > Time:</b><a> {{global.Time}}</a></div>
+            </div>
         </div>
-
-        <div div class="col-md-4" align="center" >
-            <div id="curve_chart" style="width: 500px; height: 200px"></div>
+        <div class="col-md-4" align="center" >
+            <br>
+            <h3>Graph Race</h3>
+            <br>
+            <canvas id="bar" class="chart chart-line" data="graph.data" labels="graph.labels" series='graph.series' height="50"></canvas>
         </div>
-
-
-
-
 
         <div class="col-md-4" align="center" id="races">
             <h3>Races Done/Pending</h3>
@@ -153,33 +27,40 @@
                 <b> Races Done:</b><br>
             </div>
 
+            <div ng-init='getracesdone()' >
+                <div class="list card">
+                    <ion-item ng-repeat= "done in dones">
+                        <a class="item item-thumbnail-left">
+                            <img ng-src="/img/race.jpg">
+                            <h2>{{ done.Race }}</h2>
+                            <h4>{{ done.Data.Distance }}km - Time: {{done.Data.Time}}</h4>
 
-            <div data-ng-controller="statsCtrl" ng-init='getraces()' >
-                <!--<ul ng-repeat="user in users">-->
-                <ul> </h4> Name: {{users.Races.Name}}   <br> Level: {{users.Races.Level}}  </ul>
-                <!--  </ul>-->
+                            <button class="button button-small button-energized"  ng-click="grafica(done)"> Stadistics</button>
+                        </a>
+                </div>
             </div>
 
             <div>
                 <b > Races Pending:</b><br>
 
-                <div data-ng-controller="statsCtrl" ng-init='getraces()' >
+                <div ng-init='getracespending()'  >
+
+                    <div class="list card">
+                        <ion-item ng-repeat= "pending in pendings">
+                            <a class="item item-thumbnail-left">
+                                <img ng-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSNkuzfE2hrhBo2srKUKjgLfe24wECjbsz4bbsvY5jxTrZWHYOegA">
+                                <h2>{{ pending.Name }}</h2>
+                                <h4>{{ pending.Distance }}km - Level: {{pending.Level}}</h4>
+                                <h4>{{pending.Type}}</h4>
+
+                            </a>
+                    </div>
                     <!--<ul ng-repeat="user in users">-->
-                    <ul> </h4> Name: {{users.Races.Name}}   <br> Level: {{users.Races.Level}}  </ul>
+
                     <!--  </ul>-->
                 </div>
             </div>
         </div>
-
-
     </ion-content>
 </ion-view>
 
-
-
-
-
-
-</div>
-
-</body>

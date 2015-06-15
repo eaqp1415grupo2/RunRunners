@@ -40,7 +40,7 @@ angular.module('login.controller', [])
       $window.location.href='#/map/home';
     }).error(function(data) {
       console.log(data);
-      $window.alert("ERROR - AUTH");
+      $window.alert(urlauth);
     });
     this.user = {};
   };

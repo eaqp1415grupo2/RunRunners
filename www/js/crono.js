@@ -4,6 +4,7 @@ angular.module('crono.controller', [])
         $scope.timer = 0;
         $scope.seconds = 0;
         $scope.minutes = 0;
+        $scope.hours = 0;
         var Tour = [];
         var user = {};
         var LocationIni;
@@ -35,6 +36,7 @@ angular.module('crono.controller', [])
             $scope.timer = 0;
             $scope.seconds = 0;
             $scope.minutes = 0;
+            $scope.hours = 0;
             var date = new Date();
             var fecha = (date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate());
             var hora = (date.getHours+":"+date.getMinutes()+":"+date.getSeconds());
@@ -85,7 +87,7 @@ angular.module('crono.controller', [])
 
         // stops and resets the current timer
         $scope.stopTimer = function () {
-            var time = $scope.minutes;
+            var time = $scope.minutes + (60*$scope.hours);
             $timeout.cancel(mytimeout);
             var RaceDone = ({
                 raceId: race,

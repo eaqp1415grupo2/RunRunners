@@ -78,8 +78,18 @@ angular.module('backoffice.controller', [])
 
     $scope.clickToDelete = function (data) {
         window.alert("Se borrara " + data);
-        var urlDelete = urluser+data;
-        $http.delete(urlDelete).success(function (data) {
+
+        var id = {_id: $window.localStorage['token']};
+        var remove = {'delete':data};
+        $http
+        ({
+            method: 'DELETE',
+            url: URL+'/user/' + id,
+            data: remove,
+            headers: {'Content-Type': 'application/json'}
+        })
+
+            .success(function (data) {
             window.alert(data);
         }).error(function(data) {
             window.alert("ERROR - Fallo al realizar el DELETE");
@@ -112,7 +122,14 @@ angular.module('backoffice.controller', [])
 
     $scope.deleteObjectRace = function(newObject) {
         console.log(newObject);
-        $http.delete('https://localhost:3030/race/' + $scope.newObject._id)
+        var id = {_id: $window.localStorage['token']};
+        $http
+        ({
+            method: 'DELETE',
+            url: URL+'/race/' + $scope.newObject._id,
+            data: id,
+            headers: {'Content-Type': 'application/json'}
+        })
             .success(function(data) {
                 $scope.newObject = {};
                 $scope.selected = false;
@@ -185,7 +202,7 @@ angular.module('backoffice.controller', [])
         .error(function(data) {
             console.log('Error: ' + data);
         });
-    // Función para registrar un message
+    // Funciï¿½n para registrar un message
     $scope.registrarMessage = function() {
         $http.post(URL+'message', $scope.newMessage)
             .success(function(data) {
@@ -204,7 +221,7 @@ angular.module('backoffice.controller', [])
             });
     };
 
-    // Función para editar los datos de una message
+    // Funciï¿½n para editar los datos de una message
     $scope.modificarMessage = function(newMessage) {
         $http.put(URL+'/message/' + $scope.newMessage._id, $scope.newMessage)
             .success(function(data) {
@@ -223,10 +240,17 @@ angular.module('backoffice.controller', [])
             });
     };
 
-    // Función que borra un message message conocido su id
+    // Funciï¿½n que borra un message message conocido su id
     $scope.borrarMessage = function(newMessage) {
         console.log('Borrar: '+newMessage);
-        $http.delete(URL+'/message/' + $scope.newMessage._id)
+        var id = {_id: $window.localStorage['token']};
+        $http
+        ({
+            method: 'DELETE',
+            url: URL+'/message/' + $scope.newMessage._id,
+            data: id,
+            headers: {'Content-Type': 'application/json'}
+        })
             .success(function(data) {
                 $scope.newMessage = {};
                 $scope.messages = data;
@@ -243,7 +267,7 @@ angular.module('backoffice.controller', [])
             });
     };
 
-    // Función para coger el message seleccionado en la tabla
+    // Funciï¿½n para coger el message seleccionado en la tabla
     $scope.selectObjectMessage = function(message) {
         $scope.newMessage = message;
         $scope.selected = true;

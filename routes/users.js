@@ -60,6 +60,25 @@ module.exports = function (app) {
         var hmac = crypto.createHmac('sha1', user).update(pass).digest('hex')
         return hmac
     }
+    authenticate = function (req, res) {
+
+        User.findOne({"Username": req.body.Username}, function (err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
+            } else if (user) {
+
+                var Password = encrypt(user.Username, req.body.Password);
+                if (user.Password != Password) {
+                    res.send(404, 'Password error');
+                } else {
+                    var expires = moment().add(2, 'days').valueOf();
+                    var token = jwt.encode({iss: user._id, exp: expires}, Secret);
+                    res.send(200, token);
+                }
+            }
+        });
+    };
 
     //POST - Insert a new User in the DB
     addUser = function (req, res) {
@@ -98,32 +117,13 @@ module.exports = function (app) {
                         console.log('Internal error: %s', err.message);
                     }
                 });
-                res.send(user);
             } else {
                 res.send(400, 'Tere is a User with this Username');
             }
         });
     };
 
-    authenticate = function (req, res) {
 
-        User.findOne({"Username": req.body.Username}, function (err, user) {
-            if (err) throw err;
-            if (!user) {
-                res.send(404, 'No se encuentra este nombre de usuario, revise la petición');
-            } else if (user) {
-
-                var Password = encrypt(user.Username, req.body.Password);
-                if (user.Password != Password) {
-                    res.send(404, 'Password error');
-                } else {
-                    var expires = moment().add(2, 'days').valueOf();
-                    var token = jwt.encode({iss: user._id, exp: expires}, Secret);
-                    res.send(200, token);
-                }
-            }
-        });
-    };
 
     validateToken = function(req, res){
         console.log('Validate Token');
@@ -385,10 +385,10 @@ module.exports = function (app) {
                         user.Races[i].Data.Tour = req.body.Tour;
                         user.save(function (err) {
                             if (err) res.send(500, 'Mongo Error');
-                            else res.send(200, user.Races[i]);
                         });
                         break;
                     }
+
                 }
                 if (!race) {
                     res.send(400, 'No Race');

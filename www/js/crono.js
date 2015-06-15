@@ -89,10 +89,17 @@ angular.module('crono.controller', [])
         $scope.stopTimer = function () {
             var time = $scope.minutes + (60*$scope.hours);
             $timeout.cancel(mytimeout);
+            
+            var origen = new google.maps.LatLng(
+                LocationIni.Ltd, LocationIni.Lng);
+							var destino = new google.maps.LatLng(Tour[(Tour.length-1)].Ltd, Tour[(Tour.length-1)].Lng);
+							var distancia = google.maps.geometry.spherical.computeDistanceBetween(origen, destino)/1000;
+
             var RaceDone = ({
                 raceId: race,
                 Time: time,
-                Tour: Tour
+                Tour: Tour,
+                Distance: distancia
             });
             $http({
                 method: 'PUT',

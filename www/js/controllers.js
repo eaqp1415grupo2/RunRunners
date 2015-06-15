@@ -202,12 +202,13 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location, 
 				.success(function (data) {
 					alert("acabas de borrar el usuario, le redigiremos al inicio");
 					$window.localStorage['token'] = {};
-					$window.location.href = '/';
+					$window.location.href='#/login';
+					$scope.modal2.hide();
 				})
 				.error(function (data) {
 					console.log('Error: ' + data);
 				});
-		}
+		};
 });
 /**
  * MAIN CONTROLLER - handle inapp browser

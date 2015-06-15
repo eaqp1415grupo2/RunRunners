@@ -30,25 +30,41 @@ angular.module('groupraces.controller', [])
                 console.log('Error:' + data);
             });
     };
-    
+
+    /*
+	//Check not working
    $scope.initListGroupRace = function () {
 
 		$scope.getUser();
 		$scope.getGroupAdmin();
-		
+		//window.alert($scope.user+' >1>>> '+$scope.Admin);
 		
 			
 		if ($scope.user==$scope.Admin) {
-			window.alert($scope.user+' >>>> '+$scope.Admin);
+			//window.alert($scope.user+' >>>> '+$scope.Admin);
+
 		 $scope.loadGroupRaces();
 		 $scope.loadNoGroupRaces();
 
 		}else {
-		
+				//		window.alert($scope.user+' >>2>> '+$scope.Admin);
+				 $scope.loadNoGroupRaces();
 			$scope.loadGroupRaces();}
+  	 };*/
+  	 
+  	    $scope.initListGroupRace = function () {
+
+		$scope.getUser();
+		$scope.getGroupAdmin();
+		
+      $scope.loadNoGroupRaces();
+		$scope.loadGroupRaces();
   	 };
 
     $scope.addRace = function (id) {
+     	
+		if ($scope.user==$scope.Admin) {  
+       
         $http({
             method: 'POST',
             url: URL+'groups/'+$stateParams.id+'/race',
@@ -65,6 +81,9 @@ angular.module('groupraces.controller', [])
         .error(function (data) {
             console.log('Error:' + data);
         });
+     }else{
+     		window.alert('Debes ser el Admin del grupo!');
+     }
     };
     
     $scope.loadGroupRaces=function () {

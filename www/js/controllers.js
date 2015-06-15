@@ -169,7 +169,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location, 
 
 		$http.put('user/' + $window.localStorage['token'], $scope.updateUser)//+ cookie o token)
 			.success(function (data) {
-				$location.url('/map/home');
+				$window.location.reload(true);
 				$scope.modal.hide();
 			})
 			.error(function (data) {

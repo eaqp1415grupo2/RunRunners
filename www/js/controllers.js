@@ -18,7 +18,9 @@ MapApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, 
 		.state('login', 		{url: '/login', templateUrl: '/templates/login.html', controller: 'loginCtrl'})
 		.state('menu.home', 	{url: '/home', views: {'menuContent': 				{templateUrl: '/templates/map.html', controller: 'GpsCtrl'}}})
 		.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groups.html', controller: 'GroupsCtrl'}}})
+		//.state('menu.groups', 	{url: '/groups', views: {'menuContent': 			{templateUrl: '/templates/groupsapk.html', controller: 'GroupsCtrl'}}})
 		.state('menu.races', 	{url: '/races', views: {'menuContent': 			{templateUrl: '/templates/races.html', controller: 'RacesCtrl'}}})
+		//.state('menu.races', 	{url: '/races', views: {'menuContent': 			{templateUrl: '/templates/racesapk.html', controller: 'RacesCtrl'}}})
 		.state('menu.group', 	{url: "/group/:parentId",views: {'menuContent': {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.race', 	{url: "/race/:parentId",views: {'menuContent':  {templateUrl: "templates/messages.html",controller: 'MessagesCtrl'}}})
 		.state('menu.userlist', {url: "/users/:parent/:parentId",views: {'menuContent': {templateUrl: "templates/userlist.html",controller: 'UserListCtrl'}}})
@@ -470,7 +472,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 	/***********************************************************************************/
 
 	$ionicModal.fromTemplateUrl('create.html', {
-		scope: $scope
+		scope: $scope,
 		animation: 'slide-in-up'
 	}).then(function (modal) {
 		$scope.modal = modal;

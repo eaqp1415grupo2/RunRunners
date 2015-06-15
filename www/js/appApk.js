@@ -62,7 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       url: '/races',
       views: {
         'menuContent': {
-          templateUrl: "templates/races.html",
+          templateUrl: "templates/racesapk.html",
           controller: 'RacesCtrl'
         }
       }
@@ -80,7 +80,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
       url: '/groups',
       views: {
         'menuContent': {
-          templateUrl: "templates/groups.html",
+          templateUrl: "templates/groupsapk.html",
           controller: 'GroupsCtrl'
         }
       }

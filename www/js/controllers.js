@@ -9,7 +9,6 @@ var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','g
 var URL='https://147.83.7.203:3030/';
 //var URL='https://10.189.28.37:3030/';
 
-
 /**
  * Routing table including associated controllers.
  */
@@ -56,25 +55,6 @@ MapApp.controller('statsCtrl',function($scope, $http,$window) {
 			.success(function (data) {
 				$scope.globals = data;
 
-<<<<<<< HEAD
-=======
-
-MapApp.controller('statsCtrl',function($scope, $http) {
-
-
-
-	$scope.getraces = function () {
-		$http.get(URL + 'user/' + window.localStorage.token +'/races')
-			.success(function (data) {
-				$scope.users = data;
-				console.log(data);
-			})
-			.error(function (data) {
-				console.log('Error:' + data);
-			});
-	};
-
->>>>>>> master
 
 			})
 			.error(function (data) {
@@ -82,17 +62,12 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 			});
 	};
 
-<<<<<<< HEAD
 	//Carreras Pendientes
 	$scope.getracespending = function () {
 		$http.get(URL+'user/pending/' + $window.localStorage['token'])
 			.success(function (data) {
 				var pendientes = data;
 				angular.forEach(pendientes, function(pendiente) {
-=======
-
-MapApp.controller('ProfileCtrl', ['$scope', function($scope) {
->>>>>>> master
 
 					angular.forEach(pendiente, function(carreras){
 					$scope.pendings.push(carreras);
@@ -237,7 +212,6 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 /**
  * MAIN CONTROLLER - handle inapp browser
  */
-<<<<<<< HEAD
 MapApp.controller('mainCtrl', ['$scope', '$http', '$window', function($scope, $http, $window) {
 	var rol = 1;
 	$http.get(URL+'user/admin/'+$window.localStorage['token']).success(function(data) {
@@ -246,40 +220,6 @@ MapApp.controller('mainCtrl', ['$scope', '$http', '$window', function($scope, $h
 		} else {
 			rol = 2;
 		}
-=======
-function GroupCtrl($scope, $http, $stateParams ,$ionicLoading, GroupMessageService, $log) {
-    $scope.messages = [];
-    console.log($stateParams);
-    $scope.groupId=$stateParams.groupId;
-
-	$http.get(URL+'message/parent/'+$stateParams.groupId).success(function(data) {
-		$scope.messages = data;
-		console.log(data);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});	         		
-}
-
-
-function GroupsCtrl($scope,$http, $ionicLoading, GroupsService, $log) {
-    $scope.owngroups = []; 
-    $scope.othergroups = [];
-    
-        	//Obtener Grupos propios
-	$http.get(URL+'groups/user/'+token).success(function(data) {
-		$scope.owngroups = data;
-		console.log('own G:'+$scope.owngroups);
-	})
-	.error(function(data) {
-		console.log('Error: ' + data);
-	});
-    
-            	//Obtener Otros Grupos
-	$http.get(URL+'groups/no/'+token).success(function(data) {
-		$scope.othergroups = data;
-			console.log('other G:'+data);
->>>>>>> master
 	})
 	.error(function(data) {
 		console.log('Error: ' + data);

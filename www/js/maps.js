@@ -63,7 +63,7 @@ angular.module('maps.controller', [])
         }
     };
 
-    $http.get(URL + 'race/user/' + window.localStorage.token, $scope).success(function (data) {
+    $http.get(URL + 'race/user/' + $window.localStorage['token'], $scope).success(function (data) {
         races = data;
         angular.forEach(races, function (race) {
             $scope.objects = race;
@@ -124,7 +124,7 @@ angular.module('maps.controller', [])
 
 
     //Obtener carreras html
-    $http.get(URL + 'race/user/' + window.localStorage.token).success(function (data) {
+    $http.get(URL + 'race/user/' + $window.localStorage['token']).success(function (data) {
         $scope.races = data;
         console.log(data);
     })
@@ -146,7 +146,7 @@ angular.module('maps.controller', [])
 
     $scope.okRace = function () {
         alert("creando carrera");
-        var lat =0;
+        var lat=0;
         var lng=0;
         var datos;
         var i;
@@ -156,7 +156,7 @@ angular.module('maps.controller', [])
             Inicio: this.LocationIni,
             Final: this.LocationFin,
             Type: this.Type,
-            _id: window.localStorage.token,
+            _id: $window.localStorage['token'],
             Fecha: this.Fecha,
             Hora: this.Hora
         };
@@ -182,7 +182,6 @@ angular.module('maps.controller', [])
                             var location2 = results[0].geometry.location,
                                 lat2 = location2.lat(),
                                 lng2 = location2.lng();
-
                             alert("inicio " + location);
                             alert("final" + location2);
                             var origen = new google.maps.LatLng(lat, lng);

@@ -3,9 +3,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-var URL='https://192.168.1.130:3030/';
-//var URL='https://147.83.7.203:3030/';
-//var URL='https://10.189.28.37:3030/';
+//var URL='https://192.168.1.130:3030/';
+var URL='https://147.83.7.203:3030/';
+//var URL='https://10.189.28.117:3030/';
 //var URL='https://localhost:3030/';
 
 angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', 'profile.controller',
@@ -46,7 +46,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'login.controller', '
     })
     .state('login', {
       url: "/login",
-      templateUrl: "templates/login.html",
+      templateUrl: "templates/loginapk.html",
       controller: 'loginCtrl'
     })
     .state('map.profile', {

@@ -85,7 +85,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
     var moment = require('moment');
     var Secret = require ('./config/secret.js');
     var newUser = new User({
-        Username: req.user.id,
+        Username: req.user.name.givenName+req.user.id,
         Password: req.user.id,
         Name: req.user.name.givenName,
         Surname: req.user.name.familyName,
@@ -93,6 +93,7 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
         Role: 'registered',
         Type: 'facebook'
     });
+
 
     User.findOne({"Username": newUser.Username}, function (err, user) {
         if (!user) {

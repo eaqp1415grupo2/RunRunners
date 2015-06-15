@@ -40,7 +40,7 @@ angular.module('backoffice.controller', [])
         this.user = {};
     };
 
-    /*this.updateUser = function(username, name, surname, email){
+    this.updateUser = function(username, name, surname, email){
         user.Username = username;
         user.Name = name;
         user.Surname = surname;
@@ -74,7 +74,7 @@ angular.module('backoffice.controller', [])
         $scope.Surname = this.user.Surname;
         $scope.Email = this.user.Email;
 
-    };*/
+    };
 
     $scope.clickToDelete = function (data) {
         window.alert("Se borrara " + data);

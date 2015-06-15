@@ -4,9 +4,9 @@ var MapApp = angular.module('MapApp', ['ionic','chart.js', 'races.controller','g
 							'groupraces.controller','userlist.controller','messages.controller',
 							'backoffice.controller']);
 
-var URL='https://localhost:3030/';
+//var URL='https://localhost:3030/';
 //var URL='https://192.168.1.139:3030/';
-//var URL='https://147.83.7.203:3030/';
+var URL='https://147.83.7.203:3030/';
 //var URL='https://10.189.28.37:3030/';
 
 /**
@@ -40,7 +40,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 	$scope.dones = [{}];
 	$scope.graph = {};
 
-	$http.get(URL+'user/validate/' + window.localStorage.token)
+	$http.get(URL+'user/validate/' + $window.localStorage['token'])
 		.success(function (data) {
 
 		})
@@ -51,7 +51,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 //Datos globales
 	$scope.getstats = function () {
 
-		$http.get(URL + 'user/stats/' + window.localStorage.token)
+		$http.get(URL + 'user/stats/' + $window.localStorage['token'])
 			.success(function (data) {
 				$scope.globals = data;
 
@@ -64,7 +64,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 
 	//Carreras Pendientes
 	$scope.getracespending = function () {
-		$http.get(URL+'user/pending/' + window.localStorage.token)
+		$http.get(URL+'user/pending/' + $window.localStorage['token'])
 			.success(function (data) {
 				var pendientes = data;
 				angular.forEach(pendientes, function(pendiente) {
@@ -103,7 +103,7 @@ MapApp.controller('statsCtrl',function($scope, $http) {
 	//Devuelve las carreras Hechas
 	$scope.getracesdone = function () {
 
-		$http.get(URL+'user/done/' + window.localStorage.token)
+		$http.get(URL+'user/done/' + $window.localStorage['token'])
 		.success(function (data) {
 			var hechas = data;
 			angular.forEach(hechas, function(hecha) {
@@ -135,7 +135,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 
 	$scope.updateUser = {};
 
-	$http.get(URL+'user/' + window.localStorage.token)
+	$http.get(URL+'user/' + $window.localStorage['token'])
 		.success(function (data) {
 			$scope.users = data;
 			console.log(data);
@@ -145,7 +145,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 		});
 
 	$scope.getUser = function () {
-		$http.get(URL+'user/' + window.localStorage.token)
+		$http.get(URL+'user/' + $window.localStorage['token'])
 			.success(function (data) {
 				$scope.users = data;
 				console.log(data);
@@ -167,7 +167,7 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 
 	$scope.okUpdate = function (updateUser) {
 
-		$http.put('user/' + window.localStorage.token, $scope.updateUser)//+ cookie o token)
+		$http.put('user/' + $window.localStorage['token'], $scope.updateUser)//+ cookie o token)
 			.success(function (data) {
 				$location.url('/map/home');
 				$scope.modal.hide();
@@ -198,10 +198,10 @@ MapApp.controller('profileCtrl',function($scope, $http, $ionicModal, $location) 
 		};
 
 		$scope.okDelete = function () {
-			$http.delete('user/' + window.localStorage.token)//+ cookie o token)
+			$http.delete('user/' + $window.localStorage['token'])//+ cookie o token)
 				.success(function (data) {
 					alert("acabas de borrar el usuario, le redigiremos al inicio");
-					window.localStorage.token = {};
+					$window.localStorage['token'] = {};
 					window.location.href = '/';
 				})
 				.error(function (data) {
@@ -218,7 +218,7 @@ MapApp.controller('mainCtrl', ['$scope', '$http', '$window', function($scope, $h
 		if (data=='admin'){
 			rol=2;
 		} else {
-			rol = 1;
+			rol = 2;
 		}
 	})
 	.error(function(data) {
@@ -253,7 +253,9 @@ MapApp.controller('loginCtrl',['$http', '$scope', '$location', '$window', functi
 			data: this.user,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
+			console.log(data);
 			$window.localStorage['token']=data;
+			console.log($window.localStorage['token']);
 			$window.location.href='#/map/home';
 		}).error(function(data) {
 			$window.alert("ERROR - POST");
@@ -299,7 +301,7 @@ MapApp.controller('tabCtrl', function(){
  */
 MapApp.controller('logOutCtrl', ['$scope', function($scope) {
 	alert("Vas a salir");
-	window.localStorage.token = "";
+	$window.localStorage['token'] = "";
 	window.location.href = '/';
 }]);
 
@@ -393,7 +395,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 
 
 
-	$http.get(URL + 'race/user/' + window.localStorage.token, $scope).success(function (data) {
+	$http.get(URL + 'race/user/' + $window.localStorage['token'], $scope).success(function (data) {
 		races = data;
 		angular.forEach(races, function (race) {
 			$scope.objects = race;
@@ -458,7 +460,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 	//Obtener carreras html
 	//Obtener carreras html
 
-		$http.get(URL + 'race/user/' + window.localStorage.token).success(function (data) {
+		$http.get(URL + 'race/user/' + $window.localStorage['token']).success(function (data) {
 			$scope.races = data;
 			console.log(data);
 		})
@@ -470,7 +472,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 	/***********************************************************************************/
 
 	$ionicModal.fromTemplateUrl('create.html', {
-		scope: $scope
+		scope: $scope,
 		animation: 'slide-in-up'
 	}).then(function (modal) {
 		$scope.modal = modal;
@@ -493,7 +495,7 @@ MapApp.controller('GpsCtrl',function($scope,$http, $stateParams, $ionicPopup, $i
 			Inicio: this.LocationIni,
 			Final: this.LocationFin,
 			Type: this.Type,
-			_id: window.localStorage.token,
+			_id: $window.localStorage['token'],
 			Fecha: this.Fecha,
 			Hora: this.Hora
 		};
